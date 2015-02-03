@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--[if lt IE 7 ]> <html lang="en" class="ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<link rel="shortcut icon" href="/sites/default/files/fcc_favicon_0.ico" type="image/x-icon" />
+<meta property="og:title" content="Electronic Comment Filing System" />
+<meta name="description" content="To file a comment of up to several paragraphs, click on one of the proceedings listed below. To file a longer comment as an attachment, click on submit a filing and include the docket number of the proceeding both on the form and on the attachment." />
+<meta name="dcterms.description" content="To file a comment of up to several paragraphs, click on one of the proceedings listed below. To file a longer comment as an attachment, click on submit a filing and include the docket number of the proceeding both on the form and on the attachment." />
+<meta property="og:description" content="To file a comment of up to several paragraphs, click on one of the proceedings listed below. To file a longer comment as an attachment, click on submit a filing and include the docket number of the proceeding both on the form and on the attachment." />
+<link rel="canonical" href="http://www.fcc.gov/comments" />
+<meta property="og:url" content="http://www.fcc.gov/comments" />
+<meta name="revisit-after" content="1 day" />
+
+<title>Electronic Comment Filing System | FCC.gov</title>
+<meta name="viewport" content="width=device-width, minimum-scale=0.5, user-scalable=yes, target-densitydpi=device-dpi"/> 	
+<link type="text/css" rel="stylesheet" media="all" href="css/content.css" />
+<link type="text/css" rel="stylesheet" media="all" href="css/content-extended.css" />
+<link type="text/css" rel="stylesheet" media="all" href="javascript/jquery-ui-1.11.2/jquery-ui.min.css" />
+<link type="text/css" rel="stylesheet" media="print" href="css/frame.css" />
+<link type="text/css" rel="stylesheet" media="all" href="css/submit.css" />
+<link href="css/shCore.css" rel="stylesheet" type="text/css" />
+<link href="css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="javascript/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="javascript/jquery-ui-1.11.2/jquery-ui.js"></script>
+<script type="text/javascript" src="javascript/jquery-drupal.js"></script>
+<script type="text/javascript" src="javascript/application.js"></script>
+<script type="text/javascript" src="javascript/jstorage.js"></script>
+<script type="text/javascript" src="javascript/utils.js"></script>
+<script type="text/javascript" src="javascript/page_layout.js"></script>
+<script type="text/javascript" src="javascript/equalheight.js"></script>
+<script type="text/javascript" src="javascript/shCore.js"></script>
+<script type="text/javascript" src="javascript/shBrushXml.js"></script>
+<script type="text/javascript" src="javascript/toolbox.js"></script>
+
+<script>
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, { "basePath": "/" });
+
+//--><!]]>
+</script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+$(document).ready(function() {
+	window.setTimeout(hovertipInit, 1);
+	var search_term = $.jStorage.get("searchTerm");
+	var filing_path = $.jStorage.get("filingPath");
+
+	//$("#criteria_details").append(getConfirmationDetails());
+	$('#filing_type').html(getFilingSelectorMenu());
+	$('#state_pick').html(getStateSelectorMenu());
+	$("#breadcrumb_ext").attr("href", getFilingUrl(filing_path));
+	$("#breadcrumb_ext").html(filing_path + " Filing");
+		
+	$(function() {
+		jq( "#criteria_details" ).dialog({
+			autoOpen: false,
+			resizable: false,
+			draggable: false,
+			modal: true,
+			position: {my: 'center', at: 'center'},
+			show: { effect: "explode", duration: 1000 },
+			hide: { effect: "explode", duration: 1000 }
+		});	
+		$( "#expert_filing_submit" ).click(function() {jq( "#criteria_details" ).dialog( "open" );})
+	});
+	
+	$("#confirmation_num").html(generateRandomId());
+
+});
+//--><!]]>
+</script>
+</head>
+<body class="nojs not-front not-logged-in page-node node-type-page no-sidebars claro">
+	<div id="intro-div">
+	</div>
+	<!-- /intro-div -->
+	<div id="contentWrapper">
+		<div class="wrapper">
+			<div id="hdr">
+			</div>
+			<!-- /hdr -->
+			<div id="content-div">
+				<a name="startcontent"></a>
+				<div class="breadcrumb"><a href="http://www.fcc.gov/">FCC</a> / <a href="./index.html" class="active">ECFS</a> / <a href="" id="breadcrumb_ext" class="active"></a></div>
+				<h1 id="content_span">Filing Submitted
+					<ul class="shareTools">
+						<li><a href="/print/node/3895" target="_blank" class="print">Print</a></li>
+						<li><a href="mailto:?subject=%53%65%6e%64%20%55%73%20%59%6f%75%72%20%43%6f%6d%6d%65%6e%74%73&body=http://www.fcc.gov/comments" class="email">Email</a></li>
+					</ul>
+				</h1>
+				<div id="contentcontainer">
+					<div id="topcontent"></div>
+					<div id="maincontent" class="withsidebar two-rows-sidebar-tpl group">
+						<div class="content-container">
+							<div class="main-table-view" id="expert_filing">
+								<div class="row">
+									<p> Your filing has been successfully submitted to the FCC. The confirmation number is <span class='value-pop' id="confirmation_num"></span>.
+									</p>
+									<p> This confirmation number can be used to check the status of your filing. Please record the number and go to the ECFS Search menu to check the status.
+									</p>
+									<br>
+									<p> Thank you for your submission.</p>
+								</div>
+							</div>
+						</div>	
+						<div id="sidebar">
+							<div class="widget block-block" id="block-block-41">
+								<h2 class="widgetTitle">ECFS</h2>
+								<div class="widgetContent">
+									<p style="text-align: center;">
+										<a href="/ecfs"><img src="" alt="Learn More" /></a>
+									</p>
+								</div>
+							</div>
+							<div class="widget block-block" id="block-block-39">
+								<h2 class="widgetTitle">Search Public Comments</h2>
+								<div class="widgetContent"><p>Search Proceeding Comments.</p>
+									<p style="text-align: center;">
+										<a href="http://fjallfoss.fcc.gov/ecfs/" target="_blank"><img alt="Find Comments" src="" /></a>
+									</p>
+								</div>
+							</div>
+							<div class="widget block-block" id="block-block-28">
+								<h2 class="widgetTitle">Paper Filing</h2>
+								<div class="widgetContent">
+									<p>Get instructions for filing paper documents to the Office of the Secretary.</p>
+									<p style="text-align: center;">
+										<a href="./guidelines.html" target="_blank"><img alt="Filing Guidelines" src="" /></a>
+									</p>
+								</div>
+							</div>
+						</div>
+						<!-- /sidebar -->
+					</div>
+					<!-- /maincontent -->
+				</div>
+				<!-- /contentcontainer -->
+			</div> <!-- /contentdiv -->
+			
+			<div id="footer" class="group">
+			</div>
+			<!-- /footer -->
+
+		</div>
+		<!-- /wrapper -->
+	</div>
+	<!-- /contentWrapper -->
+</body>
+</html>

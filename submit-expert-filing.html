@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--[if lt IE 7 ]> <html lang="en" class="ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<link rel="shortcut icon" href="/sites/default/files/fcc_favicon_0.ico" type="image/x-icon" />
+<meta property="og:title" content="Electronic Comment Filing System" />
+<meta name="description" content="To file a comment of up to several paragraphs, click on one of the proceedings listed below. To file a longer comment as an attachment, click on submit a filing and include the docket number of the proceeding both on the form and on the attachment." />
+<meta name="dcterms.description" content="To file a comment of up to several paragraphs, click on one of the proceedings listed below. To file a longer comment as an attachment, click on submit a filing and include the docket number of the proceeding both on the form and on the attachment." />
+<meta property="og:description" content="To file a comment of up to several paragraphs, click on one of the proceedings listed below. To file a longer comment as an attachment, click on submit a filing and include the docket number of the proceeding both on the form and on the attachment." />
+<link rel="canonical" href="http://www.fcc.gov/comments" />
+<meta property="og:url" content="http://www.fcc.gov/comments" />
+<meta name="revisit-after" content="1 day" />
+
+<title>Electronic Comment Filing System | FCC.gov</title>
+<meta name="viewport" content="width=device-width, minimum-scale=0.5, user-scalable=yes, target-densitydpi=device-dpi"/> 	
+<link type="text/css" rel="stylesheet" media="all" href="css/content.css" />
+<link type="text/css" rel="stylesheet" media="all" href="css/content-extended.css" />
+<link type="text/css" rel="stylesheet" media="all" href="javascript/jquery-ui-1.11.2/jquery-ui.min.css" />
+<link type="text/css" rel="stylesheet" media="print" href="css/frame.css" />
+<link type="text/css" rel="stylesheet" media="all" href="css/submit.css" />
+<link href="css/shCore.css" rel="stylesheet" type="text/css" />
+<link href="css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="javascript/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="javascript/jquery-ui-1.11.2/jquery-ui.js"></script>
+<script type="text/javascript" src="javascript/jquery-drupal.js"></script>
+<script type="text/javascript" src="javascript/application.js"></script>
+<script type="text/javascript" src="javascript/jstorage.js"></script>
+<script type="text/javascript" src="javascript/utils.js"></script>
+<script type="text/javascript" src="javascript/page_layout.js"></script>
+<script type="text/javascript" src="javascript/equalheight.js"></script>
+<script type="text/javascript" src="javascript/shCore.js"></script>
+<script type="text/javascript" src="javascript/shBrushXml.js"></script>
+<script type="text/javascript" src="javascript/toolbox.js"></script>
+
+<script>
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, { "basePath": "/" });
+
+//--><!]]>
+</script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+$(document).ready(function() {
+	window.setTimeout(hovertipInit, 1);
+	$.jStorage.set("filingPath", "Expert");
+	$('#filing_type').html(getFilingSelectorMenu());
+	$('#state_pick').html(getStateSelectorMenu());
+		
+	$(function() {
+		jq( "#criteria_details" ).dialog({
+			autoOpen: false,
+			resizable: false,
+			draggable: false,
+			modal: true,
+			position: {my: 'center', at: 'center'},
+			show: { effect: "explode", duration: 1000 },
+			hide: { effect: "explode", duration: 1000 }
+		});	
+		$( "#expert_filing_submit" ).click(function() {
+			$("#criteria_details").empty();
+			$("#criteria_details").append(getConfirmationDetails(this.id));
+			jq( "#criteria_details" ).dialog( "open" );
+		})
+	});
+
+});
+
+//--><!]]>
+</script>
+</head>
+<body class="nojs not-front not-logged-in page-node node-type-page no-sidebars claro">
+	<div id="intro-div">
+	</div>
+	<!-- /intro-div -->
+	<div id="contentWrapper">
+		<div class="wrapper">
+			<div id="hdr">
+			</div>
+			<!-- /hdr -->
+			<div id="content-div">
+				<a name="startcontent"></a>
+				<div class="breadcrumb"><a href="http://www.fcc.gov/">FCC</a> / <a href="./index.html" class="active">ECFS</a> / <a href="./submit-expert-filing.html" class="active">Expert Filing</a></div>
+				<h1 id="content_span">Submit A Filing
+					<ul class="shareTools">
+						<li><a href="/print/node/3895" target="_blank" class="print">Print</a></li>
+						<li><a href="mailto:?subject=%53%65%6e%64%20%55%73%20%59%6f%75%72%20%43%6f%6d%6d%65%6e%74%73&body=http://www.fcc.gov/comments" class="email">Email</a></li>
+					</ul>
+				</h1>
+				<div id="contentcontainer">
+					<div id="topcontent"></div>
+					<div id="maincontent" class="withsidebar two-rows-sidebar-tpl group">
+						<div class="content-container">
+							<div class="main-table-view" id="expert_filing">
+								<div class="row">
+									<center style="color:#990000;">
+									Note:  You are filing a document into an official FCC proceeding.  All information submitted including names and address will be publicly available via the web.
+									</center>
+									<br>
+								</div>
+								<div class="row">
+									<div class='cell small_set left'>
+										<fieldset id='proceedings_set'  class='detailset standardset'><legend>Proceeding</legend>
+											<div class = "field-table-view">
+												<div class='row'>
+													<div class='cell large_set left'  style="margin-bottom:16px;">
+														<label for='proceedings_input'>Proceeding Number </label>
+														<input type='text' maxlength='128' id='proceedings_input' class='cell_textbox' value='' title='Either a Docket Number (96-45), RM Number (RM-10020) or proposed rulemaking (PRM04MB).'/>
+													</div>
+													<div class='cell small_set right align-bottom' style="margin-bottom:16px;">
+														<input type="button" id="proceedings_add" onclick="addItems(this.id);" value="Add">
+													</div>
+												</div>
+												<div class='row'>
+													<div class='cell large_set left' width='250px'>
+														<select multiple="" size="3" id="proceedings_selector"></select>
+													</div>
+													<div class='cell small_set right'>
+														<input type="button" id="proceedings_delete" onclick="deleteItems(this.id);" value="Delete" name="delete">
+														<br>
+														<input type="button" id="proceedings_clear" onclick="clearItems(this.id);" value="Clear" name="clear">
+													</div>
+												</div>
+											</div>
+										</fieldset>
+									</div>
+									<div class='cell large_set right'>
+										<fieldset id='applicant_set' class='detailset standardset'><legend>Contact Info</legend>
+											<div class = "field-table-view">
+												<div class='row'>
+													<div class='cell two left'>
+														<label for='applicant_name_text'>Name of Filer </label>
+														<input type='text' maxlength='128' id='applicant_name_text' class='cell_textbox large_box' value='' title='Your name if it is an individual filing, or the name of the company you are filing for." alt="Your name if it is an individual filing, or the name of the company you are filing for.'/>
+													</div>
+													<div class='cell two right'>
+														<label for='applicant_email_text'>Email Address </label>
+														<input type='text' maxlength='128' id='applicant_email_text' class='cell_textbox large_box' value='' title='The filer\'s email address.'/>
+													</div>
+												</div>
+												<div class='row'>
+													<div class='cell two left'>
+														<label for='applicant_lawfirm_text'>Lawfirm Name <p style="margin-top:-9px; margin-bottom:0;"><span style="font-weight:normal; font-size:80%; color:#990000;">(required if represented by counsel)</span></p></label>
+														<input type='text' maxlength='128' id='applicant_lawfirm_text' class='cell_textbox large_box' value='' title='The name of the lawfirm preparing the filing.'/>
+													</div>
+													<div class='cell two right align-bottom' style="margin-top:15px;">	
+														<label for='applicant_attorney_text'>Attorney/Author Name </label>
+														<input type='text' maxlength='128' id='applicant_attorney_text' class='cell_textbox large_box' value='' title='The name of the attorney or author preparing the filing.'/>
+													</div>
+												</div>
+											</div>
+										</fieldset>
+									</div>
+								</div>
+								<div class='row'>
+									<div class='cell small_set left'>
+										<fieldset id='details_set' class='standardset'><legend>Details</legend>
+										<div class = "field-table-view">
+											<div class='row'>
+												<div class='cell one left' id="filing_type">
+												</div>
+											</div>
+											<div class='row'>
+												<div class='cell one left'>											
+													<label for='file_number_text'>File Number </label>
+													<input type='text' maxlength='128' id='file_number_text' class='cell_textbox' value=''/>
+												</div>	
+											</div>	
+											<div class='row'>
+												<div class='cell one left'>												
+													<label for='report_number_text'>Report Number </label>
+													<input type='text' maxlength='128' id='report_number_text' class='cell_textbox' value=''/>
+												</div>	
+											</div>	
+											<div class='row'>
+												<div class='cell one left'>	
+													<label for='bureau_id_number_text'>Bureau Identification Number </label>
+													<input type='text' maxlength='128' id='bureau_id_number_text' class='cell_textbox' value=''/>
+												</div>
+											</div>
+											<div class='row'>
+												<div class='cell one left'>	
+													<label class='option_label'><input type='checkbox' id='ex_parte_checkbox' />Ex Parte Presentation </label>	
+												</div>	
+											</div>	
+										</div>	
+
+										</fieldset>
+									</div>
+									<div class='cell large_set right'>
+										<fieldset id='address_set' class="standardset"><legend>Address</legend>
+											<div class = "field-table-view">
+												<div class='row'>
+													<div class='cell two left' style="margin-bottom:16px;">
+														<label>Address For: </label>
+														<span class="left small_span"><label for="address_for_filer_radio" class="option_label"><input type="radio" id="address_for_filer_radio" onclick="radioSwitch(this.id);">Filer</label></span>
+														
+														<span class="left small_span"><label for="address_for_lawfirm_radio"  class="option_label"><input type="radio" id="address_for_lawfirm_radio" onclick="radioSwitch(this.id);">Lawfirm</label></span>
+														<span class="left small_span"><label for="address_for_author_radio" class="option_label"><input type="radio" id="address_for_author_radio" onclick="radioSwitch(this.id);">Author</label></span>
+													</div>
+													<div class='cell two right' style="margin-bottom:16px;">												
+														<label>Address Type: </label>
+														<span class="left small_span"><label for="address_domestic_radio" class="option_label"><input type="radio" id="address_domestic_radio" onclick="radioSwitch(this.id);">Domestic</label></span>
+														<span class="left small_span"><label for="address_international_radio" class="option_label"><input type="radio" id="address_international_radio" onclick="radioSwitch(this.id);">International</label></span>
+													</div>
+												</div>
+												<div class='row'>
+													<div class='cell one left'>
+														<label for='address_line_1_text'>Street Address</label>
+														<input type='text' maxlength='128' id='address_line_1_text' class='cell_textbox' value='' title='Enter complete street address.' style='width:95%'/>
+													</div>			
+												</div>
+												<div class='row'>
+													<div class='cell two left'>
+														<label for='address_line_2_text'>Apt / Suite / Other</label>
+														<input type='text' maxlength='128' id='address_line_2_text' class='cell_textbox large_box' value='' title='Enter apartment number, suite number, company name, or any additional information related to the street address.'/>
+													</div>
+													<div class='cell two right'>
+														<label for='address_city_text'>City</label>
+														<input type='text' maxlength='128' id='address_city_text' class='cell_textbox large_box' value=''/>										
+													</div>													
+												</div>
+												<div class='row'>												
+													<div class='cell two left' id='state_pick'>
+													</div>
+													<div class='cell two right'>										
+														<label>Zip Code</label>
+														<input type='text' maxlength='128' id='address_zip_code_text' class='cell_textbox small_box' value='' title='Enter 5 digit zip code.'/><span style='font-size: 120%; font-weight: bold;'>&nbsp;&nbsp;-&nbsp;&nbsp;</span><input type='text' maxlength='128' id='address_zip_extended_text' class='cell_textbox small_box' value='' title='Enter 5 digit zip code.'/>
+													</div>
+												</div>
+											</div>
+										</fieldset>
+									</div>
+								</div>
+								<div class='row'>
+									<fieldset id='docAdd_set' class="docset"><legend>Document(s)</legend>
+										<table id = "docAdd_table" class = "field-table-view">
+											<tbody>
+												<tr>
+													<td><label id="fileLabel"> File Name </label></td>
+													<td><label id="descriptionLabel">Description </label></td>
+												</tr>
+												<tr>
+													<td class='two'><input type="file" name="upload" size="25" value="" id="filing_document_1_upload"/></td>
+													<td><input  rows="1" cols="40" value="" id="filing_description_1_text" class="custom_desc" ></input></td>
+												</tr>
+												<tr>
+													<td><a id="docAdd" class="value-pop" style="font-weight: normal;" onclick="addDocument(this.id)"> Add Another Attachment...</a></td>
+												</tr>
+											</tbody>
+										</table>
+									</fieldset>
+								</div>							
+								<div class='row'>
+									<div style="margin:auto; width:160px;">
+										<input type="submit" id="expert_filing_reset" value="Reset" class="submit left"/>
+										<input type="submit" id="expert_filing_submit" value="Continue" class="submit right"/>
+										<div id="criteria_details" title="Confirm Submission" class="megamenu criteriamenu"></div>
+									</div>
+								</div>
+								<div class='row'>
+									<br>
+									<center style="color:#990000;">
+									Note:  You are filing a document into an official FCC proceeding.  All information submitted including names and address will be publicly available via the web.
+									</center>	
+								</div>
+							</div>
+						</div>	
+						<div id="sidebar">
+							<div class="widget block-block" id="block-block-41">
+								<h2 class="widgetTitle">ECFS</h2>
+								<div class="widgetContent">
+									<p style="text-align: center;">
+										<a href="/ecfs"><img src="" alt="Learn More" /></a>
+									</p>
+								</div>
+							</div>
+							<div class="widget block-block" id="block-block-39">
+								<h2 class="widgetTitle">Search Public Comments</h2>
+								<div class="widgetContent"><p>Search Proceeding Comments.</p>
+									<p style="text-align: center;">
+										<a href="http://fjallfoss.fcc.gov/ecfs/" target="_blank"><img alt="Find Comments" src="" /></a>
+									</p>
+								</div>
+							</div>
+							<div class="widget block-block" id="block-block-28">
+								<h2 class="widgetTitle">Paper Filing</h2>
+								<div class="widgetContent">
+									<p>Get instructions for filing paper documents to the Office of the Secretary.</p>
+									<p style="text-align: center;">
+										<a href="./guidelines.html" target="_blank"><img alt="Filing Guidelines" src="" /></a>
+									</p>
+								</div>
+							</div>
+						</div>
+						<!-- /sidebar -->
+					</div>
+					<!-- /maincontent -->
+				</div>
+				<!-- /contentcontainer -->
+			</div> <!-- /contentdiv -->
+			
+			<div id="footer" class="group">
+			</div>
+			<!-- /footer -->
+
+		</div>
+		<!-- /wrapper -->
+	</div>
+	<!-- /contentWrapper -->
+</body>
+<script>
+var docCount = 1;
+function addDocument(id){
+	if(id = "docAdd"){
+		//Create new table row in order to add another file
+		docCount++;
+		var new_row = "<tr>";
+			new_row += '<td class="two"><input type="file" name="upload" size="25" value="" id="filing_document_' + docCount + '_upload"/></td>';
+			new_row += '<td><input  rows="1" cols="40" value="" id="filing_description_' + docCount + '_text" class="custom_desc" ></input></td>';
+			new_row += '</tr>';
+		
+		//Get the last row which contains the add button and insert the new row before the last row.	
+		$("#" + id).parent().parent().before(new_row);
+		var adjust_height = $("#" + id + "_set").height() + 25;
+		$("#" + id + "_set").css("height", adjust_height); 
+	
+	}
+}
+</script>
+</html>
