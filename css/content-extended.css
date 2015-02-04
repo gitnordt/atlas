@@ -15,6 +15,12 @@ body {
 th {
     padding-right: 4px !important;
 }
+
+
+.group:after {
+    width: 1082px !important;
+}
+
 .logo {
     background: url("../images/navFCC.gif") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
     display: block;
@@ -66,6 +72,7 @@ th {
 }
 #actionbar .lookup {
     right: 234px;
+	margin-right: 10px;
 }
 
 #actionbar .links  {
@@ -133,7 +140,6 @@ th {
     display: block;
     font-weight: bold;
     line-height: 30px;
-    margin-right: 10px;
     padding-left: 35px;
     text-decoration: none;
     width: 170px !important;
@@ -158,15 +164,9 @@ th {
     display: block;
     font-weight: bold;
     line-height: 30px;
-
-
-
-    margin-right: 10px;
     padding-left: 35px;
     text-decoration: none;
-
-
-    width: 170px;
+    width: 170px !important;
 }
 
 
@@ -370,6 +370,7 @@ th {
     padding: 0;
     position: relative;
     width: auto;
+	min-width: 210px !important;
 }
 
 .jqueryslidemenu .widget .help-menu ul li {

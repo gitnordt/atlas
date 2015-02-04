@@ -36,7 +36,6 @@
 <script type='text/javascript' src='javascript/dojo-1.10.2/dojo/dojo.js'></script>
 <script type="text/javascript" src="javascript/toolbox.js"></script>
 <script type="text/javascript" src="javascript/results_grid.js"></script>
-<script type="text/javascript" src="javascript/results_grid4.js"></script> 
 <script type='text/javascript' src='javascript/config.js'></script>
 </head>
 
@@ -135,6 +134,7 @@ $(document).ready(function() {
 		jq( "#criteria_details" ).dialog({
 			autoOpen: false,
 			resizable: false,
+			modal: true,
 			position: {my: 'center', at: 'center'},
 			show: { effect: "explode", duration: 1000 },
 			hide: { effect: "explode", duration: 1000 }

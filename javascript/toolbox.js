@@ -509,16 +509,19 @@ function getAnchorDetails(search_term){
 }
 
 function getConfirmationDetails(id){
+		//console.log(id);
 		var confirmation_object = submitForm(id);
 		var confirmation_keys = Object.keys(confirmation_object);
 		var confirmation_length = confirmation_keys.length;
+		//console.log(confirmation_object);
+		
 		var html = ""; 
 		
 		html += "<div id='criteria_input' style='width:100%; margin:2px;'>";
 		html += "<div class='row'>";
 		html += "<p style='margin:8px; font-weight:bold;'>Please review and confirm the information below before submitting to the ECFS:</p>"
 		html += "</div>";
-		
+
 		for(var i = 0; i < confirmation_length; i++){
 			var curr_key = confirmation_keys[i];
 			var value = confirmation_object[curr_key];
@@ -635,6 +638,7 @@ function submitForm(id){
 	var id_prefix = id.substr(0, id.lastIndexOf("_"));
 	var form_inputs = $('#' + id_prefix).find('input[type="text"], input[type="checkbox"], input[type="radio"], input[type="file"], select');
 	var input_object = {};
+	
 	//gather search criteria items submitted in the query
 	$.each(form_inputs, function( index, field ) {
 		//console.log(field);
@@ -700,6 +704,8 @@ function criteriaSubmit(id){
 		
 		$("#criteria_view").html(criteria_html);	
 	}
+	
+	closeDialog("criteria_details");	
 		
 }
 

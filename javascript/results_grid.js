@@ -46,6 +46,7 @@ function filterResults(value, columnName){
 	var gridStructure = grid.structure[0].cells[0];  
 	var nameConversion = columnName.substr(0, columnName.length - 1);
 	var colIndex = -1;
+	var lastIndex = grid.layout.cells.length - 1; //lastIndex represents the index of the details column
 
 	dojo.some(grid.layout.cells, function(cell,idx) {
 		if(cell.field.toLowerCase().indexOf(nameConversion.toLowerCase()) != -1){
@@ -59,12 +60,12 @@ function filterResults(value, columnName){
 	});
 
 	
-	if (value != "" && colIndex != 6) {
+	if (value != "" && colIndex != lastIndex) {
 		//set filter to "equalTo" on column if a value exists and it is not the Details column
 		grid.setFilter([{type: 'string', condition: 'equalTo', column: colIndex, value: ''+ value +''}]);
 	} 
-	else if (value != "" && colIndex == 6) {
-		//set filter to "contains" on the column if a value exists and it is the Details column
+	else if (value != "" && colIndex == lastIndex) {
+		//set filter to "contains" on the column if a value exists and it is the Details column	
 		grid.setFilter([{type: 'string', condition: 'contains', column: colIndex, value: ''+ value +''}]);
 	} 
 	else {
@@ -124,10 +125,9 @@ function jsonHandler(results){
 			else
 				calc_width = calculateWidth(clean_header, 9) + "px";
 				
-			//console.log(origHeaders[item], clean_header);
 			if(clean_header == "TOGGLE")
 				cellSet1.push({ name: "*", field:origHeaders[item], width: "40px", headerClasses: ["staticHeader"], styles: "text-align: center; font-size:1.5em;font-weight:bold;", get: getCheck, formatter: formatCheck});
-			else if(clean_header == "PROCEEDING NUMBER" || clean_header == "NAME OF FILER" || 	clean_header == "DATE RECEIVED" || clean_header == "FILING TYPE" || clean_header == "PAGES" || clean_header == "BRIEF COMMENT")
+			else if(clean_header == "PROCEEDING NUMBER" || clean_header == "NAME OF FILER" || 	clean_header == "DATE RECEIVED" || 	clean_header == "FILING TYPE" || clean_header == "PAGES" || clean_header == "BRIEF COMMENT")
 				cellSet1.push({ name: clean_header, field:origHeaders[item], width: "auto"});
 			else
 				fieldSet.push(origHeaders[item]);
@@ -142,22 +142,17 @@ function jsonHandler(results){
 	resultWidthHeaders[0]["cells"] = [cellSet1];
 	cellSet2.push({ name: "DETAILS", field:"Filing_Details", fields:fieldSet, width: calc_width, colSpan : cellSet1.length, headerClasses: ["staticHeader"], filterable: true, formatter: formatDetail});
 	resultWidthHeaders[0]["cells"].push(cellSet2);
-	
-	//console.log(resultWidthHeaders);
 
 	/*Now set the data for each row*/
-	var setResultsRows = [], setFilterRows = [],
-		proceedings = [], proceeding_check = [],
-		filingTypes = [], filing_check = [],
-		states = [], state_check = [],
-		briefComment = [], brief_check = [];
+	var setResultsRows = [], setFilterRows = [], proceedings = [], proceeding_check = [], filingTypes = [], filing_check = [],
+		states = [], state_check = [], briefComment = [], brief_check = [];
 			
 	for (var i=0, total= record_length; i < total; i++) {
-		if (record_length == 1) {
+		if (record_length == 1) 
 			var row = records;
-		} else {
+		else
 			var row = records[i];
-		}
+		
 		var link = {};
 		
 		for(key in origHeaders) {
@@ -213,7 +208,6 @@ function jsonHandler(results){
 			}
 			
 			var _array = getStringArray(value);
-			//console.log(_array);
 			if(_array.length > 1 && _array.length < 3){
 				for(var j=0; j < _array.length; j++){
 					var new_value = _array[j];
@@ -227,7 +221,6 @@ function jsonHandler(results){
 				link[origHeaders[key]] = value/*col(value)*/;
 		}
 		
-		//console.log(link);
 		setResultsRows.push(link); 	
 	}
 	
@@ -282,8 +275,6 @@ function jsonHandler(results){
 		setFilterRows.push(gather_rows);
 	}
 	
-	//document.getElementById("sourceFilter").style.display='inline';
-	//document.getElementById("sourceFilter").style.visibility='visible';
 	document.getElementById("warning").style.display='inline';
 	document.getElementById("warning").style.visibility='visible';	
 
@@ -296,9 +287,6 @@ function jsonHandler(results){
 		  identifier: 'id',
 		  items: []
 		};
-		
-		//results_data.items = [];
-
 		
 		for(var i=0; i<rows.length; i++){
 		  results_data.items.push(dojo.mixin({ id: i+1 }, rows[i]));
@@ -317,7 +305,6 @@ function jsonHandler(results){
 			results_plugins = {filter: filter_rules, pagination: paging_rules};
 			
 			auto_width = false;
-			
 		}
 
 		if(registered_grid == undefined){	
@@ -406,9 +393,8 @@ function jsonHandler(results){
 		/*finished building the results table*/
 	}
 	
-
-	//every other index, display formatted  data
 	function formatDetail(value, inRowIndex){
+		//every other index, display formatted  data
 		var fields = this._props.fields;
 		var value_length = Object.keys(value).length;
 		var counter = 0;
@@ -430,7 +416,6 @@ function jsonHandler(results){
 		html += "</div>";
 		return html;
 	}
-	//end data
 	
 	function getCheck(inRowIndex) {
 		if (!this.grid.expandedRows)
@@ -440,12 +425,9 @@ function jsonHandler(results){
 					show: (this.grid.expandedRows[inRowIndex] ? 'false' : 'true')};
 	}
 	
-
-	
 	function formatCheck(value, inRowIndex){
 		return html = '<img src="images/' + value.image + '" onclick="toggle(' + inRowIndex + ', ' + value.show +  ', ' + results_id + ');" height="11" width="11"/>';
 	}
-	
 	
 	function createColumns (label, value, placement,complete_row){
 		var html = "";

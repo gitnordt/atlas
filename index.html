@@ -22,8 +22,6 @@
 <link type="text/css" rel="stylesheet" media="all" href="css/content.css" />
 <link type="text/css" rel="stylesheet" media="all" href="css/content-extended.css" />
 <link type="text/css" rel="stylesheet" media="print" href="css/frame.css" />
-<!--[if lte IE 8]><link href="css/ie.css" rel="stylesheet" type="text/css" /><![endif]-->
-<!--[if lte IE 7]><link href="css/ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
 <script type="text/javascript" src="javascript/jquery-drupal.js"></script>
 <script type="text/javascript" src="javascript/application.js"></script>
 <script type="text/javascript" src="javascript/page_layout.js"></script>
@@ -106,6 +104,10 @@ jQuery.extend(Drupal.settings, { "basePath": "/" });
 											The standard form for submitting filings to ECFS if you want to send Word, PDF, or Excel files.
 											This form now includes the ability to submit your filing into multiple proceedings.
 										</li>
+										<li><strong><a href="/ecfs/comment_search/new">Submit a Non-Docketed Filing</a>: </strong>
+											This form is to be used only for submitting specific formal documents to the FCC Inbox. Do not use this form 
+											to submit informal comments or complaints about service providers.
+										</li>										
 										<li><strong><a href="/ecfs/comment_search/new">Search for Filings</a>: </strong>
 											Search for and view public filings and Commission items.
 											You can export, or generate a Really Simple Syndication (RSS) feed of your search results.
@@ -129,7 +131,7 @@ jQuery.extend(Drupal.settings, { "basePath": "/" });
 									<ul>
 										<li>Phone: 202-418-0193</li>
 										<li>Email: <a href="mailto:ecfshelp@fcc.gov">ecfshelp@fcc.gov</a></li>
-										<li>Please do not email comments directly to ECFS Help - to file a comment in a docket, click on "Submit a Filing" or "Submit a Filing (Express)" in the upper left hand corner of the screen.</li>
+										<li>Please do not email comments directly to ECFS Help - to file a comment in a docket, click on "Submit a Filing(Expert)" or "Submit a Filing (Express)" in the upper left hand corner of the screen.</li>
 									</ul>								
 								</div>
 								<p></p>
@@ -139,32 +141,6 @@ jQuery.extend(Drupal.settings, { "basePath": "/" });
 						<!-- /content-container -->
 		
 						<div id="sidebar">
-							<div class="widget block-block" id="block-block-41">
-								<h2 class="widgetTitle">ECFS</h2>
-								<div class="widgetContent">
-									<p style="text-align: center;">
-										<a href="/ecfs"><img src="" alt="Learn More" /></a>
-									</p>
-								</div>
-							</div>
-							<div class="widget block-block" id="block-block-39">
-								<h2 class="widgetTitle">Search Public Comments</h2>
-								<div class="widgetContent"><p>Search Proceeding Comments.</p>
-									<p style="text-align: center;">
-										<a href="http://fjallfoss.fcc.gov/ecfs/" target="_blank"><img alt="Find Comments" src="" /></a>
-									</p>
-								</div>
-							</div>
-							<div class="widget block-block" id="block-block-28">
-								<h2 class="widgetTitle">Paper Filing</h2>
-								<div class="widgetContent">
-									<p>Get instructions for filing paper documents to the Office of the Secretary.</p>
-									<p style="text-align: center;">
-										<a href="./guidelines.html" target="_blank"><img alt="Filing Guidelines" src="" /></a>
-									</p>
-									<!--<p class="blockBtnBlue"><a href="/osec/guidelines.html">Filing Guidelines</a></p>-->
-								</div>
-							</div>
 						</div>
 						<!-- /sidebar -->
 						

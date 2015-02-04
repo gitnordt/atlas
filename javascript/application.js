@@ -20,6 +20,8 @@ buildmenu:function(menuid, arrowsvar){
 	jQuery(document).ready(function($){
 		$("#intro-div").html(intro_html);
 		$("#hdr").html(header_html);
+		if($("#sidebar"))
+			$("#sidebar").html(sidebar_html);
 		$("#footer").html(footer_html);
 		var $mainmenu=$("#"+menuid+" .widget .widgetContent > ul")
 		var $headers=$mainmenu.find("ul").parent()
