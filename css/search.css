@@ -50,9 +50,11 @@
 
 #criteria_input{
     clear: both;
-    margin: 0px 8px 0px 8px;
+    margin: auto;
     width: 96%;
 	display:table;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 #criteria_view{
@@ -82,6 +84,16 @@
 #criteria_input select{
 	margin-bottom : 6px;
 	font-size: 95%;
+}
+
+#criteria_divider{
+    border-color: -moz-use-text-color -moz-use-text-color black;
+    border-style: none none solid;
+    border-width: medium medium 1.5px;
+    height: 1px;
+    margin-left: 0;
+    padding: 0;
+    width: 64.8em;
 }
 
 legend{
@@ -163,6 +175,15 @@ margin: 4em 0 1em 0 !important;
 	margin: 5px;
 }
 
+.floating_label{
+	padding: 20px 0 6px 0;
+}
+
+.option_label input{
+	margin: 0 !important;
+	padding:0 !important;
+	vertical-align: middle;
+}
 
 /*icon styling*/
 .icon-edit{
@@ -200,8 +221,8 @@ margin: 4em 0 1em 0 !important;
 	color: white;
 }
 
-.from-to-date-div{
-	width:102%; 
+.date-div{
+	width:100%; 
 	clear:both; 
 	height:40px;
 }

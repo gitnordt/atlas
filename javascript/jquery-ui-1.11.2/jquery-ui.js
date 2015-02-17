@@ -10163,7 +10163,7 @@ var dialog = $.widget( "ui.dialog", {
 			.appendTo( this.uiDialog );
 
 		this._createTitlebar();
-		this._createButtonPane();
+		//this._createButtonPane();
 
 		if ( this.options.draggable && $.fn.draggable ) {
 			this._makeDraggable();
@@ -10459,6 +10459,7 @@ var dialog = $.widget( "ui.dialog", {
 			})
 			.addClass( "ui-dialog-titlebar-close" )
 			.appendTo( this.uiDialogTitlebar );
+					
 		this._on( this.uiDialogTitlebarClose, {
 			click: function( event ) {
 				event.preventDefault();
@@ -10466,6 +10467,8 @@ var dialog = $.widget( "ui.dialog", {
 			}
 		});
 
+		this._createButtons();
+		
 		uiDialogTitle = $( "<span>" )
 			.uniqueId()
 			.addClass( "ui-dialog-title" )
@@ -10475,6 +10478,7 @@ var dialog = $.widget( "ui.dialog", {
 		this.uiDialog.attr({
 			"aria-labelledby": uiDialogTitle.attr( "id" )
 		});
+		
 	},
 
 	_title: function( title ) {
@@ -10484,7 +10488,7 @@ var dialog = $.widget( "ui.dialog", {
 		title.text( this.options.title );
 	},
 
-	_createButtonPane: function() {
+	/*_createButtonPane: function() {
 		this.uiDialogButtonPane = $( "<div>" )
 			.addClass( "ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" );
 
@@ -10493,21 +10497,23 @@ var dialog = $.widget( "ui.dialog", {
 			.appendTo( this.uiDialogButtonPane );
 
 		this._createButtons();
-	},
+	},*/
 
 	_createButtons: function() {
 		var that = this,
 			buttons = this.options.buttons;
 
 		// if we already have a button pane, remove it
-		this.uiDialogButtonPane.remove();
-		this.uiButtonSet.empty();
+		//this.uiDialogButtonPane.remove();
+		//this.uiButtonSet.empty();
 
 		if ( $.isEmptyObject( buttons ) || ($.isArray( buttons ) && !buttons.length) ) {
-			this.uiDialog.removeClass( "ui-dialog-buttons" );
+			//this.uiDialog.removeClass( "ui-dialog-buttons" );
+			this.uiDialog.removeClass( "ui-dialog-title" );
 			return;
 		}
 
+		button_cnt = 0;
 		$.each( buttons, function( name, props ) {
 			var click, buttonOptions;
 			props = $.isFunction( props ) ?
@@ -10524,14 +10530,30 @@ var dialog = $.widget( "ui.dialog", {
 				icons: props.icons,
 				text: props.showText
 			};
+
 			delete props.icons;
 			delete props.showText;
-			$( "<button></button>", props )
-				.button( buttonOptions )
-				.appendTo( that.uiButtonSet );
+			
+			button_cnt ++;
+
+			if(props.text == "minimize"){
+				this.uiDialogTitlebarButton = $( "<button></button>", props )
+					.button( buttonOptions )
+					//.appendTo( that.uiButtonSet )
+					.addClass( "ui-dialog-titlebar-min" )
+					.appendTo( this.uiDialogTitlebar );
+			}else
+				this.uiDialogTitlebarButton = $( "<button></button>", props )
+					.button( buttonOptions )
+					//.appendTo( that.uiButtonSet )
+					.addClass( "ui-dialog-titlebar-max" )
+					.appendTo( this.uiDialogTitlebar );
+
+			this.uiDialogTitlebarButton.prevObject.prependTo( $(".ui-dialog-titlebar"));
 		});
-		this.uiDialog.addClass( "ui-dialog-buttons" );
-		this.uiDialogButtonPane.appendTo( this.uiDialog );
+		//this.uiDialog.addClass( "ui-dialog-buttons" );
+		//this.uiDialogButtonPane.appendTo( this.uiDialog );
+					
 	},
 
 	_makeDraggable: function() {

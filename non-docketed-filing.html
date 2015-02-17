@@ -52,7 +52,8 @@ $(document).ready(function() {
 	$.jStorage.set("filingPath", "Expert");
 	$('#filing_type').html(getFilingSelectorMenu());
 	$('#state_pick').html(getStateSelectorMenu());
-		
+	$('#inbox_pick').html(getInboxSelectorMenu());
+
 	$(function() {
 		jq( "#criteria_details" ).dialog({
 			autoOpen: false,
@@ -63,8 +64,7 @@ $(document).ready(function() {
 			show: { effect: "explode", duration: 1000 },
 			hide: { effect: "explode", duration: 1000 }
 		});	
-		
-		$( "#expert_filing_submit" ).click(function() {
+		$( "#nondoc_filing_submit" ).click(function() {
 			$("#criteria_details").empty();
 			$("#criteria_details").append(getConfirmationDetails(this.id));
 			jq( "#criteria_details" ).dialog( "open" );
@@ -87,8 +87,8 @@ $(document).ready(function() {
 			<!-- /hdr -->
 			<div id="content-div">
 				<a name="startcontent"></a>
-				<div class="breadcrumb"><a href="http://www.fcc.gov/">FCC</a> / <a href="./index.html" class="active">ECFS</a> / <a href="./submit-expert-filing.html" class="active">Expert Filing</a></div>
-				<h1 id="content_span">Submit A Filing
+				<div class="breadcrumb"><a href="http://www.fcc.gov/">FCC</a> / <a href="./index.html" class="active">ECFS</a> / <a href="./non-dockteted-filing.html" class="active">Non-Docketed Filing</a></div>
+				<h1 id="content_span">Submit A Non-Docketed Filing
 					<ul class="shareTools">
 						<li><a href="/print/node/3895" target="_blank" class="print">Print</a></li>
 						<li><a href="mailto:?subject=%53%65%6e%64%20%55%73%20%59%6f%75%72%20%43%6f%6d%6d%65%6e%74%73&body=http://www.fcc.gov/comments" class="email">Email</a></li>
@@ -98,99 +98,60 @@ $(document).ready(function() {
 					<div id="topcontent"></div>
 					<div id="maincontent" class="withsidebar two-rows-sidebar-tpl group">
 						<div class="content-container">
-							<div class="main-table-view" id="expert_filing">
+							<div class="main-table-view" id="nondoc_filing">
 								<div class="row">
 									<center style="color:#990000;">
-									Note:  You are filing a document into an official FCC proceeding.  All information submitted including names and address will be publicly available via the web.
+									<p>Note: You are filing a document into an official FCC proceeding. All information submitted including names and address will be publicly available via the web.</p>
+
+									<p>This form is to be used only for submitting the specific types of documents listed in the drop-down menu following "Please select the appropriate FCC inbox." Do not use this form to submit <a href="https://consumercomplaints.fcc.gov/hc/en-us">informal complaints about service providers</a>. Do not use this form to submit comments in a proceeding for which a docket number (e.g. 14-1) or rulemaking number (e.g. RM-10001) has been assigned, comments on existing licensing proceedings, comments in existing formal complaint proceedings, or anything for which another existing electronic-filing system is available.</p>
+
+									<p>If your filing requires payment of a fee, you may use the Commission's Fee Filer system at <a href="https://apps.fcc.gov/FeeFiler">https://apps.fcc.gov/FeeFiler</a>.</p>
 									</center>
 									<br>
 								</div>
 								<div class="row">
-									<div class='cell small_set left'>
-										<fieldset id='proceedings_set'  class='detailset standardset'><legend>Proceeding</legend>
+									<!--<div class='cell small_set left'>-->
+										<fieldset id='select_set'  class='detailset'><legend>Details</legend>
 											<div class = "field-table-view">
-												<div class='row'>
-													<div class='cell large_set left'  style="margin-bottom:16px;">
-														<label for='proceedings_input'>Proceeding Number </label>
-														<input type='text' maxlength='128' id='proceedings_input' class='cell_textbox' value='' title='Either a Docket Number (96-45), RM Number (RM-10020) or proposed rulemaking (PRM04MB).'/>
+												<div class='row' style='margin-left:20px;'>
+													<div class='cell full left' id="inbox_pick">
 													</div>
-													<div class='cell small_set right align-bottom' style="margin-bottom:16px;">
-														<input type="button" id="proceedings_add" onclick="addItems(this.id);" value="Add">
-													</div>
-												</div>
-												<div class='row'>
-													<div class='cell large_set left' width='250px'>
-														<select multiple="" size="3" id="proceedings_selector"></select>
-													</div>
-													<div class='cell small_set right'>
-														<input type="button" id="proceedings_delete" onclick="deleteItems(this.id);" value="Delete" name="delete">
-														<br>
-														<input type="button" id="proceedings_clear" onclick="clearItems(this.id);" value="Clear" name="clear">
+													<div class='cell full left' id="filing_type">
 													</div>
 												</div>
 											</div>
 										</fieldset>
-									</div>
-									<div class='cell large_set right'>
-										<fieldset id='applicant_set' class='detailset standardset'><legend>Contact Info</legend>
+									<!--</div>-->
+								</div>
+								<div class='row'>
+									<div class='cell small_set left'>
+										<fieldset id='applicant_set' class='standardset'><legend>Contact Info</legend>
 											<div class = "field-table-view">
 												<div class='row'>
-													<div class='cell two left'>
+													<div class='cell one left'>
 														<label for='applicant_name_text'>Name of Filer </label>
 														<input type='text' maxlength='128' id='applicant_name_text' class='cell_textbox large_box' value='' title='Your name if it is an individual filing, or the name of the company you are filing for." alt="Your name if it is an individual filing, or the name of the company you are filing for.'/>
 													</div>
-													<div class='cell two right'>
+												</div>
+												<div class='row'>
+													<div class='cell one left'>
 														<label for='applicant_email_text'>Email Address </label>
 														<input type='text' maxlength='128' id='applicant_email_text' class='cell_textbox large_box' value='' title='The filer\'s email address.'/>
 													</div>
 												</div>
 												<div class='row'>
-													<div class='cell two left'>
+													<div class='cell one left'>
 														<label for='applicant_lawfirm_text'>Lawfirm Name <p style="margin-top:-9px; margin-bottom:0;"><span style="font-weight:normal; font-size:80%; color:#990000;">(required if represented by counsel)</span></p></label>
 														<input type='text' maxlength='128' id='applicant_lawfirm_text' class='cell_textbox large_box' value='' title='The name of the lawfirm preparing the filing.'/>
 													</div>
-													<div class='cell two right align-bottom' style="margin-top:15px;">	
+												</div>
+												<div class='row'>
+													<div class='cell one left'>	
 														<label for='applicant_attorney_text'>Attorney/Author Name </label>
 														<input type='text' maxlength='128' id='applicant_attorney_text' class='cell_textbox large_box' value='' title='The name of the attorney or author preparing the filing.'/>
 													</div>
 												</div>
 											</div>
-										</fieldset>
-									</div>
-								</div>
-								<div class='row'>
-									<div class='cell small_set left'>
-										<fieldset id='details_set' class='standardset'><legend>Details</legend>
-										<div class = "field-table-view">
-											<div class='row'>
-												<div class='cell one left' id="filing_type">
-												</div>
-											</div>
-											<div class='row'>
-												<div class='cell one left'>											
-													<label for='file_number_text'>File Number </label>
-													<input type='text' maxlength='128' id='file_number_text' class='cell_textbox' value=''/>
-												</div>	
-											</div>	
-											<div class='row'>
-												<div class='cell one left'>												
-													<label for='report_number_text'>Report Number </label>
-													<input type='text' maxlength='128' id='report_number_text' class='cell_textbox' value=''/>
-												</div>	
-											</div>	
-											<div class='row'>
-												<div class='cell one left'>	
-													<label for='bureau_id_number_text'>Bureau Identification Number </label>
-													<input type='text' maxlength='128' id='bureau_id_number_text' class='cell_textbox' value=''/>
-												</div>
-											</div>
-											<div class='row'>
-												<div class='cell one left'>	
-													<label class='option_label'><input type='checkbox' id='ex_parte_checkbox' />Ex Parte Presentation </label>	
-												</div>	
-											</div>	
-										</div>	
-
 										</fieldset>
 									</div>
 									<div class='cell large_set right'>
@@ -259,8 +220,8 @@ $(document).ready(function() {
 								</div>							
 								<div class='row'>
 									<div style="margin:auto; width:160px;">
-										<input type="submit" id="expert_filing_reset" value="Reset" class="submit left" onclick='clearForm(this.id)' />
-										<input type="submit" id="expert_filing_submit" value="Continue" class="submit right"/>
+										<input type="submit" id="nondoc_filing_reset" value="Reset"  onclick='clearForm(this.id)' class="submit left"/>
+										<input type="submit" id="nondoc_filing_submit" value="Continue" class="submit right"/>
 										<div id="criteria_details" title="Confirm Submission" class="megamenu criteriamenu"></div>
 									</div>
 								</div>

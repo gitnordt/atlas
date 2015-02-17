@@ -67,7 +67,7 @@ $(document).ready(function() {
 			show: { effect: "explode", duration: 1000 },
 			hide: { effect: "explode", duration: 1000 }
 		});
-		
+
 		$( "#express_filing_submit" ).click(function() {
 			$("#criteria_details").empty();
 			$("#criteria_details").append(getConfirmationDetails(this.id));
@@ -179,7 +179,7 @@ $(document).ready(function() {
 								</div>							
 								<div class='row'>
 									<div style="margin:auto; width:160px;">
-										<input type="submit" id="express_filing_reset" value="Reset" class="submit left"/>
+										<input type="submit" id="express_filing_reset" value="Reset" onclick='clearForm(this.id)' class="submit left"/>
 										<input type="submit" id="express_filing_submit" value="Continue" class="submit right"/>
 										<div id="criteria_details" title="Confirm Submission" class="megamenu criteriamenu"></div>
 									</div>

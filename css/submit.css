@@ -100,6 +100,14 @@ select{
 	padding: 0 !important;
 }
 
+.full{
+	width: 100% !important;
+}
+
+.full select{
+	width: 97% !important;
+}
+
 #proceedings_selector{
  width:140px;
  height:65px;
@@ -123,7 +131,7 @@ select{
 
 .custom_desc{
 	resize:none; 
-	width:85%;
+	width:94%;
 }
 
 #table_docAdd tr{

@@ -29,17 +29,7 @@
 <script type="text/javascript" src="javascript/equalheight.js"></script>
 <script type="text/javascript" src="javascript/shCore.js"></script>
 <script type="text/javascript" src="javascript/shBrushXml.js"></script>
-<!--
-<script type="text/javascript" src="javascript/fcc_carousel.js"></script>
-<script type="text/javascript" src="javascript/iwant.js"></script>
-<script type="text/javascript" src="javascript/node-event-tracking.js"></script>
-<script type="text/javascript" src="javascript/exitNotice.js"></script>
 
-<script type="text/javascript" src="javascript/mousehold.js"></script>
-<script type="text/javascript" src="javascript/prettify.js"></script>
-<script type="text/javascript" src="javascript/emphasis-src.js"></script>
-
--->
 
 <link href="css/shCore.css" rel="stylesheet" type="text/css" />
 <link href="css/shThemeDefault.css" rel="stylesheet" type="text/css" />
@@ -52,16 +42,22 @@ jQuery.extend(Drupal.settings, { "basePath": "/" });
 </script>
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
-    // initialize tooltips in a separate thread
-    $(document).ready(function() {
-		//$("body").load("page_layout.html"); 
-		window.setTimeout(hovertipInit, 1);
-		
-		$("#search_theme_form").submit(function(e)
-		{
-			$.jStorage.set("searchTerm", $('#' + this.id).find('#search_term_input').val());
-		});
-    });
+// initialize tooltips in a separate thread
+$(document).ready(function() {
+	//$("body").load("page_layout.html"); 
+	window.setTimeout(hovertipInit, 1);
+	$.jStorage.flush();
+	$("#search_theme_form").submit(function(e)
+	{
+		$.jStorage.set("searchTerm", $('#' + this.id).find('#search_term_input').val());
+	});
+});
+
+function searchType(type){
+	var real_type = type.split("_")[1];
+	$.jStorage.set("searchType", real_type);
+	window.location.href = 'search.html';
+}
 	
 	
 
@@ -104,21 +100,21 @@ jQuery.extend(Drupal.settings, { "basePath": "/" });
 											The standard form for submitting filings to ECFS if you want to send Word, PDF, or Excel files.
 											This form now includes the ability to submit your filing into multiple proceedings.
 										</li>
-										<li><strong><a href="/ecfs/comment_search/new">Submit a Non-Docketed Filing</a>: </strong>
+										<li><strong><a href="non-docketed-filing.html">Submit a Non-Docketed Filing</a>: </strong>
 											This form is to be used only for submitting specific formal documents to the FCC Inbox. Do not use this form 
 											to submit informal comments or complaints about service providers.
 										</li>										
-										<li><strong><a href="/ecfs/comment_search/new">Search for Filings</a>: </strong>
+										<li><strong><a href="#" id='search_filing' onclick='searchType(this.id);'>Search for Filings</a>: </strong>
 											Search for and view public filings and Commission items.
 											You can export, or generate a Really Simple Syndication (RSS) feed of your search results.
 										</li>
 										<li>
-											<strong><a href="/ecfs/proceeding_search/new">Search for Proceedings</a>: </strong>
+											<strong><a href="#" id='search_proceeding' onclick='searchType(this.id);'>Search for Proceedings</a>: </strong>
 											New search screen to find a proceeding (Docket Number, Rulemaking Number, etc.).
 										</li>
 
 										<li>
-											<strong><a href="/ecfs/comment/confirm">Check Your Filing Status</a>: </strong>
+											<strong><a href="#" id='search_status' onclick='searchType(this.id);'>Check Your Filing Status</a>: </strong>
 											Use your confirmation number to check whether the filing you made is available online.
 										</li>
 									</ul>
@@ -170,22 +166,4 @@ jQuery.extend(Drupal.settings, { "basePath": "/" });
 		</div>
 	</div>
 </body>
-<script>
-	/*(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-	ga('create', 'UA-16888309-1','auto', {
-		'allowLinker': true
-	}); 
-	
-	ga('send', 'pageview');
-
-	// Load the plugin.
-	ga('require', 'linker');
-
-	// Define which domains to autoLink.
-	ga('linker:autoLink', ['fcc.github.io', 'fccdata.github.io']);*/
-</script>	
 </html>

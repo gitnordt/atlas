@@ -204,6 +204,38 @@ function getStateSelectorMenu(){
 	return state_selector_menu;
 }
 
+function getInboxSelectorMenu(){
+	var inbox_selector_menu = "";
+		inbox_selector_menu += "<label for='inbox_selector' > Please select the appropriate FCC inbox</label><select class='selector_cell search_selector' id='inbox_selector'>";
+		inbox_selector_menu += "<option value=''></option>";
+		inbox_selector_menu += "<option value='INBOX-73.3545'>Section 325(c) Application for Permit to Deliver Programs to Foreign Stations</option>";
+		inbox_selector_menu += "<option value='INBOX-51.329'>Section 251 Network Change Notification</option>";
+		inbox_selector_menu += "<option value='INBOX-1.1105'>Petition for Waiver of Parts 32, 43, 64, 65, 69 (fee required)</option>";
+		inbox_selector_menu += "<option value='INBOX-1.3'>Petition for Waiver (miscellaneous)</option>";
+		inbox_selector_menu += "<option value='INBOX-63.71'>Section 214 Domestic Discontinuance Application</option>";
+		inbox_selector_menu += "<option value='INBOX-1.2'>Petition for Declaratory Ruling</option>";
+		inbox_selector_menu += "<option value='INBOX-PART15'>Petition for Waiver of Part 15</option>";
+		inbox_selector_menu += "<option value='INBOX-63.04'>Section 214 Domestic Transfer of Control Application</option>";
+		inbox_selector_menu += "<option value='INBOX-1.735'>Section 208 Complaint: Restricted Proceedings</option>";
+		inbox_selector_menu += "<option value='INBOX-1.1408'>Section 224 Pole Attachment Complaint: Restricted Proceedings</option>";
+		inbox_selector_menu += "<option value='INBOX-73.702'>International High Frequency Application</option>";
+		inbox_selector_menu += "</select>";
+		
+		return inbox_selector_menu;
+}
+
+function getSearchTypeSelectorMenu(){
+	var search_type_selector_menu = "";
+		search_type_selector_menu += "<label for='search_type_selector' > Search Type</label><select class='selector_cell search_selector' id='search_type_selector' onchange='switchAnchorDetails(this.id);'>";
+		search_type_selector_menu += "<option value='filing'>FILING</option>";
+		search_type_selector_menu += "<option value='status'>FILING STATUS</option>";
+		search_type_selector_menu += "<option value='keyword'>KEYWORD</option>";
+		search_type_selector_menu += "<option value='proceeding'>PROCEEDING</option>";
+		search_type_selector_menu += "</select>";
+
+		return search_type_selector_menu;
+}
+
 /*Functions to build each field in the search criteria menu*/
 function createRowTextbox(id_prefix, label_text, value, tooltip_text){
 	var html = "<label for='" + id_prefix + "_text'>" + label_text + "</label>";
@@ -218,13 +250,13 @@ function createCellTextbox(id_prefix, label_text, value, tooltip_text){
 }
 
 function createSingleDateField(id_prefix){
-	var html = "<label for='" + id_prefix + "_picker'>Date</label>";
-	html += "<input id='" + id_prefix + "_picker' class='datepicker' type='text'>";
+	var html = "<span class='left' style='width:100%;'><label for='" + id_prefix + "_picker'>Date</label>";
+	html += "<input id='" + id_prefix + "_picker' class='datepicker' type='text'></span>";
 	return html;
 }
 
 function createMultiDateField(id_prefix){
-	var html = "<span class='left small_span'><label for='" + id_prefix + "'_from_picker' >From</label>";
+	var html = "<span class='left small_span'><label for='" + id_prefix + "_from_picker' >From</label>";
 	html += "<input id='" + id_prefix + "_from_picker' class='datepicker small_box' type='text'/></span>";
 	html += "<span class='right small_span'><label for='" + id_prefix + "_to_picker'>To</label>";
 	html += "<input id='" + id_prefix + "_to_picker' class='datepicker small_box' type='text'/></span>";
@@ -242,15 +274,15 @@ function createCheckbox(id_prefix, label_text, multi){
 function createDateCheckbox(id_prefix, state){
 	var html = "";
 	if(state)
-		html = "<label class='option_label'><input type='checkbox' id='"+ id_prefix +"_checkbox' " + state + " onclick='dateFieldExchange(this.id);'/>Search A Date Range</label></br>";
+		html = "<label class='option_label' for='" + id_prefix + "_checkbox'><input type='checkbox' id='"+ id_prefix +"_checkbox' " + state + " onclick='dateFieldExchange(this.id);'/> Search Date Range?</label></br>";
 	
 	else
-		html = "<label class='option_label'><input type='checkbox' id='"+ id_prefix +"_checkbox' onclick='dateFieldExchange(this.id);'/> Search A Date Range</label></br>";
+		html = "<label class='option_label' for='" + id_prefix + "_checkbox'><input type='checkbox' id='"+ id_prefix +"_checkbox' onclick='dateFieldExchange(this.id);'/> Search Date Range?</label></br>";
 	return html;
 }
 
 function createRadioOptions(id_prefix, label_text){
-	var html = "<label class='option_label'><input type='radio' id='"+ id_prefix + "_" + label_text + "_radio_switch' onclick='radioSwitch(this.id);'/>" + toCamelCase(label_text) + "</label>";
+	var html = "<label class='option_label'><input type='radio' id='"+ id_prefix + "_" + label_text + "_radio_switch' onclick='radioSwitch(this.id);'/> " + toCamelCase(label_text) + "</label>";
 	return html;
 
 }
@@ -301,7 +333,7 @@ function dateFieldExchange(id){
 
 	if(input_fields.length > 1){
 		date_div.empty();
-		date_div.removeClass("from-to-date-div");
+		//date_div.removeClass("date-div");
 		//date_div.addClass("date-with-radio-div");
 		html = createSingleDateField(id_prefix);
 		date_div.html(html);
@@ -309,7 +341,7 @@ function dateFieldExchange(id){
 	else{
 		date_div.empty();
 		//date_div.removeClass("date-with-radio-div");
-		date_div.addClass("from-to-date-div");
+		//date_div.addClass("date-div");
 		html = createMultiDateField(id_prefix);
 		date_div.html(html);
 	}
@@ -374,138 +406,178 @@ function getFilingUrl(path){
 	return url;	
 }
 
-function getAnchorDetails(search_term){
+function getAnchorDetails(search_term, search_type){
 		//console.log("Search: " + search_term);
 		var html = "";  
-		html += "<div id='criteria_input'>";
-		html += "<div class='row'><div class='cell'>";
-		html += createRowTextbox("keyword", "Keyword", search_term, "Edit the term you wish to search for.");
-		html += "</div></div>";
-		
-		html += "<div class='row'>";
-		html += "<div class='cell two left'>";
-		html += createCellTextbox("proceeding_number", "Proceeding Number", "", "Enter the proceeding number you wish to search for.");
-		html += "</div>";
-		html += "<div class='cell two right'>";
-		html += createCellTextbox("da/fcc_number", "DA/FCC Number", "", "Enter the DA or FCC number you wish to search for.");
-		html += "</div>";
-		html += "</div>";
-		
-		html += "<div class='row'>";
-		html += "<div class='cell two left'>";
-		html += createCellTextbox("lawfirm_name", "Lawfirm Name", "", "Enter the lawfirm you wish to search for.");
-		html += "</div>";
-		html += "<div class='cell two right'>";
-		html += createCellTextbox("attorney/author_name", "Attorney/Author Name", "", "Enter the attorney or author's name you wish to search for.");
-		html += "</div>";
-		html += "</div>";
-		html += "</br>";
-		
-		html += "<div class='row'>";
-		html += "<div class='cell two left'>";
-		html += "<fieldset id='comment_posted'><legend>Date Posted Online</legend>";
-		html += createDateCheckbox("comment_posted");
-		html += "<div id='comment_posted_div'>";
-		html += createSingleDateField("comment_posted");
-		html += "</div>";
-		html += "</fieldset>";
-		html += "</div>";
-		html += "<div class='cell two right'>";
-		html += "<fieldset id='comment_received'><legend>Date Received</legend>";
-		html += createDateCheckbox("comment_received");	
-		html += "<div id=comment_received_div>";
-		html += createSingleDateField("comment_received");
-		html += "</div>";
-		html += "</fieldset>";
-		html += "</div>";			
-		html += "</div>";
-		
-		html += "<div class='row'>";
-		html += "<div class='cell two left'>";
-		html += "<fieldset id='comment_period'><legend>Comment Period</legend>";
-		html += createDateCheckbox("comment_period", "checked");
-		html += "<div id='comment_period_div' class='from-to-date-div'>";
-		html += createMultiDateField("comment_period");
-		html += "</div>";
-		html += "<div class='date-radio-div'><label>Due Next:</label><span class='left small_span'>";
-		html += createRadioOptions("comment_period", "week");
-		html += "</span>";
-		html += "<span class='left small_span'>";
-		html += createRadioOptions("comment_period", "month");
-		html += "</span>";
-		html += "</div></fieldset>";
-		html += "</div>";
-		html += "<div class='cell two right'>";
-		html += "<fieldset id='comment_reply'><legend>Comment Reply</legend>";
-		html += createDateCheckbox("comment_reply");
-		html += "<div id='comment_reply_div'>";
-		html += createSingleDateField("comment_reply");
-		html += "</div>";
-		html += "<div class='date-radio-div'><label>Due Next:</label><span class='left small_span'>";
-		html += createRadioOptions("comment_reply", "week");
-		html += "</span>";
-		html += "<span class='left small_span'>";
-		html += createRadioOptions("comment_reply", "month");
-		html += "</span>";
-		html += "</div></fieldset>";
-		html += "</div>";
-		html += "</div>";
-		html += "</br>";
-		
-		html += "<div class='row'><div class='cell'>";
-		html += getFilingSelectorMenu();
-		html += "</div></div>";
-		
-		html += "<div class='row'>";
-		html += "<div class='cell two left'>";
-		html += createCellTextbox("filer_name", "Name of Filer", "", "Enter the filer name you wish to search for.");
-		html += "</div>";
-		html += "<div class='cell two right'>";
-		html += createCellTextbox("city", "City", "", "Enter the city you wish to search for.");
-		html += "</div>";
-		html += "</div>";
-		
-		html += "<div class='row'>";
-		html += "<div class='cell two left'>";
-		html += getStateSelectorMenu();
-		html += "</div>";
-		html += "<div class='cell two right'>";
-		html += createCellTextbox("zipcode", "Zip Code", "", "Enter the zip code you wish to search for.");
-		html += "</div>";
-		html += "</div>";			
 
-		html += "<div class='row'>";
-		html += "<div class='cell two left'>";
-		html += createCellTextbox("bureau_number", "Bureau ID Number", "", "Enter the bureau id you wish to search for.");
-		html += "</div>";
-		html += "<div class='cell two right'>";
-		html += createCellTextbox("report_number", "Report Number", "", "Enter the report number you wish to search for.");
-		html += "</div>";
-		html += "</div>";
+		html += "<div id='criteria_input'>";
 		
-		html += "<div class='row'>";
-		html += "<div class='cell two left'>";
-		html += "<div style='width:100%; clear:both;'><label>Brief Comments:</label><span class='left small_span'>";
-		html += createCheckbox("exclude_brief", "Exclude", true);
-		html += "</span>";
-		html += "<span class='left small_span'>";
-		html += createCheckbox("only_brief", "Only", true);
-		html += "</span>";
-		html += "</div>";
-		html += "</div>";
-		html += "<div class='cell two right'></br>";
-		html += createCheckbox("ex_parte_filing", "Ex Parte Filing");
-		html += "</div>";
-		html += "</div>";
-		html += "</br>";
+			html += "<div class='row'>";
+			html += "<div class='two left'>";
+			html += "<div id='search_type'>";
+			html += getSearchTypeSelectorMenu();
+			html += "</div>";
+			html += "</div>";
+			
+			if(search_type == "keyword"){
+				html += "<div class='two right'>";	
+				html += "<div style='margin:auto;'>";
+				html += createRowTextbox("keyword", "Keyword", search_term, "Edit the term you wish to search for.");
+				html += "</div>";
+				html += "</div>";
+			}
+			
+			html += "</div>";
+			
+			html += "<div class='row' style='height:30px; border:1px solid blue;'>";
+			html += "<hr  id='criteria_divider'></div>";
+
+			html += "<div class='row'>";
+			html += "<div class='two left'>";
+			html += "<div>";
+			html += getFilingSelectorMenu();
+			html += "</div>";
+			html += "</div>";
+			html += "<div class='two right'>";	
+			html += "<div class='cell two left'>";
+			html += createCellTextbox("lawfirm_name", "Lawfirm Name", "", "Enter the lawfirm you wish to search for.");
+			html += "</div>";
+			html += "<div class='cell two right'>";
+			html += createCellTextbox("attorney/author_name", "Attorney/Author Name", "", "Enter the attorney or author's name you wish to search for.");
+			html += "</div>";
+			html += "</div>";			
+			html += "</div>";
+			
+			
+			html += "<div class='row'>";
+			html += "<div class='two left'>";
+			html += "<div class='cell two left'>";
+			html += createCellTextbox("proceeding_number", "Proceeding Number", "", "Enter the proceeding number you wish to search for.");
+			html += "</div>";
+			html += "<div class='cell two right'>";
+			html += createCellTextbox("da/fcc_number", "DA/FCC Number", "", "Enter the DA or FCC number you wish to search for.");
+			html += "</div>";
+			html += "</div>";
+			html += "<div class='two right'>";
+			html += "<div class='cell two left'>";
+			html += createCellTextbox("bureau_number", "Bureau ID Number", "", "Enter the bureau id you wish to search for.");
+			html += "</div>";
+			html += "<div class='cell two right'>";
+			html += createCellTextbox("report_number", "Report Number", "", "Enter the report number you wish to search for.");
+			html += "</div>";
+			html += "</div>";
+			html += "</div>";
+			
+			
+			html += "<div class='row'>";
+			html += "<div class='two left'>";
+			html += "<div class='cell two left'>";
+			html += createCellTextbox("filer_name", "Name of Filer", "", "Enter the filer name you wish to search for.");
+			html += "</div>";
+			html += "<div class='cell two right'>";
+			html += createCellTextbox("city", "City", "", "Enter the city you wish to search for.");
+			html += "</div>";
+			html += "</div>";
+			html += "<div class='two right'>";
+			html += "<div class='cell two left'>";
+			html += getStateSelectorMenu();
+			html += "</div>";
+			html += "<div class='cell two right'>";
+			html += createCellTextbox("zipcode", "Zip Code", "", "Enter the zip code you wish to search for.");
+			html += "</div>";
+			html += "</div>";
+			html += "</div>";
+			
+			
+			html += "<div class='row'>";
+			html += "<div class='two left' style='position:relative;'>";
+			html += "<div class='cell two left'>";
+			html += "<fieldset id='comment_posted'><legend>Date Posted</legend>";
+			html += createDateCheckbox("comment_posted");
+			html += "<div id='comment_posted_div'>";
+			html += createSingleDateField("comment_posted");
+			html += "</div>";
+			html += "</fieldset>";
+			html += "</div>";
+			html += "<div class='cell two right'>";
+			html += "<fieldset id='comment_received'><legend>Date Received</legend>";
+			html += createDateCheckbox("comment_received");	
+			html += "<div id=comment_received_div>";
+			html += createSingleDateField("comment_received");
+			html += "</div>";
+			html += "</fieldset>";
+			html += "</div>";
+			html += "<div class='cell two left'>";
+			html += "<fieldset id='comment_brief'><label style='padding-bottom: 5px;'>Brief Comments:</label><span class='left small_span'>";
+			html += createCheckbox("exclude_brief", "Exclude", true);
+			html += "</span>";
+			html += "<span class='left small_span'>";
+			html += createCheckbox("only_brief", "Only", true);
+			html += "</span>";
+			html += "</fieldset>";
+			html += "</div>";
+			html += "<div class='cell two right'><fieldset id='ex_parte'  style='height:2.7em; position: relative;'>";
+			html += "<div style='position:absolute; bottom:7px;'>"
+			html += createCheckbox("ex_parte_filing", "Ex Parte Filing");
+			html += "</div>";
+			html += "</fieldset>";
+			html += "</div>";
+			html += "</div>";
+			html += "<div class='two right'>";
+			html += "<div class='cell two left'>";
+			html += "<fieldset id='comment_period'><legend>Comment Period</legend>";
+			html += createDateCheckbox("comment_period", "checked");
+			html += "<div id='comment_period_div' class='date-div'>";
+			html += createMultiDateField("comment_period");
+			html += "</div>";
+			html += "<div class='date-radio-div'><label class='floating_label'>Due Next:</label><span class='left small_span'>";
+			html += createRadioOptions("comment_period", "week");
+			html += "</span>";
+			html += "<span class='left small_span'>";
+			html += createRadioOptions("comment_period", "month");
+			html += "</span>";
+			html += "</div>";
+			html += "</fieldset>";
+			html += "</div>";
+			html += "<div class='cell two right'>";
+			html += "<fieldset id='comment_reply'><legend>Comment Reply</legend>";
+			html += createDateCheckbox("comment_reply");
+			html += "<div id='comment_reply_div' class='date-div'>";
+			html += createSingleDateField("comment_reply");
+			html += "</div>";
+			html += "<div class='date-radio-div'><label class='floating_label'>Due Next:</label><span class='left small_span'>";
+			html += createRadioOptions("comment_reply", "week");
+			html += "</span>";
+			html += "<span class='left small_span'>";
+			html += createRadioOptions("comment_reply", "month");
+			html += "</span>";
+			html += "</div>";
+			html += "</fieldset>";
+			html += "</div>";
+			html += "</div>";
+			html += "</div>";
 		
-		html += "</div>";
-		html += "<div id='submit_div' class='ui-dialog-titlebar ui-widget-footer'>";
+		html += "</br>";//end of criteria div
+		html += "</div>"; 
+		
+		html += "<div id='submit_div' class='ui-widget-footer'>";
 		html += "<input type='submit' class='pointer clear_criteria' onclick='clearForm(this.id)' value='Reset' id='criteria_input_clear'/>";		
 		html += "<input type='submit' name='submit' class='pointer submit_criteria' onclick='criteriaSubmit(this.id)' value='Submit' id='criteria_input_submit'/>";
 		html += "</div>";
 		
 		return html;
+}
+
+function switchAnchorDetails(id){
+	var input_term = $("#search_term_input").val();
+	var input_type = $('#' + id + ' option:selected').val();	
+	$.jStorage.set("searchTerm", input_term);
+	$.jStorage.set("searchType", input_type);
+
+	getAnchorDetails(input_term, input_type);
+	$("#criteria_details").empty().append(getAnchorDetails(input_term, input_type));
+	$('#' + id + ' option:selected').removeAttr('selected');
+	$('#' + id).find('option[value="' + input_type + '"]').attr("selected",true);
 }
 
 function getConfirmationDetails(id){
@@ -545,7 +617,7 @@ function getConfirmationDetails(id){
 		
 		html += "</div>";
 		html += "</br>";
-		html += "<div id='submit_div' class='ui-dialog-titlebar ui-widget-footer'>";
+		html += "<div id='submit_div' class='ui-widget-footer'>";
 		html += "<input type='submit' class='pointer clear_criteria' id='criteria_close'value='Edit' onclick='closeDialog(this.id)'/>";		
 		html += "<input type='submit' name='submit' class='pointer submit_criteria' onclick='confirmationSubmit()' value='Submit' id='criteria_submit'/>";
 		html += "</div>";
@@ -568,7 +640,7 @@ function cleanLabel(label){
 		
 	return clean_label;
 }
-
+/*-------------------------------Used for multi-select textbox-------------------------------*/
 function addItems(id) {
 	var id_prefix = id.substr(0, id.lastIndexOf("_"));
 	var input_field = $('#' + id_prefix + '_input');
@@ -593,7 +665,7 @@ function deleteItems(id) {
 		var sel_options = $('#' + id_prefix + '_selector option:selected');
 		
 		$.map(sel_options ,function(option) {
-			console.log(option.value);
+			//console.log(option.value);
 			selector.find('[value="' + option.value + '"]').remove();
 		});
 	}
@@ -609,13 +681,24 @@ function clearItems(id) {
 	return true;
  } 
 
+/*-------------------------------Used for all submit forms-------------------------------*/ 
 function clearForm(id){
+	//console.log(id);
 	var id_prefix = id.substr(0, id.lastIndexOf("_"));
-	var form_input = $('#' + id_prefix).find('input[type="text"], input[type="checkbox"], input[type="radio"], select');
+	//console.log(id_prefix);
+	var form_input = $('#' + id_prefix).find('input[type="text"], input[type="checkbox"], input[type="radio"], input[type="file"], select, textarea');
+	
+	//console.log(form_input);
 	
 	$.each(form_input, function( index, field ) {
-		if(field.type == "text" && field.value != "")
-			field.value = "";
+		if((field.type == "text" || field.type == "textarea"  || field.type == "file")  && field.value != ""){
+			if(id_prefix == "express_filing"){
+				if(field.id != "proceeding_num")
+					field.value = "";
+			}
+			else
+				field.value = "";
+		}
 		else if(field.type == "checkbox"){
 			//if the box is a comment date box
 			if (field.id.toLowerCase().indexOf("comment") != -1){
@@ -630,6 +713,9 @@ function clearForm(id){
 			field.checked = false;
 		else if(field.type == "select-one" && field.selectedIndex > 0)
 			field.selectedIndex = 0;
+		else if(field.type == "select-multiple" && id_prefix == "expert_filing"){
+			clearItems(field.id);
+		}
 	});
 }
 
