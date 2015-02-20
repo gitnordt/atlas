@@ -21,14 +21,27 @@
 <meta name="viewport" content="width=device-width, minimum-scale=0.5, user-scalable=yes, target-densitydpi=device-dpi"/> 	
 <link type="text/css" rel="stylesheet" media="all" href="css/content.css" />
 <link type="text/css" rel="stylesheet" media="all" href="css/content-extended.css" />
+<link type="text/css" rel="stylesheet" media="all" href="javascript/jquery-ui-1.11.2/jquery-ui.min.css" />
 <link type="text/css" rel="stylesheet" media="print" href="css/frame.css" />
-<script type="text/javascript" src="javascript/jquery-drupal.js"></script>
+<!--<script type="text/javascript" src="javascript/jquery-drupal.js"></script>
 <script type="text/javascript" src="javascript/application.js"></script>
 <script type="text/javascript" src="javascript/page_layout.js"></script>
 <script type="text/javascript" src="javascript/jstorage.js"></script>
 <script type="text/javascript" src="javascript/equalheight.js"></script>
 <script type="text/javascript" src="javascript/shCore.js"></script>
+<script type="text/javascript" src="javascript/shBrushXml.js"></script>-->
+
+<script type="text/javascript" src="javascript/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="javascript/jquery-ui-1.11.2/jquery-ui.js"></script>
+<script type="text/javascript" src="javascript/jquery-drupal.js"></script>
+<script type="text/javascript" src="javascript/application.js"></script>
+<script type="text/javascript" src="javascript/jstorage.js"></script>
+<script type="text/javascript" src="javascript/utils.js"></script>
+<script type="text/javascript" src="javascript/page_layout.js"></script>
+<script type="text/javascript" src="javascript/equalheight.js"></script>
+<script type="text/javascript" src="javascript/shCore.js"></script>
 <script type="text/javascript" src="javascript/shBrushXml.js"></script>
+
 
 
 <link href="css/shCore.css" rel="stylesheet" type="text/css" />
@@ -51,6 +64,9 @@ $(document).ready(function() {
 	{
 		$.jStorage.set("searchTerm", $('#' + this.id).find('#search_term_input').val());
 	});
+	
+	jq('#date_search_input').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+5", closeText : "Close"}); 
+	
 });
 
 function searchType(type){

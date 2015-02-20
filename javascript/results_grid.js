@@ -114,7 +114,8 @@ function jsonHandler(results){
 	    var clean_header = cleanHeader(origHeaders[item]);	
 		if(isInArray(clean_header, cleanHeaders) == false )
 		{
-			var calc_width = "auto";
+			//calculating secondary set of fields
+			var calc_width = "";
 			cleanHeaders.push(clean_header);
 			if(clean_header == "FILE")
 				calc_width = calculateWidth(clean_header, 100)  + "px";
@@ -140,7 +141,8 @@ function jsonHandler(results){
 
                         }};
 	resultWidthHeaders[0]["cells"] = [cellSet1];
-	cellSet2.push({ name: "DETAILS", field:"Filing_Details", fields:fieldSet, width: calc_width, colSpan : cellSet1.length, headerClasses: ["staticHeader"], filterable: true, formatter: formatDetail});
+	cellSet2.push({ name
+	: "DETAILS", field:"Filing_Details", fields:fieldSet, width: calc_width, colSpan : cellSet1.length, headerClasses: ["staticHeader"], filterable: true, formatter: formatDetail});
 	resultWidthHeaders[0]["cells"].push(cellSet2);
 
 	/*Now set the data for each row*/
@@ -237,9 +239,9 @@ function jsonHandler(results){
 			gather_rows[proc] = proceedings[k][proc];
 			if(k == 0){
 				if(proc.indexOf("Totals") != -1)
-					filterWidthHeaders.push({ name: cleanHeader(proc), field:proc, width: calculateWidth(proc, 9) + "px", noresize: true});
+					filterWidthHeaders.push({ name: cleanHeader(proc), field:proc, width: "50px", noresize: true});
 				else
-					filterWidthHeaders.push({ name: cleanHeader(proc), field:proc, width: calculateWidth(proc, 9) + "px", formatter: addLinks, noresize: true});
+					filterWidthHeaders.push({ name: cleanHeader(proc), field:proc, width: "90px", formatter: addLinks, noresize: true});
 			}
 		}
 		for (type in filingTypes[k]){

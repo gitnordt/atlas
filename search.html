@@ -50,8 +50,8 @@
 			<!-- /hdr -->
 			<div id="content-div">
 				<a name="startcontent"></a>
-				<div class="breadcrumb"><a href="http://www.fcc.gov/">FCC</a> / <a href="./index.html" class="active">ECFS</a> / <a href="./search.html" id='breadcrumb-title' class="active"></a></div>
-				<h1 id="content_span">
+				<div class="breadcrumb"><a href="http://www.fcc.gov/">FCC</a> / <a href="./index.html" class="active">ECFS</a> / <a href="./search.html" id='breadcrumb-title' class="active">Search</a></div>
+				<h1 id="content_span">Search
 					<ul class="shareTools">
 						<li><a href="/print/node/3895" target="_blank" class="print">Print</a></li>
 						<li><a href="mailto:?subject=%53%65%6e%64%20%55%73%20%59%6f%75%72%20%43%6f%6d%6d%65%6e%74%73&body=http://www.fcc.gov/comments" class="email">Email</a></li>
@@ -69,6 +69,7 @@
 												<legend>Search Criteria</legend>
 												<div id="criteria_div">
 													<div id="edit_title_div" style="float:left; width:10%;"><img id="edit-anchor" src="images/file_edit.png" class="icon-edit" alt="Edit Criteria"/></div>
+													<div id='criteria_view'></div>
 													<div id="criteria_details" title="Search" class="megamenu criteriamenu"></div>
 												</div>
 											</fieldset>
@@ -127,22 +128,17 @@ $(document).ready(function() {
 	if(!search_type || search_term){
 		search_type = "keyword";
 		$.jStorage.set("searchType", search_type);
-		$("#criteria_div").append("<div id='criteria_view'><p>Keyword: <br><span class='value-cool'>" + search_term + "</span></p></div>");
+		$("#criteria_view").html("<p>Keyword: <br><span class='value-cool'>" + search_term + "</span></p>");
 		$("#search_term_input").val(search_term);
 		auto_open = false;
 	}
-	alert(search_type + ", " + search_term);
-	var search_title = toCamelCase(search_type) + " Search";
-	$("#breadcrumb-title").html(search_title);
-	$("#content_span").prepend(search_title);
-	
+
 	var viewer_displayed = false;
 	var scrollHandler = function(){
 		$(".ui-dialog").css({"margin-top": ($(window).scrollTop()) + "px", "margin-left":($(window).scrollLeft()) + "px"});
 	}
 
 	$("label[for!='#search_term_input']").css("display", "none");
-	$("#activity").append("<p><span class='value-cool'>Loading...<br>&nbsp;</span></p>");
 	$("#criteria_details").append(getAnchorDetails(search_term, search_type));
 	$('#search_type_selector option:selected').removeAttr('selected');
 	$("#search_type_selector").find('option[value="' + search_type + '"]').attr("selected",true);
@@ -199,99 +195,6 @@ $(document).ready(function() {
 		$( "#edit-anchor" ).click(function() {jq( "#criteria_details" ).dialog( "open" );})
 	});
 
-	function displayResults(results_url) {
-		var start_time = new Date().getTime();
-		var max_recs = getMaxRecords();
-		var check_time = getCheckTime();
-		
-		var results = ajaxCall(results_url, 'json', false, true);
-		//console.log(results.length);
-
-		if(results.length >= max_recs){
-			$('#warning').empty().append("<label>** Only displaying " + max_recs + " of 600 records.  Please refine your search.</label>");
-		}
-		
-		if(results.length != 0){								
-			dojo.ready(function(){
-				//console.log(results);
-				jsonHandler(results);
-				$('#no_results').hide();
-				if ($('#results').is(":hidden")){
-					$('#results').show();
-					dijit.byId("resultsGrid")._refresh();
-					dijit.byId("filterGrid")._refresh();
-				}
-				viewer_displayed = true;
-				/*filtering();*/
-			});
-			
-			dojo.addOnLoad(function() {
-			   $('#criteria').height($('#activity').height() - 1);
-			   $('#criteria_div').height($('#criteria').height() - 16);
-			});
-		}
-		else if(results.metadata.totalCount == 0){	
-			$('#no_results').empty().append('<label>No results found.</label>');
-		}
-
-		
-		/*$.getJSON(results_url, function(response) {
-			console.log(" is this working");
-			task_json=self.setInterval(function() {
-				var timer = new Date().getTime() - start_time;
-				console.log(timer + " secs");
-				if(timer > getWaitTime()){
-					self.clearInterval(task_json); //stops interval
-					$('#no_results').empty().append('<label>Request timeout: Taking too long to retrieve results.</label>');
-					return; //breaks loop and returns message
-				}
-				
-				// Results logic start.
-				
-				$.getJSON(results_url, function(response) {
-					console.log(response);
-					if(response){
-						if(response.metadata.queryStatus == "DONE"){
-							self.clearInterval(task_json);
-							if(response.metadata.totalCount >= max_recs){
-								$('#warning').empty().append("<label>** Only displaying " + max_recs + " of " + response.metadata.totalCount + " records.  Please refine your search.</label>");
-							}
-							if(response.metadata.totalCount != 0){								
-								dojo.ready(function(){
-									jsonHandler(response);
-									$('#no_results').hide();
-									if ($('#results').is(":hidden")){
-										$('#results').show();
-										dijit.byId("resultsGrid")._refresh();
-									}
-									viewer_displayed = true;
-									filtering();
-								});
-								
-								dojo.addOnLoad(function() {
-								   dojo.connect(window, "onresize", resizeGrid("resultsGrid");
-								});
-							}
-							else if(response.metadata.totalCount == 0){	
-								$('#no_results').empty().append('<label>No results found.</label>');
-							}
-						}
-						else{
-							console.log("not done querying: " + timer + " secs");
-						}
-					}
-				})
-				.fail(function() {
-					$('#no_results').empty().append('<label>This query could not be submitted.</label>');
-					self.clearInterval(task_json);
-				});
-				
-				// Results logic end.
-				
-			},check_time); 	
-		
-		});	*/
-	}
 
 	//var results_url  = 'https://' + getHost() + '/queryservice/results/' + msg + '?callback=?';
 	var results_url = 'mock_data.json';
@@ -308,8 +211,48 @@ $(document).ready(function() {
 	}
 	
 	$('#warning').empty();
-	displayResults(results_url);
-
+	console.log(search_type);
+	if(search_type == "keyword"){
+		$('#activity p').empty();
+		$("#activity").append("<p><span class='value-cool'>Loading...<br>&nbsp;</span></p>");
+		displayResults(results_url);
+	}
+	else{
+		$('#no_results').empty();
+		$('#activity p').empty();
+		$("#activity").append("<p><span class='value-cool'>Awaiting Search Criteria to retreive results</span></p>");
+		
+		var counter = 0; 
+		var wait_interval;
+		
+		function intervalStart() {
+			wait_interval = setInterval(function () {myTimer()}, 1000);
+		}
+		
+		function myTimer() {
+			counter ++;
+			if(counter < 4)
+				$("#activity p").append(".");
+			else{
+				window.clearInterval(wait_interval);
+				counter = 0;
+				
+				window.setTimeout(function () {
+					$('#activity p').empty().append("<span class='value-cool'>Awaiting Search Criteria to retreive results</span>");
+					intervalStart();
+				}, 1000);
+			}
+				
+			if ($('#results').is(":visible")){
+				window.clearInterval(wait_interval);
+				counter = 0;
+			}
+		}
+		
+		intervalStart();
+		
+		
+	}
 });
 
 require(["dijit/Tooltip", "dojo/domReady!"], function(Tooltip){

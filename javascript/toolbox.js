@@ -236,6 +236,59 @@ function getSearchTypeSelectorMenu(){
 		return search_type_selector_menu;
 }
 
+function getProcStatusSelectorMenu(){
+	var proceeding_status_selector_menu = "";
+		proceeding_status_selector_menu += "<label for='proceeding_status_selector' > Proceeding Status</label><select class='selector_cell search_selector' id='proceeding_status_selector'>";
+		proceeding_status_selector_menu += "<option value=''></option>";
+		proceeding_status_selector_menu += "<option value='open'>OPEN</option>";
+		proceeding_status_selector_menu += "<option value='closed'>CLOSED</option>";
+		proceeding_status_selector_menu += "</select>";
+
+		return proceeding_status_selector_menu;
+}
+
+function getBureauSelectorMenu(){
+	var bureau_selector_menu = "";
+		bureau_selector_menu += "<select class='selector_cell search_selector'  multiple='' size='5' id='bureau_selector' style='padding-bottom:1px;'>";
+		bureau_selector_menu += "<option value=''></option>";
+		bureau_selector_menu += "<option value='AU'>Auctions</option>";
+		bureau_selector_menu += "<option value='CS'>Cable Services Bureau</option>";
+		bureau_selector_menu += "<option value='CC'>Common Carrier Bureau</option>";
+		bureau_selector_menu += "<option value='CI'>Compliance and Information Bureau</option>";
+		bureau_selector_menu += "<option value='CG'>Consumer and Governmental Affairs Bureau</option>";
+		bureau_selector_menu += "<option value='EB'>Enforcement Bureau</option>";
+		bureau_selector_menu += "<option value='FO'>Field Operations Bureau</option>";
+		bureau_selector_menu += "<option value='GN'>General (Multiple Bureaus)</option>";
+		bureau_selector_menu += "<option value='IB'>International Bureau</option>";
+		bureau_selector_menu += "<option value='MM'>Mass Media Bureau</option>";
+		bureau_selector_menu += "<option value='MB'>Media Bureau</option>";
+		bureau_selector_menu += "<option value='BO'>Offfice of Communication Business Opps</option>";
+		bureau_selector_menu += "<option value='LJ'>Office of Administrative Law Judges</option>";
+		bureau_selector_menu += "<option value='JG'>Office of Chairman Genachowski</option>";
+		bureau_selector_menu += "<option value='MC'>Office of Commissioner Clyburn</option>";
+		bureau_selector_menu += "<option value='CM'>Office of Commissioner McDowell</option>";
+		bureau_selector_menu += "<option value='CB'>Office of Communications and Business Op</option>";
+		bureau_selector_menu += "<option value='ET'>Office of Engineering and Technology</option>";
+		bureau_selector_menu += "<option value='GC'>Office of General Counsel</option>";
+		bureau_selector_menu += "<option value='IC'>Office of International Communications</option>";
+		bureau_selector_menu += "<option value='OL'>Office of Legislative Affairs</option>";
+		bureau_selector_menu += "<option value='MD'>Office of Managing Director</option>";
+		bureau_selector_menu += "<option value='MR'>Office of Media Relations</option>";
+		bureau_selector_menu += "<option value='PP'>Office of Plans and Policy</option>";
+		bureau_selector_menu += "<option value='SP'>Office of Strategic Planning and Analysi</option>";
+		bureau_selector_menu += "<option value='PD'>Office of Workplace Diversity</option>";
+		bureau_selector_menu += "<option value='IG'>Office of the Inspector General</option>";
+		bureau_selector_menu += "<option value='XX'>Others</option>";
+		bureau_selector_menu += "<option value='PR'>Private Radio Bureau</option>";
+		bureau_selector_menu += "<option value='PS'>Public Safety and Homeland Security</option>";
+		bureau_selector_menu += "<option value='WP'>Wireless Telecom and Public Safety</option>";
+		bureau_selector_menu += "<option value='WT'>Wireless Telecommunications Bureau</option>";
+		bureau_selector_menu += "<option value='WC'>Wireline Competition Bureau</option>";
+		bureau_selector_menu += "</select>";
+
+		return bureau_selector_menu;
+}
+
 /*Functions to build each field in the search criteria menu*/
 function createRowTextbox(id_prefix, label_text, value, tooltip_text){
 	var html = "<label for='" + id_prefix + "_text'>" + label_text + "</label>";
@@ -359,9 +412,9 @@ function radioSwitch(id){
 		var from_date = new Date(), to_date = new Date();
 
 		if(split_id[2] == "week")
-			to_date.setDate(to_date.getDate() + 7);
+			from_date.setDate(from_date.getDate() - 7);
 		if(split_id[2] == "month")
-			to_date.setMonth(to_date.getMonth() + 1);
+			from_date.setMonth(from_date.getMonth() - 1);
 		
 		var sibling_datepicker_fields = $('#' + id_prefix).find("input.datepicker:text");
 		
@@ -412,26 +465,113 @@ function getAnchorDetails(search_term, search_type){
 
 		html += "<div id='criteria_input'>";
 		
+		html += "<div class='row'>";
+		html += "<div class='two left'>";
+		html += "<div id='search_type'>";
+		html += getSearchTypeSelectorMenu();
+		html += "</div>";
+		html += "</div>";
+		if(search_type == "keyword"){
+			html += "<div class='two right'>";	
+			html += "<div style='margin:auto;'>";
+			html += createRowTextbox("keyword", "Keyword", search_term, "Edit the term you wish to search for.");
+			html += "</div>";
+			html += "</div>";
+		}
+		else if(search_type == "status"){
+			html += "<div class='two right'>";	
+			html += "<div style='margin:auto;'>";
+			html += createRowTextbox("confirmation_number", "Confirmation Number", "", "Type the filing confirmation number you wish to search for.");
+			html += "</div>";
+			html += "</div>";
+		}
+		html += "</div>";
+		
+		html += "<div class='row'>";
+		html += "<hr class='criteria_divider'>";
+		html += "</div>";
+		
+		if(search_type == "proceeding"){
+		
 			html += "<div class='row'>";
-			html += "<div class='two left'>";
-			html += "<div id='search_type'>";
-			html += getSearchTypeSelectorMenu();
-			html += "</div>";
-			html += "</div>";
-			
-			if(search_type == "keyword"){
-				html += "<div class='two right'>";	
-				html += "<div style='margin:auto;'>";
-				html += createRowTextbox("keyword", "Keyword", search_term, "Edit the term you wish to search for.");
+				html += "<div class='two left'>";
+				html += "<div class='cell two left'>";
+				html += createCellTextbox("proceeding_number", "Proceeding Number", "", "Enter the proceeding number you wish to search for.");
+				html += "</div>";
+				html += "<div class='cell two right'>";
+				html += createCellTextbox("bureau_number", "Bureau ID Number", "", "Enter the bureau id you wish to search for.");
 				html += "</div>";
 				html += "</div>";
-			}
-			
+				html += "<div class='two right'>";
+				html += "<div>";
+				html += createRowTextbox("proceeding_subject", "Subject", "", "Enter terms in the proceeding subject you wish to search for.");
+				html += "</div>";
+				html += "</div>";
 			html += "</div>";
-			
-			html += "<div class='row' style='height:30px; border:1px solid blue;'>";
-			html += "<hr  id='criteria_divider'></div>";
 
+			html += "<div class='row'>";
+				html += "<div class='two left'>";
+				html += "<div class='cell two left'>";
+				html += "<div style='margin-top:6px; margin-bottom:4px;'>";
+				html += createCellTextbox("filer_name", "Name of Party", "", "Enter the name you wish to search for.");
+				html += "</div>";
+				html += "<div>";
+				html += createCellTextbox("prepared_by", "Prepared By", "", "Enter the name you wish to search for.");
+				html += "<hr class='criteria_divider cell_divider'>";
+				html += "</div>";
+				html += "</div>";
+				html += "<div class='cell two right'>";
+				html += "<fieldset id='proceeding_status'><legend>Status</legend>";
+				html += createCheckbox("recent_activity", "Active in the past month?");
+				html += "<br>";
+				html += "<div id=proceeding_status_div>";
+				html += getProcStatusSelectorMenu();
+				html += "</div>";
+				html += "</fieldset>";
+				html += "</div>";
+				html += "</div>";	
+				html += "<div class='two right' style='position:relative;'>";
+				html += "<div class='cell two left'>";
+				html += "<fieldset id='date_created'><legend>Date Created</legend>";
+				html += createDateCheckbox("date_created");
+				html += "<div id='date_created_div'>";
+				html += createSingleDateField("date_created");
+				html += "</div>";
+				html += "</fieldset>";
+				html += "</div>";
+				html += "<div class='cell two right'>";
+				html += "<fieldset id='date_closed'><legend>Date Closed</legend>";
+				html += createDateCheckbox("date_closed");	
+				html += "<div id=date_closed_div>";
+				html += createSingleDateField("date_closed");
+				html += "</div>";
+				html += "</fieldset>";
+				html += "</div>";
+				html += "</div>";
+			html += "</div>";
+
+			html += "<div class='row'>";
+				html += "<div class='two left'>";
+				html += "<fieldset id='bureau_set'><legend>List of Bureaus</legend>";				
+				html += getBureauSelectorMenu();
+				html += "</fieldset>";
+				html += "</div>";
+				html += "<div class='two right'>";
+				html += "<fieldset id='date_created'><legend>Table Of Allotments</legend>";
+				html += "<div class='cell two left'>";
+				html += createCellTextbox("call_sign", "Call Sign", "", "Enter the call sign wish to search for.");
+				html += "</div>";
+				html += "<div class='cell two right'>";
+				html += createCellTextbox("broadcast_channel", "Channel", "", "Enter the broadcasting channel wish to search for.");
+				html += "</div>";
+				html += "<div style='clear:both;'>";
+				html += createRowTextbox("rule_section", "Rule Section", "", "Enter the rule section you wish to search for.");
+				html += "</div>";
+				html += "</fieldset>";
+				html += "</div>";
+			html += "</div>";
+		}
+		else if(search_type != "status"){
 			html += "<div class='row'>";
 			html += "<div class='two left'>";
 			html += "<div>";
@@ -447,7 +587,6 @@ function getAnchorDetails(search_term, search_type){
 			html += "</div>";
 			html += "</div>";			
 			html += "</div>";
-			
 			
 			html += "<div class='row'>";
 			html += "<div class='two left'>";
@@ -468,7 +607,6 @@ function getAnchorDetails(search_term, search_type){
 			html += "</div>";
 			html += "</div>";
 			
-			
 			html += "<div class='row'>";
 			html += "<div class='two left'>";
 			html += "<div class='cell two left'>";
@@ -488,22 +626,21 @@ function getAnchorDetails(search_term, search_type){
 			html += "</div>";
 			html += "</div>";
 			
-			
 			html += "<div class='row'>";
 			html += "<div class='two left' style='position:relative;'>";
 			html += "<div class='cell two left'>";
-			html += "<fieldset id='comment_posted'><legend>Date Posted</legend>";
-			html += createDateCheckbox("comment_posted");
-			html += "<div id='comment_posted_div'>";
-			html += createSingleDateField("comment_posted");
+			html += "<fieldset id='date_posted'><legend>Date Posted</legend>";
+			html += createDateCheckbox("date_posted");
+			html += "<div id='date_posted_div'>";
+			html += createSingleDateField("date_posted");
 			html += "</div>";
 			html += "</fieldset>";
 			html += "</div>";
 			html += "<div class='cell two right'>";
-			html += "<fieldset id='comment_received'><legend>Date Received</legend>";
-			html += createDateCheckbox("comment_received");	
-			html += "<div id=comment_received_div>";
-			html += createSingleDateField("comment_received");
+			html += "<fieldset id='date_received'><legend>Date Received</legend>";
+			html += createDateCheckbox("date_received");	
+			html += "<div id=date_received_div>";
+			html += createSingleDateField("date_received");
 			html += "</div>";
 			html += "</fieldset>";
 			html += "</div>";
@@ -525,37 +662,38 @@ function getAnchorDetails(search_term, search_type){
 			html += "</div>";
 			html += "<div class='two right'>";
 			html += "<div class='cell two left'>";
-			html += "<fieldset id='comment_period'><legend>Comment Period</legend>";
-			html += createDateCheckbox("comment_period", "checked");
-			html += "<div id='comment_period_div' class='date-div'>";
-			html += createMultiDateField("comment_period");
+			html += "<fieldset id='date_period'><legend>Comment Period</legend>";
+			html += createDateCheckbox("date_period", "checked");
+			html += "<div id='date_period_div' class='date-div'>";
+			html += createMultiDateField("date_period");
 			html += "</div>";
 			html += "<div class='date-radio-div'><label class='floating_label'>Due Next:</label><span class='left small_span'>";
-			html += createRadioOptions("comment_period", "week");
+			html += createRadioOptions("date_period", "week");
 			html += "</span>";
 			html += "<span class='left small_span'>";
-			html += createRadioOptions("comment_period", "month");
+			html += createRadioOptions("date_period", "month");
 			html += "</span>";
 			html += "</div>";
 			html += "</fieldset>";
 			html += "</div>";
 			html += "<div class='cell two right'>";
-			html += "<fieldset id='comment_reply'><legend>Comment Reply</legend>";
-			html += createDateCheckbox("comment_reply");
-			html += "<div id='comment_reply_div' class='date-div'>";
-			html += createSingleDateField("comment_reply");
+			html += "<fieldset id='date_reply'><legend>Comment Reply</legend>";
+			html += createDateCheckbox("date_reply");
+			html += "<div id='date_reply_div' class='date-div'>";
+			html += createSingleDateField("date_reply");
 			html += "</div>";
 			html += "<div class='date-radio-div'><label class='floating_label'>Due Next:</label><span class='left small_span'>";
-			html += createRadioOptions("comment_reply", "week");
+			html += createRadioOptions("date_reply", "week");
 			html += "</span>";
 			html += "<span class='left small_span'>";
-			html += createRadioOptions("comment_reply", "month");
+			html += createRadioOptions("date_reply", "month");
 			html += "</span>";
 			html += "</div>";
 			html += "</fieldset>";
 			html += "</div>";
 			html += "</div>";
 			html += "</div>";
+	}	
 		
 		html += "</br>";//end of criteria div
 		html += "</div>"; 
@@ -574,10 +712,15 @@ function switchAnchorDetails(id){
 	$.jStorage.set("searchTerm", input_term);
 	$.jStorage.set("searchType", input_type);
 
-	getAnchorDetails(input_term, input_type);
 	$("#criteria_details").empty().append(getAnchorDetails(input_term, input_type));
 	$('#' + id + ' option:selected').removeAttr('selected');
 	$('#' + id).find('option[value="' + input_type + '"]').attr("selected",true);
+	jq('.datepicker').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+5", closeText : "Close"}); 
+	
+	if(input_type == "status")
+		$('.ui-dialog').animate({height: 160}, 200);
+	else
+		$('.ui-dialog').animate({height: 450}, 200);
 }
 
 function getConfirmationDetails(id){
@@ -700,8 +843,8 @@ function clearForm(id){
 				field.value = "";
 		}
 		else if(field.type == "checkbox"){
-			//if the box is a comment date box
-			if (field.id.toLowerCase().indexOf("comment") != -1){
+			//if the box is a date box
+			if (field.id.toLowerCase().indexOf("date") != -1){
 				//if the box is checked and is not a date range box or if unchecked and is a date range box, reset
 				if((field.checked == true && field.id.toLowerCase().indexOf("period") == -1) ||(field.checked == false && field.id.toLowerCase().indexOf("period") != -1))
 					field.click();
@@ -724,37 +867,47 @@ function submitForm(id){
 	var id_prefix = id.substr(0, id.lastIndexOf("_"));
 	var form_inputs = $('#' + id_prefix).find('input[type="text"], input[type="checkbox"], input[type="radio"], input[type="file"], select');
 	var input_object = {};
-	
+
 	//gather search criteria items submitted in the query
 	$.each(form_inputs, function( index, field ) {
 		//console.log(field);
-		if(field.type == "text" && field.value != "")
+		if(field.type == "text" && field.value != "") //text boxes with values
 			input_object[field.id] = field.value;
-		else if(field.type == "checkbox" && field.id.indexOf("comment") == -1 && field.checked == true)
+		else if(field.type == "checkbox" && field.id.indexOf("date") == -1 && field.checked == true) //checked checkboxes
 			input_object[field.id] = field.checked;		
-		else if(field.type == "radio" && field.id.indexOf("address") != -1 && field.checked == true)
+		else if(field.type == "radio" && field.id.indexOf("address") != -1 && field.checked == true) //selected radio buttons
 			input_object[field.id] = field.checked;
-		else if(field.type == "file" && field.files.length > 0)
+		else if(field.type == "file" && field.files.length > 0) //uploaded files
 			input_object[field.id] = field.files[0];
-		else if(field.type == "select-one" && field.selectedIndex > 0)
+		else if(field.type == "select-one" && (field.selectedIndex > 0 || (field.id.indexOf("search_type") != -1 && field.selectedIndex > -1))) //single-select menus
 			input_object[field.id] = field.options[field.selectedIndex].text;
-		else if(field.type == "select-multiple" && field.options.length > 0){
+		else if(field.type == "select-multiple" && field.options.length > 0){ //multi-select menus
 			input_object[field.id] = [];
-			$.each(field.options, function (index, option){
-				input_object[field.id].push(option.value);
-			})
+			if(field.id.indexOf("proceedings") != -1){
+				$.each(field.options, function (index, option){
+					input_object[field.id].push(option.value);
+				})
+			}
+			else{
+				if(field.selectedIndex > -1){
+					$.each(field.selectedOptions, function (index, option){
+						input_object[field.id].push(option.text);
+					})
+				}
+			}
 		}
 	});
 	return input_object;
 }
 	
+var results_url = 'mock_data.json';	
 function criteriaSubmit(id){
-	
 	var criteria_object = submitForm(id);
 
 	//add new search criteria to the list
 	$("#criteria_view").empty();
 	var criteria_keys = Object.keys(criteria_object);
+	console.log(criteria_keys);
 	var criteria_length = criteria_keys.length;
 	
 	/*if the number of items in the search criteria is even, split into equal columns and rows, else add an
@@ -791,7 +944,9 @@ function criteriaSubmit(id){
 		$("#criteria_view").html(criteria_html);	
 	}
 	
-	closeDialog("criteria_details");	
+	closeDialog("criteria_details");
+	displayResults(results_url);
+	//console.log(criteria_html);
 		
 }
 
@@ -799,5 +954,99 @@ function confirmationSubmit(){
 
 	location.href="submit-confirmed-filing.html";
 
+}
+
+function displayResults(results_url) {
+	var start_time = new Date().getTime();
+	var max_recs = getMaxRecords();
+	var check_time = getCheckTime();
+	
+	var results = ajaxCall(results_url, 'json', false, true);
+	//console.log(results.length);
+
+	if(results.length >= max_recs){
+		$('#warning').empty().append("<label>** Only displaying " + max_recs + " of 600 records.  Please refine your search.</label>");
+	}
+	
+	if(results.length != 0){								
+		dojo.ready(function(){
+			//console.log(results);
+			jsonHandler(results);
+			$('#no_results').hide();
+			if ($('#results').is(":hidden")){
+				$('#results').show();
+				dijit.byId("resultsGrid")._refresh();
+				dijit.byId("filterGrid")._refresh();
+			}
+			viewer_displayed = true;
+			/*filtering();*/
+		});
+		
+		dojo.addOnLoad(function() {
+		   $('#criteria').height($('#activity').height() - 1);
+		   $('#criteria_div').height($('#criteria').height() - 16);
+		});
+	}
+	else if(results.metadata.totalCount == 0){	
+		$('#no_results').empty().append('<label>No results found.</label>');
+	}
+
+	
+	/*$.getJSON(results_url, function(response) {
+		console.log(" is this working");
+		task_json=self.setInterval(function() {
+			var timer = new Date().getTime() - start_time;
+			console.log(timer + " secs");
+			if(timer > getWaitTime()){
+				self.clearInterval(task_json); //stops interval
+				$('#no_results').empty().append('<label>Request timeout: Taking too long to retrieve results.</label>');
+				return; //breaks loop and returns message
+			}
+			
+			// Results logic start.
+			
+			$.getJSON(results_url, function(response) {
+				console.log(response);
+				if(response){
+					if(response.metadata.queryStatus == "DONE"){
+						self.clearInterval(task_json);
+						if(response.metadata.totalCount >= max_recs){
+							$('#warning').empty().append("<label>** Only displaying " + max_recs + " of " + response.metadata.totalCount + " records.  Please refine your search.</label>");
+						}
+						if(response.metadata.totalCount != 0){								
+							dojo.ready(function(){
+								jsonHandler(response);
+								$('#no_results').hide();
+								if ($('#results').is(":hidden")){
+									$('#results').show();
+									dijit.byId("resultsGrid")._refresh();
+								}
+								viewer_displayed = true;
+								filtering();
+							});
+							
+							dojo.addOnLoad(function() {
+							   dojo.connect(window, "onresize", resizeGrid("resultsGrid");
+							});
+						}
+						else if(response.metadata.totalCount == 0){	
+							$('#no_results').empty().append('<label>No results found.</label>');
+						}
+					}
+					else{
+						console.log("not done querying: " + timer + " secs");
+					}
+				}
+			})
+			.fail(function() {
+				$('#no_results').empty().append('<label>This query could not be submitted.</label>');
+				self.clearInterval(task_json);
+			});
+			
+			// Results logic end.
+			
+		},check_time); 	
+	
+	});	*/
 }
 

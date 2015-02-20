@@ -50,6 +50,18 @@ th {
     width: 157px;
 }
 
+#date_search_image{
+    background: url("../images/web-development-icons2.jpg") repeat scroll -468px -433px / 546px 916px rgba(0, 0, 0, 0);
+    border: 1px solid #1d4d66 !important;
+    color: blue !important;
+    font-weight: bold !important;
+    height: 30px;
+    margin: -0.6em 0 0;
+    padding: 1px;
+    position: absolute;
+    right: 0;
+    width: 1.8em;
+}
 
 #actionbar {
     width: 1200px !important;
@@ -58,21 +70,42 @@ th {
 #actionbar .searchbox {
     background: none repeat scroll 0 0 #e6e6e6 !important;
     float: left;
-    margin: 15px 15px 0 5px;
+    margin: 15px 15px 0 0;
     width: 200px !important;
+}
+
+
+#actionbar .datebox {
+    background: none repeat scroll 0 0 #e6e6e6 !important;
+    float: left;
+	margin: 15px 15px 0 1px;
+    width: 104px !important;
+}
+
+/*#actionbar .datebox {*/
+
+#search_date_form{
+    background: url("../images/web-development-icons2.jpg") repeat scroll -438px -377px / 512px 799px rgba(0, 0, 0, 0);
+	border-radius: 2px !important;
+    -moz-border-radius: 2px !important;
+    -webkit-border-radius: 2px !important;
+    -khtml-border-radius: 2px !important;
+    float: left;
+	height: 2.62em;
+    margin: 16px 15px 0 1px;
+    width: 26px !important;
 }
 
 #actionbar .actioncenter {
     border: 10px solid transparent;
     position: absolute;
-
     top: 5px;
 }
 #actionbar .filing {
-    right: 464px;
+    right: 345px;
 }
 #actionbar .lookup {
-    right: 234px;
+    right: 116px;
 	margin-right: 10px; /*new*/
 }
 
@@ -140,7 +173,7 @@ th {
     color: #fff;
     display: block;
     font-weight: bold;
-	margin-right: 10px;/**/
+	margin-right: 22px;/**/
     line-height: 30px;
     padding-left: 35px;
     text-decoration: none;
@@ -165,7 +198,7 @@ th {
     color: #fff;
     display: block;
     font-weight: bold;
-	margin-right: 10px;/**/
+	margin-right: 20px;/**/
     line-height: 30px;
     padding-left: 35px;
     text-decoration: none;
@@ -243,9 +276,10 @@ th {
     padding-top: 2px;
 }
 
-#actionbar .form-item .form-text {
+#actionbar .form-item .form-text:not(#date_search_input) {
     width: 155px !important;
 }
+
 
 #actionbar .odd {
     background-color: #274866;
@@ -276,6 +310,11 @@ th {
     position: absolute;
     width: 100%;
     z-index: 4;
+}
+
+#date_search_input {
+    width: 68px !important;
+	padding: 7px 4px 4px !important;
 }
 
 #maincontent {
@@ -346,8 +385,13 @@ th {
     font-style: normal !important;
     line-height: 1.4em !important;
     margin-top: 0;
-    padding: 25px 0 20px 150px;
+    padding: 20px 0 20px 150px;
 }
+
+#footer #metaLinks ul{
+	padding: 20px 0 20px 30px !important;
+}
+
 #footer #footerNavigation {
     background: url("../images/footer_bg_links.png") repeat-x scroll 0 0 #060008;
     clear: both;

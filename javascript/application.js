@@ -410,6 +410,10 @@ $(document).ready(function() {
 	$("#search_term_input").keyup(function(){
 		$.jStorage.set("searchTerm", $("#search_term_input").val());
 	});
+	
+	/*$("#search_date_input").submit(function(){
+		$.jStorage.set("searchDate", $("#search_date_input").val());
+	});*/
 
 	// Add unique id's to each footer menu
 	$('#footerNavigation .widgetContent > .menu > li.expanded').each(function(i) {

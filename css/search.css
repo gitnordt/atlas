@@ -40,12 +40,14 @@
 #criteria{
 	width:33%;
 	float:left;
+	min-height: 68px;
 }
 
 #activity{
 	width:64%;
 	float:left;
 	margin: auto;
+	min-height: 68px;
 }
 
 #criteria_input{
@@ -86,14 +88,18 @@
 	font-size: 95%;
 }
 
-#criteria_divider{
-    border-color: -moz-use-text-color -moz-use-text-color black;
+.criteria_divider{
+    border-color: -moz-use-text-color -moz-use-text-color #555;
     border-style: none none solid;
     border-width: medium medium 1.5px;
     height: 1px;
     margin-left: 0;
     padding: 0;
     width: 64.8em;
+}
+
+.cell_divider{
+    width: 98% !important;
 }
 
 legend{
