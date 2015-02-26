@@ -12,15 +12,15 @@
 <meta name="viewport" content="width=device-width, minimum-scale=0.5, user-scalable=yes, target-densitydpi=device-dpi"/>
  	
 <link type="text/css" rel="stylesheet" media="all" href="css/content.css" />
-<link type="text/css" rel="stylesheet" media="all" href="css/content-extended.css" />
 <link type="text/css" rel="stylesheet" media="all" href="javascript/jquery-ui-1.11.2/jquery-ui.min.css" />
+<link type="text/css" rel="stylesheet" media="all" href="css/content-extended.css" />
 <link type="text/css" rel="stylesheet" media="print" href="css/frame.css" />
 <link type="text/css" rel="stylesheet" href="css/shCore.css"/>
 <link type="text/css" rel="stylesheet" href="css/shThemeDefault.css" />
 <link type="text/css" rel="stylesheet" media="all" href="css/search.css" />
 <link type="text/css" rel="stylesheet" media="all" href="javascript/dojo-1.10.2/dijit/themes/claro/claro.css" />
 <link type="text/css" rel="stylesheet" media="all" href="javascript/dojo-1.10.2/dojox/grid/enhanced/resources/claro/EnhancedGrid.css" />
-<link type="text/css" rel="stylesheet" media="all" href="javascript/dojo-1.10.2/dojox/grid/enhanced/resources/EnhancedGrid_rtl.css" />
+
 
 <!--<script>dojoConfig = {parseOnLoad: true}</script>-->
 <script type="text/javascript" src="javascript/jquery-2.1.1.min.js"></script>
@@ -37,6 +37,7 @@
 <script type="text/javascript" src="javascript/toolbox.js"></script>
 <script type="text/javascript" src="javascript/results_grid.js"></script>
 <script type='text/javascript' src='javascript/config.js'></script>
+
 </head>
 
 <body style="background:black;" class="nojs not-front not-logged-in page-node node-type-page no-sidebars claro">
@@ -121,17 +122,28 @@ require(["dijit/Tooltip", "dojo/domReady!"]);
 $(document).ready(function() {
 	var search_term = $.jStorage.get("searchTerm");
 	var search_type = $.jStorage.get("searchType");
+
+	quickSearchSwitch(search_type);
 	window.setTimeout(hovertipInit, 1);
 	
 	var auto_open = true;
 	
-	if(!search_type || search_term){
-		search_type = "keyword";
+
+	if(!search_type){
+		search_type = "term";
 		$.jStorage.set("searchType", search_type);
-		$("#criteria_view").html("<p>Keyword: <br><span class='value-cool'>" + search_term + "</span></p>");
+	}
+	
+	if(search_term){
+		var html = createCriteriaColumns("Search Type", search_type.toUpperCase(), "left", false);
+		html += createCriteriaColumns(toCamelCase(search_type), search_term, "right", true);
+		
+		$("#criteria_view").html(html);
 		$("#search_term_input").val(search_term);
 		auto_open = false;
 	}
+	else
+		search_term = "";
 
 	var viewer_displayed = false;
 	var scrollHandler = function(){
@@ -192,7 +204,10 @@ $(document).ready(function() {
 				}
 			}]
 		});	
+		
 		$( "#edit-anchor" ).click(function() {jq( "#criteria_details" ).dialog( "open" );})
+		
+
 	});
 
 
@@ -211,8 +226,8 @@ $(document).ready(function() {
 	}
 	
 	$('#warning').empty();
-	console.log(search_type);
-	if(search_type == "keyword"){
+	//console.log(search_type);
+	if((search_type == "term" && search_term) || search_type == "date"){
 		$('#activity p').empty();
 		$("#activity").append("<p><span class='value-cool'>Loading...<br>&nbsp;</span></p>");
 		displayResults(results_url);
@@ -250,8 +265,6 @@ $(document).ready(function() {
 		}
 		
 		intervalStart();
-		
-		
 	}
 });
 

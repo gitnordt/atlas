@@ -17,6 +17,10 @@ th {
     padding-right: 4px !important;
 }
 
+#language {
+    margin-right: 0.4em;
+}
+
 /*new*/
 .group:after {
     width: 100% !important;
@@ -70,7 +74,7 @@ th {
 #actionbar .searchbox {
     background: none repeat scroll 0 0 #e6e6e6 !important;
     float: left;
-    margin: 15px 15px 0 0;
+    margin: 15px 15px 0 2px;
     width: 200px !important;
 }
 
@@ -102,11 +106,11 @@ th {
     top: 5px;
 }
 #actionbar .filing {
-    right: 345px;
+    right: 378px;
+    width: 205px !important;
 }
 #actionbar .lookup {
-    right: 116px;
-	margin-right: 10px; /*new*/
+	width: 205px !important;
 }
 
 #actionbar .links  {
@@ -672,4 +676,90 @@ h1 .shareTools li a.print {
 
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
 	font-family: Verdana,Arial,sans-serif !important;
+}
+
+
+
+
+.quickbox .ui-state-default .ui-icon {
+    background: url("../javascript/jquery-ui-1.11.2/images/ui-icons_3d80b3_256x240.png") repeat scroll -445px -418px / 355px 388px rgba(0, 0, 0, 0) !important
+}
+
+/*********************************************************/
+/*********************************************************/
+/*********************************************************/
+/*********************************************************/
+
+/*.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus,
+.ui-selectmenu-item-icon */
+/*.quickbox .ui-state-default .ui-icon .calendar_icon {
+    background: url("../images/web-development-icons2.jpg") repeat scroll -468px -433px / 546px 916px rgba(0, 0, 0, 0) !important;
+    font-weight: bold;
+    height: 30px;
+    margin: -0.6em 0 0;
+    padding: 1px;
+    position: absolute;
+    right: 0;
+    width: 1.8em;
+}*/
+
+ /* select with custom icons */
+/*.quickbox  .ui-selectmenu-menu .ui-menu.customicons .ui-menu-item {
+padding: 0.5em 0 0.5em 3em;
+}
+.quickbox .ui-selectmenu-menu .ui-menu.customicons .ui-menu-item .ui-icon {
+height: 24px;
+width: 24px;
+top: 0.1em;
+}
+.ui-icon.video {
+background: url("../images/web-development-icons2.jpg") repeat scroll -468px -433px / 546px 916px rgba(0, 0, 0, 0) !important;
+}
+.ui-icon.podcast {
+background: url("../images/web-development-icons2.jpg") repeat scroll -468px -433px / 546px 916px rgba(0, 0, 0, 0) !important;
+}*/
+
+.quickbox .ui-corner-all, .quickbox .ui-corner-top{
+	border-top-right-radius: 0 !important;
+	border-top-left-radius: 0 !important;
+}
+/*
+.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+   border-top-right-radius: 1px !important;
+}
+.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+    border-top-right-radius: 1px !important;
+}*/
+
+/* select with custom icons */
+/*.quickbox .ui-selectmenu-menu .ui-menu.customicons .ui-menu-item {
+	padding: 0.5em 0 0.5em 3em;
+}
+.quickbox .ui-selectmenu-menu .ui-menu.customicons .ui-menu-item .ui-icon {
+	height: 25px;
+	width: 25px;
+	top: 0.1em;
+}*/
+.quickbox .ui-widget{
+    font: 96% Verdana,Arial,Helvetica,sans-serif !important;
+}
+#quick_search_selector-menu {
+    font: 83% Verdana,Arial,Helvetica,sans-serif !important;
+}
+
+.quickbox .ui-selectmenu-button span.ui-icon{
+	right: 4.4em !important;
+}
+.quickbox .ui-selectmenu-button span.ui-selectmenu-text{
+	padding: 0.6em 0.6em 0.58em 2.2em !important;
+}
+
+@-moz-document url-prefix() { 
+  .quickbox .ui-selectmenu-button span.ui-selectmenu-text {
+     padding: 0.6em 0.6em 0.66em 2.2em !important;
+  }
+}
+
+#quick_search_selector-button{
+	width: 6em !important;
 }

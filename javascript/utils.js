@@ -55,7 +55,6 @@ function isInArray(value, array) {
 
 function isIE() {
 	var ua = window.navigator.userAgent;
-	console.log(ua);
 	var msie = ua.indexOf("MSIE ");
 	//var gecko = ua.indexOf("like Gecko");
 	//check for ie10 and below or ie. If IE browser, return true. If another browser, return false

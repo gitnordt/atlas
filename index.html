@@ -20,9 +20,11 @@
 <title>Electronic Comment Filing System | FCC.gov</title>
 <meta name="viewport" content="width=device-width, minimum-scale=0.5, user-scalable=yes, target-densitydpi=device-dpi"/> 	
 <link type="text/css" rel="stylesheet" media="all" href="css/content.css" />
-<link type="text/css" rel="stylesheet" media="all" href="css/content-extended.css" />
 <link type="text/css" rel="stylesheet" media="all" href="javascript/jquery-ui-1.11.2/jquery-ui.min.css" />
+<link type="text/css" rel="stylesheet" media="all" href="css/content-extended.css" />
 <link type="text/css" rel="stylesheet" media="print" href="css/frame.css" />
+<link href="css/shCore.css" rel="stylesheet" type="text/css" />
+<link href="css/shThemeDefault.css" rel="stylesheet" type="text/css" />
 <!--<script type="text/javascript" src="javascript/jquery-drupal.js"></script>
 <script type="text/javascript" src="javascript/application.js"></script>
 <script type="text/javascript" src="javascript/page_layout.js"></script>
@@ -41,13 +43,6 @@
 <script type="text/javascript" src="javascript/equalheight.js"></script>
 <script type="text/javascript" src="javascript/shCore.js"></script>
 <script type="text/javascript" src="javascript/shBrushXml.js"></script>
-
-
-
-<link href="css/shCore.css" rel="stylesheet" type="text/css" />
-<link href="css/shThemeDefault.css" rel="stylesheet" type="text/css" />
-
-
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
 jQuery.extend(Drupal.settings, { "basePath": "/" });
@@ -60,22 +55,10 @@ $(document).ready(function() {
 	//$("body").load("page_layout.html"); 
 	window.setTimeout(hovertipInit, 1);
 	$.jStorage.flush();
-	$("#search_theme_form").submit(function(e)
-	{
-		$.jStorage.set("searchTerm", $('#' + this.id).find('#search_term_input').val());
-	});
 	
-	jq('#date_search_input').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+5", closeText : "Close"}); 
+	//jq('#search_term_input').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+5", closeText : "Close"}); 
 	
 });
-
-function searchType(type){
-	var real_type = type.split("_")[1];
-	$.jStorage.set("searchType", real_type);
-	window.location.href = 'search.html';
-}
-	
-	
 
 //--><!]]>
 </script>
@@ -92,7 +75,7 @@ function searchType(type){
 			<div id="content-div">
 				<a name="startcontent"></a>
 				<div class="breadcrumb"><a href="http://www.fcc.gov/">FCC</a> / <a href="" class="active">ECFS</a></div>
-				<h1>Welcome to the Electronic Comment Filing System	
+				<h1>Welcome to ECFS	
 					<ul class="shareTools">
 						<li><a href="/print/node/3895" target="_blank" class="print">Print</a></li>
 						<li><a href="mailto:?subject=%53%65%6e%64%20%55%73%20%59%6f%75%72%20%43%6f%6d%6d%65%6e%74%73&body=http://www.fcc.gov/comments" class="email">Email</a></li>
@@ -105,7 +88,8 @@ function searchType(type){
 							<div id="node-3895" class="node clear-block">
 								<div class="meta"></div>
 								<div class="content">
-									<p> Welcome to the Federal Communications Commission's Electronic Comment Filing System (ECFS). ECFS serves as the repository for official records in the FCC's docketed proceedings and rulemakings from 1992 to the present. Consumers can research, retrieve, view, and print any document in the system, including earlier non-electronic FCC documents that have been scanned into the system. </p>
+									<h4 class="mainHeader">The Electronic Comment Filing System </h4>
+									<p> The Federal Communications Commission's Electronic Comment Filing System (ECFS) serves as the repository for official records in the FCC's docketed proceedings and rulemakings from 1992 to the present. Consumers can research, retrieve, view, and print any document in the system, including earlier non-electronic FCC documents that have been scanned into the system. </p>
 									<p> ECFS includes the following features. </p>
 									<ul>
 										<li>
@@ -138,12 +122,12 @@ function searchType(type){
 										Please also check out the <a href="userManual/ecfsmanual.jsp">ECFS Online Manual</a> for more information on all of the available
 										features.
 									</p>
-									<h2 class="mainHeader">Feedback</h2>
+									<h4 class="mainHeader">Feedback</h4>
 									Please contact us if you have any questions, comments, or suggestions about the new ECFS.
 									<ul>
 										<li>Phone: 202-418-0193</li>
 										<li>Email: <a href="mailto:ecfshelp@fcc.gov">ecfshelp@fcc.gov</a></li>
-										<li>Please do not email comments directly to ECFS Help - to file a comment in a docket, click on "Submit a Filing(Expert)" or "Submit a Filing (Express)" in the upper left hand corner of the screen.</li>
+										<li>Please do not email comments directly to ECFS Help - to file a comment in a docket, click on "Submit a Filing(Expert)" or "Submit a Filing (Express).</li>
 									</ul>								
 								</div>
 								<p></p>

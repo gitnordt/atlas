@@ -385,6 +385,47 @@ jQuery.expr[':'].contains = function(a, i, m) {
 	  .indexOf(m[3].toUpperCase()) >= 0;
 };
 
+function searchType(type){
+	var real_type = type.split("_")[1];
+	$.jStorage.set("searchType", real_type);
+	window.location.href = 'search.html';
+}
+
+function quickSearchSwitch(searchType){
+	var quick_html = "";
+
+	if(searchType == "term"){
+		quick_html = "<label for='search_term_input'>Search<\/label><input type='text' maxlength='128' id='search_term_input' size='15' value='' title='Enter the term you wish to search for.' class='form-text' />";
+
+		$("#search_term_input").keyup(function(){
+			$("#edit-search-theme-form-wrapper").find("label").remove();
+			$.jStorage.set("searchTerm", $("#search_term_input").val());
+		});
+	}
+	else if(searchType == "date"){		
+		quick_html = "<label for='search_term_input'>Search<\/label><input type='text' maxlength='50' class='datepicker form-text' id='search_term_input' value=''/>";
+	}
+	
+	if(quick_html){
+		$('#quick_search_selector').find('option[value="' + searchType + '"]').attr("selected", true);
+		$("#quick_search_selector-button").find('.ui-selectmenu-text').html(toCamelCase(searchType));
+		$( "#searchbox-switch-type .form-item").html(quick_html);
+	}
+	
+	if($('#search_term_input').hasClass("datepicker")){
+		jq('#search_term_input').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+5", closeText : "Close", 
+		onSelect: function(){
+			$("#edit-search-theme-form-wrapper").find("label").remove();
+			$.jStorage.set("searchType", "date");
+			$.jStorage.set("searchTerm", $(this).val());
+		}
+		});
+	}
+	else{
+		jq('#search_term_input').datepicker( "destroy" );
+		$.jStorage.set("searchType", searchType);
+	}
+}
 
 /**
  * Initiailization
@@ -406,15 +447,54 @@ $(document).ready(function() {
 	$("#stickywrapper").remove();
 	$("#actionbar").wrap('<div id="stickynav" />');
 	$("#stickynav").prepend("<div id='stickywrapper'></div>");
-	
-	$("#search_term_input").keyup(function(){
-		$.jStorage.set("searchTerm", $("#search_term_input").val());
+
+	/***********************************************/	
+	$(function() {
+		jq.widget("custom.iconselectmenu", jq.ui.selectmenu, {
+			_renderItem: function( ul, item ) {
+				var li = jq( "<li>", { text: item.label } );
+
+				if ( item.disabled ) {
+					li.addClass( "ui-state-disabled" );
+				}
+
+				jq( "<span>", {
+					style: item.element.attr( "data-style" ),
+					"class": "ui-icon " + item.element.attr( "data-class" )
+				})
+					.appendTo( li );
+
+				return li.appendTo( ul );
+			}
+		});
+
+		jq( "#quick_search_selector" )
+			.iconselectmenu()
+			.iconselectmenu( "menuWidget" )
+				.addClass( "ui-menu-icons" );	
 	});
 	
-	/*$("#search_date_input").submit(function(){
-		$.jStorage.set("searchDate", $("#search_date_input").val());
-	});*/
+	/***********************************************/
 
+	$("#search_theme_form").submit(function(e){
+		$.jStorage.set("searchTerm", $('#' + this.id).find('#search_term_input').val());
+	});
+	
+	var set_type = $.jStorage.get("searchType");
+	if(set_type)
+		quickSearchSwitch(set_type);
+	else
+		quickSearchSwitch("term");
+
+	$("#quick_search_selector-menu").click(function(){
+		var search_type = $('#quick_search_selector').val();
+		quickSearchSwitch(search_type);
+	});
+
+
+	/***********************************************/
+	
+	
 	// Add unique id's to each footer menu
 	$('#footerNavigation .widgetContent > .menu > li.expanded').each(function(i) {
 		$(this).attr('id', 'footer_nav_item_' + i);
@@ -509,7 +589,7 @@ $(document).ready(function() {
 	$('.node').prepend('<ul class="translations-list links inline"></ul>');
 	$('.translation-link').each(function(i,link){
 		$link = $(link);
-		console.log($link.parent().html())
+		//console.log($link.parent().html())
 		$($link.parent()).appendTo('.translations-list');
 	});
 

@@ -229,8 +229,9 @@ function getSearchTypeSelectorMenu(){
 		search_type_selector_menu += "<label for='search_type_selector' > Search Type</label><select class='selector_cell search_selector' id='search_type_selector' onchange='switchAnchorDetails(this.id);'>";
 		search_type_selector_menu += "<option value='filing'>FILING</option>";
 		search_type_selector_menu += "<option value='status'>FILING STATUS</option>";
-		search_type_selector_menu += "<option value='keyword'>KEYWORD</option>";
+		search_type_selector_menu += "<option value='date'>DATE</option>";
 		search_type_selector_menu += "<option value='proceeding'>PROCEEDING</option>";
+		search_type_selector_menu += "<option value='term'>TERM</option>";
 		search_type_selector_menu += "</select>";
 
 		return search_type_selector_menu;
@@ -299,6 +300,12 @@ function createRowTextbox(id_prefix, label_text, value, tooltip_text){
 function createCellTextbox(id_prefix, label_text, value, tooltip_text){
 	var html = "<label for='" + id_prefix + "_text'>" + label_text + "</label>";
 	html += "<input type='text' maxlength='128' id='"+ id_prefix +"_text' class='cell_textbox' value='" + value + "' title='"+ tooltip_text +"'/>";
+	return html;
+}
+
+function createDateTextbox(id_prefix, label_text, value, tooltip_text){
+	var html = "<label for='" + id_prefix + "_text'>" + label_text + "</label>";
+	html += "<input type='text' maxlength='50' class='datepicker cell_textbox' id='"+ id_prefix +"_text' value='" + value + "' title='"+ tooltip_text +"'/>";
 	return html;
 }
 
@@ -471,10 +478,17 @@ function getAnchorDetails(search_term, search_type){
 		html += getSearchTypeSelectorMenu();
 		html += "</div>";
 		html += "</div>";
-		if(search_type == "keyword"){
+		if(search_type == "term"){
 			html += "<div class='two right'>";	
 			html += "<div style='margin:auto;'>";
-			html += createRowTextbox("keyword", "Keyword", search_term, "Edit the term you wish to search for.");
+			html += createRowTextbox(search_type, toCamelCase(search_type), search_term, "Edit the term you wish to search for.");
+			html += "</div>";
+			html += "</div>";
+		}		
+		else if(search_type == "date"){
+			html += "<div class='two right'>";	
+			html += "<div style='margin:auto;'>";
+			html += createDateTextbox(search_type, toCamelCase(search_type), search_term, "Select the date you wish to search for.");
 			html += "</div>";
 			html += "</div>";
 		}
@@ -571,7 +585,7 @@ function getAnchorDetails(search_term, search_type){
 				html += "</div>";
 			html += "</div>";
 		}
-		else if(search_type != "status"){
+		else if(search_type != "status" && search_type != "date"){
 			html += "<div class='row'>";
 			html += "<div class='two left'>";
 			html += "<div>";
@@ -717,7 +731,7 @@ function switchAnchorDetails(id){
 	$('#' + id).find('option[value="' + input_type + '"]').attr("selected",true);
 	jq('.datepicker').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+5", closeText : "Close"}); 
 	
-	if(input_type == "status")
+	if(input_type == "status" || input_type == "date")
 		$('.ui-dialog').animate({height: 160}, 200);
 	else
 		$('.ui-dialog').animate({height: 450}, 200);
@@ -767,6 +781,7 @@ function getConfirmationDetails(id){
 		
 		return html;
 }
+
 
 function closeDialog(id){
 	var id_prefix = id.substr(0, id.lastIndexOf("_"));
@@ -907,7 +922,7 @@ function criteriaSubmit(id){
 	//add new search criteria to the list
 	$("#criteria_view").empty();
 	var criteria_keys = Object.keys(criteria_object);
-	console.log(criteria_keys);
+	//console.log(criteria_keys);
 	var criteria_length = criteria_keys.length;
 	
 	/*if the number of items in the search criteria is even, split into equal columns and rows, else add an
@@ -984,7 +999,7 @@ function displayResults(results_url) {
 		
 		dojo.addOnLoad(function() {
 		   $('#criteria').height($('#activity').height() - 1);
-		   $('#criteria_div').height($('#criteria').height() - 16);
+		   $('#criteria_div').height($('#criteria').height() - 21);
 		});
 	}
 	else if(results.metadata.totalCount == 0){	
@@ -993,7 +1008,6 @@ function displayResults(results_url) {
 
 	
 	/*$.getJSON(results_url, function(response) {
-		console.log(" is this working");
 		task_json=self.setInterval(function() {
 			var timer = new Date().getTime() - start_time;
 			console.log(timer + " secs");
@@ -1034,7 +1048,7 @@ function displayResults(results_url) {
 						}
 					}
 					else{
-						console.log("not done querying: " + timer + " secs");
+						console.log("not done querying: " + timer + "+ timer + " secs");
 					}
 				}
 			})
