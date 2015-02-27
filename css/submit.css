@@ -89,7 +89,7 @@ fieldset label{
 	word-wrap: break-word;
 }
 
-select{
+.content-container select{
 	width: 92%;
 	clear: left; 
 	background: #fff;

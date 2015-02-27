@@ -22,7 +22,6 @@
 <link type="text/css" rel="stylesheet" media="all" href="javascript/dojo-1.10.2/dojox/grid/enhanced/resources/claro/EnhancedGrid.css" />
 
 
-<!--<script>dojoConfig = {parseOnLoad: true}</script>-->
 <script type="text/javascript" src="javascript/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="javascript/jquery-ui-1.11.2/jquery-ui.js"></script>
 <script type="text/javascript" src="javascript/jquery-drupal.js"></script>
@@ -117,7 +116,6 @@
 jQuery.extend(Drupal.settings, { "basePath": "/" });
 </script>
 <script type="text/javascript">
-require(["dijit/Tooltip", "dojo/domReady!"]);
 
 $(document).ready(function() {
 	var search_term = $.jStorage.get("searchTerm");
@@ -268,11 +266,13 @@ $(document).ready(function() {
 	}
 });
 
-require(["dijit/Tooltip", "dojo/domReady!"], function(Tooltip){
-	new Tooltip({
-		id: "activity_tooltip",
-		connectId: "info-anchor",
-		label: "<legend>Details:</legend><p class='paragraph-style'>Displayed are the proceeding numbers, submission types, and states<br>with the highest volume of ECFS submissions associated with your<br>current search criteria. Also displayed are the totals for brief comments. <br>Clicking on a link will filter the results table below.</p>"
+dojo.addOnLoad(function(){
+	require(["dijit/Tooltip", "dojo/domReady!"], function(Tooltip){
+		new Tooltip({
+			id: "activity_tooltip",
+			connectId: "info-anchor",
+			label: "<legend>Details:</legend><p class='paragraph-style'>Displayed are the proceeding numbers, submission types, and states<br>with the highest volume of ECFS submissions associated with your<br>current search criteria. Also displayed are the totals for brief comments. <br>Clicking on a link will filter the results table below.</p>"
+		});
 	});
 });
 

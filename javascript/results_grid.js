@@ -1,7 +1,9 @@
-dojo.require("dojox.grid.EnhancedGrid");
-dojo.require("dojox.grid.enhanced.plugins.Pagination");
-dojo.require("dojo.data.ItemFileWriteStore");
-dojo.require("dojox.grid.enhanced.plugins.Filter");
+dojo.addOnLoad(function(){
+	dojo.require("dojox.grid.EnhancedGrid");
+	dojo.require("dojox.grid.enhanced.plugins.Pagination");
+	dojo.require("dojo.data.ItemFileWriteStore");
+	dojo.require("dojox.grid.enhanced.plugins.Filter");
+});
 
 var results_id = "resultsGrid";
 var filter_id = "filterGrid";

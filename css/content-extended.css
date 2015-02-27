@@ -581,6 +581,13 @@ h1 .shareTools li a.print {
 	z-index: 1100 !important;
 }
 
+.ui-datepicker select{
+	padding: 3px !important;
+}
+.ui-datepicker .ui-datepicker-title select {
+	font-size: .9em !important;
+}
+
 .ui-corner-all {
     border-radius: 0 !important;
 }
