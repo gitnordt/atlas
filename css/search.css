@@ -40,14 +40,14 @@
 #criteria{
 	width:33%;
 	float:left;
-	min-height: 68px;
+	min-height: 95px;
 }
 
 #activity{
 	width:64%;
 	float:left;
 	margin: auto;
-	min-height: 68px;
+	min-height: 95px;
 }
 
 #criteria_input{
@@ -341,6 +341,7 @@ margin: 4em 0 1em 0 !important;
 	margin-top: 1.5em; 
 	margin-bottom: 1.5em; 
 	line-height: 1.5em;
+	white-space: normal;
 }
 #dojo_grid blockquote { 
 	font-size: 0.916em; 

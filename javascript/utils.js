@@ -233,3 +233,27 @@ function getUrlParams(param_name)
        }
        return "";
 }
+
+function hasLowerCase(str) {
+    if(str.toUpperCase() != str) {
+        return true;
+    }
+    return false;
+}
+
+function hasUpperCase(str) {
+    if(str.toLowerCase() != str) {
+        return true;
+    }
+    return false;
+}
+
+function findUpperCaseLetters(str) {
+	var uc = [];
+	for(x=0;x<str.length;x++){
+		if(str.charAt(x) >= 'A' && str.charAt(x) <= 'Z')
+			uc.push(str.indexOf(str.charAt(x)));
+	}
+	
+	return uc;
+}

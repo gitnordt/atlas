@@ -15,7 +15,25 @@ function cleanHeader(header){
 	var newHeader = "";
 	if(header.indexOf("Totals") == 1)
 		header = header.substring(1, header.length);
-	newHeader = header.split("_").join(" ").replace("$", " - ").toUpperCase();
+	else if(hasUpperCase(header)){
+		var upperLetters = findUpperCaseLetters(header);
+		console.log(header);
+		console.log(upperLetters);
+		var concat = header;
+		for(var c=0;c<upperLetters.length;c++){
+			if(upperLetters[c] != 0){
+				if(upperLetters[c+1]){
+					upperLetters[c+1] = upperLetters[c+1] + 1;
+					console.log(upperLetters);
+				}
+				concat = concat.substring(0, upperLetters[c]) + "_" + concat.substring(upperLetters[c], concat.length);	
+			}
+		}
+		console.log(concat);
+		header = concat;
+	}
+		
+	newHeader = header.replace("$", " - ").toUpperCase().replace("_CD", "_CODE").replace("_RCPT", "_RECEIPT").split("_").join(" ");
 	
 	return newHeader;		
 }
@@ -32,6 +50,9 @@ function toggle(inIndex, inShow, grid) {
 }
 
 function addLinks(value, inRowIndex, inItem){
+ console.log(value);
+ console.log(inRowIndex);
+ console.log(inItem);
 
   if(value)
 	return '<span class="pointer value-pop" onclick="filterResults(\'' + value + '\', \'' + inItem.field + '\')" >' + value + '</span>';
@@ -85,9 +106,10 @@ function jsonHandler(results){
 	} else {
 		record_length = records.length;
 	}	
-	
+
 	/*There are 3 sets of Headers needed. The first set is the "origHeaders" which allows for preset headers and compiling the remaining headers. These are used to determine data placement for the rows. */
 	var origHeaders = ["Toggle"];
+	var commentHeader = "";
 	for (var i=0, total=record_length; i < total; i++) { //loop through documents(rows) to get headers
 
 		records[i]["Toggle"] = "";
@@ -101,12 +123,17 @@ function jsonHandler(results){
 		   if (headerRow.hasOwnProperty(key)) {
 		      var objkey = key;
 		      //console.log("header to push: " + objkey);
-		       if(isInArray(objkey, origHeaders) == false && objkey.indexOf('_') != 0)
+			   if(objkey == "text" || objkey == "Filing_Comment")
+					commentHeader = objkey;
+		       else if(isInArray(objkey, origHeaders) == false && objkey.indexOf('_') != 0 
+			   && objkey.indexOf('_sort') == -1 && objkey != "score" && objkey != "viewingStatus")
 					origHeaders.push(objkey);
 		   }
 		}
 	}
-
+	origHeaders.push(commentHeader);
+	console.log(origHeaders);
+	
 	/*Second is "cleanHeaders" which are the "pretty" headers passed to the detailed view used for displaying. Lastly, "resultWidthHeaders" used in the results table layout and determine width of columns*/
 	var cleanHeaders = [], filterWidthHeaders = [], resultWidthHeaders = [], cellSet1 = [], cellSet2 = [], fieldSet = [];
 	
@@ -119,7 +146,7 @@ function jsonHandler(results){
 			cleanHeaders.push(clean_header);
 			if(clean_header == "FILE")
 				calc_width = calculateWidth(clean_header, 100)  + "px";
-			else if(clean_header == "LAWFIRM NAME"  || clean_header == "CITY" || clean_header == "STATE")
+			else if(clean_header == "LAWFIRM NAME"  || clean_header == "CITY" || clean_header.indexOf("STATE CODE") != -1)
 				calc_width = calculateWidth(clean_header, 25) + "px";
 			else if(clean_header == "COMMENT PERIOD")
 				calc_width = calculateWidth(clean_header, 16) + "px";
@@ -128,7 +155,8 @@ function jsonHandler(results){
 				
 			if(clean_header == "TOGGLE")
 				cellSet1.push({ name: "*", field:origHeaders[item], width: "40px", headerClasses: ["staticHeader"], styles: "text-align: center; font-size:1.5em;font-weight:bold;", get: getCheck, formatter: formatCheck});
-			else if(clean_header == "PROCEEDING NUMBER" || clean_header == "NAME OF FILER" || 	clean_header == "DATE RECEIVED" || 	clean_header == "FILING TYPE" || clean_header == "PAGES" || clean_header == "BRIEF COMMENT")
+			else if(clean_header.indexOf("PROCEEDING") != -1 || clean_header == "NAME OF FILER" || clean_header == "APPLICANT" || clean_header.indexOf("STATE CODE") != -1 || clean_header == "DATE RECEIVED" 
+			|| clean_header == "DATE RECEIPT" || clean_header == "FILING TYPE" || clean_header == "SUBMISSION TYPE" || clean_header == "PAGES" || clean_header.indexOf("BRIEF") != -1)
 				cellSet1.push({ name: clean_header, field:origHeaders[item], width: "auto"});
 			else
 				fieldSet.push(origHeaders[item]);
@@ -149,18 +177,21 @@ function jsonHandler(results){
 	var setResultsRows = [], setFilterRows = [], proceedings = [], proceeding_check = [], filingTypes = [], filing_check = [],
 		states = [], state_check = [], briefComment = [], brief_check = [];
 			
-	for (var i=0, total= record_length; i < total; i++) {
+	for (var i=0, total=record_length; i < total; i++) {
 		if (record_length == 1) 
 			var row = records;
 		else
 			var row = records[i];
 		
 		var link = {};
-		
+		//console.log(row);
 		for(key in origHeaders) {
 			var value = row[origHeaders[key]];
+			if(!value)
+				value = "";
+				
 			//get filter counts
-			if(origHeaders[key].toLowerCase() == "proceeding_number"){
+			if(origHeaders[key].toLowerCase().indexOf("proceeding") != -1){
 				if(isInArray(value, proceeding_check) == false){
 					proceeding_check.push(value);
 				    proceedings.push({"Proceedings": value, "PTotals" : 1});
@@ -172,19 +203,19 @@ function jsonHandler(results){
 					});
 				}
 			}
-			else if(origHeaders[key].toLowerCase() == "filing_type"){				
+			else if(origHeaders[key].toLowerCase() == "filing_type" || origHeaders[key].toLowerCase() == "submissiontype"){				
 				if(isInArray(value, filing_check) == false){
 					filing_check.push(value);
-				    filingTypes.push({"Filings": value, "FTotals" : 1});
+				    filingTypes.push({"Submissions": value, "FTotals" : 1});
 				}	
 				else{
 					$.map(filingTypes, function(object, key) {
-							if(object.Filings == value)
+							if(object.Submissions == value)
 								object.FTotals = parseInt(object.FTotals) + 1;
 					});
 				}
 			}//do not count fields where state is blank
-			else if(origHeaders[key].toLowerCase() == "state" && value != ""){				
+			else if(origHeaders[key].toLowerCase().indexOf("statecd") != -1 && value != ""){				
 				if(isInArray(value, state_check) == false){
 					state_check.push(value);
 				    states.push({"States": value, "STotals" : 1});
@@ -196,14 +227,14 @@ function jsonHandler(results){
 					});
 				}
 			}
-			else if(origHeaders[key].toLowerCase() == "brief_comment"){				
+			else if(origHeaders[key].toLowerCase().indexOf("brief") != -1){				
 				if(isInArray(value, brief_check) == false){
 					brief_check.push(value);
-				    briefComment.push({"Brief_Comments": value, "BTotals" : 1});
+				    briefComment.push({"briefComment": value, "BTotals" : 1});
 				}	
 				else{
 					$.map(briefComment, function(object, key) {
-							if(object.Brief_Comments == value)
+							if(object.briefComment == value)
 								object.BTotals = parseInt(object.BTotals) + 1;
 					});
 				}
@@ -225,7 +256,7 @@ function jsonHandler(results){
 		
 		setResultsRows.push(link); 	
 	}
-	
+	console.log(setResultsRows);
 	proceedings.sort(sortByProperty("PTotals")).reverse();
 	filingTypes.sort(sortByProperty("FTotals")).reverse();
 	states.sort(sortByProperty("STotals")).reverse();
@@ -239,7 +270,7 @@ function jsonHandler(results){
 			gather_rows[proc] = proceedings[k][proc];
 			if(k == 0){
 				if(proc.indexOf("Totals") != -1)
-					filterWidthHeaders.push({ name: cleanHeader(proc), field:proc, width: "50px", noresize: true});
+					filterWidthHeaders.push({ name: cleanHeader(proc), field:proc, width: "60px", noresize: true});
 				else
 					filterWidthHeaders.push({ name: cleanHeader(proc), field:proc, width: "90px", formatter: addLinks, noresize: true});
 			}
@@ -248,7 +279,7 @@ function jsonHandler(results){
 			gather_rows[type] = filingTypes[k][type];
 			if(k == 0){
 				if(type.indexOf("Totals") != -1)
-					filterWidthHeaders.push({ name: cleanHeader(type), field:type, width: calculateWidth(type, 9) + "px", noresize: true});
+					filterWidthHeaders.push({ name: cleanHeader(type), field:type, width: "60px", noresize: true});
 				else
 					filterWidthHeaders.push({ name: cleanHeader(type), field:type, width: calculateWidth(type, 9) + "px", formatter: addLinks, noresize: true});
 			
@@ -258,7 +289,7 @@ function jsonHandler(results){
 			gather_rows[state] = states[k][state];
 			if(k == 0){
 				if(state.indexOf("Totals") != -1)
-					filterWidthHeaders.push({ name: cleanHeader(state), field:state, width: calculateWidth(state, 12) + "px", noresize: true});
+					filterWidthHeaders.push({ name: cleanHeader(state), field:state, width: "60px", noresize: true});
 				else
 					filterWidthHeaders.push({ name: cleanHeader(state), field:state, width: calculateWidth(state, 12) + "px", formatter: addLinks, noresize: true});
 			}
@@ -268,7 +299,7 @@ function jsonHandler(results){
 			gather_rows[brief] = briefComment[k][brief];
 			if(k == 0){
 				if(brief.indexOf("Totals") != -1)
-					filterWidthHeaders.push({ name: cleanHeader(brief), field:brief, width: calculateWidth(brief, 9) + "px", noresize: true});
+					filterWidthHeaders.push({ name: cleanHeader(brief), field:brief, width: "60px", noresize: true});
 				else
 					filterWidthHeaders.push({ name: cleanHeader(brief), field:brief, width: calculateWidth(brief, 9) + "px", formatter: addLinks, noresize: true});
 			}
@@ -403,15 +434,19 @@ function jsonHandler(results){
 		var html = "<div id='criteria_input' style='width:100%; margin:2px;'>";
 		$.each(value, function( index, val ){
 
-			if(counter % 2 == 0){
-				if( counter == value_length - 1)//if last
-					html += createColumns(cleanHeader(fields[counter]), val, "left", true);
-				else 
-					html += createColumns(cleanHeader(fields[counter]), val, "left", false);
+			if(fields[counter] == "text" ||  fields[counter] == "Filing_Comment"){
+				html += createColumns(cleanHeader(fields[counter]), val, "left", false, true);
 			}
-			else
-				html += createColumns(cleanHeader(fields[counter]), val, "right", true);
-				
+			else{
+				if(counter % 2 == 0){
+					if( counter == value_length - 1)//if last
+						html += createColumns(cleanHeader(fields[counter]), val, "left", true, true);
+					else 
+						html += createColumns(cleanHeader(fields[counter]), val, "left", true, false);
+				}
+				else
+					html += createColumns(cleanHeader(fields[counter]), val, "right", true, true);
+			}
 			counter ++;
 		});
 		
@@ -431,13 +466,16 @@ function jsonHandler(results){
 		return html = '<img src="images/' + value.image + '" onclick="toggle(' + inRowIndex + ', ' + value.show +  ', ' + results_id + ');" height="11" width="11"/>';
 	}
 	
-	function createColumns (label, value, placement,complete_row){
+	function createColumns (label, value, placement, split_row, complete_row){
 		var html = "";
 
 		if (placement == "left")
 			html += "<div class='row'>";
 		
-		html += "<div class='cell two_halves " + placement + "'><p>" + label + ": <span class='value-cool'>" + value + "</span></p></div>";
+		if(split_row == true)
+			html += "<div class='cell two_halves " + placement + "'><p>" + label + " : <span class='value-cool'>" + value + "</span></p></div>";
+		else
+			html += "<div class='cell" + placement + "'><p>" + label + " : <span class='value-cool'>" + value + "</span></p></div>";
 		
 		if(placement == "right"  || complete_row == true)
 			html += "</div>";

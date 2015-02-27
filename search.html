@@ -212,7 +212,7 @@ $(document).ready(function() {
 
 
 	//var results_url  = 'https://' + getHost() + '/queryservice/results/' + msg + '?callback=?';
-	var results_url = 'mock_data.json';
+	var results_url = 'mock_data2.json';
 	
 	if(!viewer_displayed)
 		$('#no_results').empty().append("<label><span class='value-cool'>Loading...</span></label>");
@@ -229,7 +229,7 @@ $(document).ready(function() {
 	//console.log(search_type);
 	if((search_type == "term" && search_term) || search_type == "date"){
 		$('#activity p').empty();
-		$("#activity").append("<p><span class='value-cool'>Loading...<br>&nbsp;</span></p>");
+		$("#activity").append("<p><span class='value-cool'>Loading...</span></p>");
 		displayResults(results_url);
 	}
 	else{
@@ -272,7 +272,7 @@ require(["dijit/Tooltip", "dojo/domReady!"], function(Tooltip){
 	new Tooltip({
 		id: "activity_tooltip",
 		connectId: "info-anchor",
-		label: "<legend>Details:</legend><p class='paragraph-style'>Displayed are the number of filings based on Proceedings, Filing Type, and State.<br>Also displayed are the totals for brief comments versus expert comments. <br>Clicking on a link will filter the results table below.</p>"
+		label: "<legend>Details:</legend><p class='paragraph-style'>Displayed are the proceeding numbers, submission types, and states<br>with the highest volume of ECFS submissions associated with your<br>current search criteria. Also displayed are the totals for brief comments. <br>Clicking on a link will filter the results table below.</p>"
 	});
 });
 
