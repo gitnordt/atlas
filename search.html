@@ -154,6 +154,7 @@ $(document).ready(function() {
 	$("#search_type_selector").find('option[value="' + search_type + '"]').attr("selected",true);
 	jq('.datepicker').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+5", closeText : "Close"}); 
 	
+	var type_height = 450;
 	$(function() {
 		jq( "#criteria_details" ).dialog({
 			autoOpen: auto_open,
@@ -174,6 +175,8 @@ $(document).ready(function() {
 					primary: "ui-icon-closethick"
 				},
 				click: function(){
+					type_height = $(this).parents('.ui-dialog').height();
+					console.log(type_height);
 					$(this).parents('.ui-dialog').animate({
 						height: 27,
 						width: 200,
@@ -190,9 +193,9 @@ $(document).ready(function() {
 				icons: {
 					primary: "ui-icon-closethick"
 				},
-				click: function(){
+				click: function(){	
 					$(this).parents('.ui-dialog').animate({
-						height: 450,
+						height: type_height,
 						width: 815,
 						top: ($(window).height()-400)/2,
 						left:($(window).width()-800)/2

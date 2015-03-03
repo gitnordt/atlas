@@ -44,8 +44,7 @@
 }
 
 #activity{
-	width:64%;
-	float:left;
+	width:63%;
 	margin: auto;
 	min-height: 95px;
 }
@@ -399,8 +398,3 @@ background-color: gray !important;
 background: url("../../../resources/images/grid_dx_gradient.gif") repeat-x scroll center top #e8e1cf;
 }
 
-
-.bigHello{
-color: red;
-font-size : 3em;
-}

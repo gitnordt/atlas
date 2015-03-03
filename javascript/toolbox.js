@@ -713,7 +713,7 @@ function getAnchorDetails(search_term, search_type){
 		html += "</div>"; 
 		
 		html += "<div id='submit_div' class='ui-widget-footer'>";
-		html += "<input type='submit' class='pointer clear_criteria' onclick='clearForm(this.id)' value='Reset' id='criteria_input_clear'/>";		
+		html += "<input type='submit' class='pointer clear_criteria' onclick='resetForm(this.id)' value='Reset' id='criteria_input_clear'/>";		
 		html += "<input type='submit' name='submit' class='pointer submit_criteria' onclick='criteriaSubmit(this.id)' value='Submit' id='criteria_input_submit'/>";
 		html += "</div>";
 		
@@ -787,7 +787,7 @@ function closeDialog(id){
 	var id_prefix = id.substr(0, id.lastIndexOf("_"));
 	//console.log(jq('#' + id_prefix + '_details'));
 	jq('#' + id_prefix + '_details').dialog("close");
-
+	quickSearchSwitch("term");
 }
 
 function cleanLabel(label){
@@ -840,7 +840,7 @@ function clearItems(id) {
  } 
 
 /*-------------------------------Used for all submit forms-------------------------------*/ 
-function clearForm(id){
+function resetForm(id){
 	//console.log(id);
 	var id_prefix = id.substr(0, id.lastIndexOf("_"));
 	//console.log(id_prefix);
@@ -869,9 +869,9 @@ function clearForm(id){
 		}		
 		else if(field.type == "radio")
 			field.checked = false;
-		else if(field.type == "select-one" && field.selectedIndex > 0)
+		else if(field.type == "select-one" && field.selectedIndex > 0 && field.id != "search_type_selector")
 			field.selectedIndex = 0;
-		else if(field.type == "select-multiple" && id_prefix == "expert_filing"){
+		else if(field.type == "select-multiple"){
 			clearItems(field.id);
 		}
 	});
@@ -897,8 +897,8 @@ function submitForm(id){
 		else if(field.type == "select-one" && (field.selectedIndex > 0 || (field.id.indexOf("search_type") != -1 && field.selectedIndex > -1))) //single-select menus
 			input_object[field.id] = field.options[field.selectedIndex].text;
 		else if(field.type == "select-multiple" && field.options.length > 0){ //multi-select menus
-			input_object[field.id] = [];
 			if(field.id.indexOf("proceedings") != -1){
+				input_object[field.id] = [];
 				$.each(field.options, function (index, option){
 					input_object[field.id].push(option.value);
 				})
@@ -906,7 +906,12 @@ function submitForm(id){
 			else{
 				if(field.selectedIndex > -1){
 					$.each(field.selectedOptions, function (index, option){
-						input_object[field.id].push(option.text);
+						if(index > 0){
+							if(input_object[field.id])
+								input_object[field.id].push(option.text);
+							else
+								input_object[field.id] = [option.text];
+						}
 					})
 				}
 			}
@@ -915,7 +920,7 @@ function submitForm(id){
 	return input_object;
 }
 	
-var results_url = 'mock_data.json';	
+var results_url = 'mock_data2.json';	
 function criteriaSubmit(id){
 	var criteria_object = submitForm(id);
 

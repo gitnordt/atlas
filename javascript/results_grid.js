@@ -19,19 +19,19 @@ function cleanHeader(header){
 		header = header.substring(1, header.length);
 	else if(hasUpperCase(header)){
 		var upperLetters = findUpperCaseLetters(header);
-		console.log(header);
-		console.log(upperLetters);
+		//console.log(header);
+		//console.log(upperLetters);
 		var concat = header;
 		for(var c=0;c<upperLetters.length;c++){
 			if(upperLetters[c] != 0){
 				if(upperLetters[c+1]){
 					upperLetters[c+1] = upperLetters[c+1] + 1;
-					console.log(upperLetters);
+					//console.log(upperLetters);
 				}
 				concat = concat.substring(0, upperLetters[c]) + "_" + concat.substring(upperLetters[c], concat.length);	
 			}
 		}
-		console.log(concat);
+		//console.log(concat);
 		header = concat;
 	}
 		
@@ -52,9 +52,9 @@ function toggle(inIndex, inShow, grid) {
 }
 
 function addLinks(value, inRowIndex, inItem){
- console.log(value);
+ /*console.log(value);
  console.log(inRowIndex);
- console.log(inItem);
+ console.log(inItem);*/
 
   if(value)
 	return '<span class="pointer value-pop" onclick="filterResults(\'' + value + '\', \'' + inItem.field + '\')" >' + value + '</span>';
@@ -134,7 +134,7 @@ function jsonHandler(results){
 		}
 	}
 	origHeaders.push(commentHeader);
-	console.log(origHeaders);
+	//console.log(origHeaders);
 	
 	/*Second is "cleanHeaders" which are the "pretty" headers passed to the detailed view used for displaying. Lastly, "resultWidthHeaders" used in the results table layout and determine width of columns*/
 	var cleanHeaders = [], filterWidthHeaders = [], resultWidthHeaders = [], cellSet1 = [], cellSet2 = [], fieldSet = [];
@@ -258,7 +258,7 @@ function jsonHandler(results){
 		
 		setResultsRows.push(link); 	
 	}
-	console.log(setResultsRows);
+	//console.log(setResultsRows);
 	proceedings.sort(sortByProperty("PTotals")).reverse();
 	filingTypes.sort(sortByProperty("FTotals")).reverse();
 	states.sort(sortByProperty("STotals")).reverse();
