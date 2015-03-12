@@ -1,0 +1,141 @@
+body {
+    background-attachment: scroll !important;
+    background-clip: border-box !important;
+    background-color: #060008 !important;
+    background-image: url("../images/fcc_bg.jpg") !important;
+    background-origin: padding-box !important;
+    background-position: center 0 !important;
+    background-repeat: no-repeat !important;
+    background-size: 100% 154px;
+    margin: 0;
+    padding-top: 30px;
+}
+#heading{
+	height: 100px;
+	width: 100%;
+	position:relative;
+}
+#heading-title{
+	margin: auto;
+	height: 100px;
+	width: 400px;
+	position:relative;
+}
+.seal {
+    background: url("../images/FCCseal.png") no-repeat scroll 20px 21px rgba(0, 0, 0, 0);
+    clear: both;
+    display: block;
+    font-style: normal !important;
+    line-height: 1.4em !important;
+    margin-top: 0;
+    padding: 20px;
+}
+#heading_start{
+    color: #dcdcdc;
+    float: left;
+    font-family: 'Hoefler Text',Georgia,'Times New Roman',serif;
+    font-size: 1.75em;
+    font-weight: bold;
+    letter-spacing: 0.07em;
+    line-height: 1.1em;
+    margin: 0;
+    position: relative;
+    text-align: right;
+    text-shadow: 0.1em 0.1em 0.2em black;
+    text-transform: uppercase;
+    top: 30%;
+    width: 30%;
+}
+#logo{
+	width:27%;
+	float:left;
+	clear:right;
+	height:100px;
+	margin-top: -25px;
+}
+
+#heading_end{
+    color: #dcdcdc;
+    float: left;
+    font-family: 'Hoefler Text',Georgia,'Times New Roman',serif;
+    font-size: 1.75em;
+    font-weight: bold;
+    letter-spacing: 0.07em;
+    line-height: 1.1em;
+    margin: 0;
+    position: relative;
+    text-align: left;
+    text-shadow: 0.1em 0.1em 0.2em black;
+    text-transform: uppercase;
+    top: 30%;
+    width: 30%;
+}
+
+#search{
+    background-color: rgba(181, 189, 200, 1) !important;
+    border-color: #1b3b54 #50585f;
+    border-image: none;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 23px;
+    clear: both;
+    height: 590px;
+    margin: 24px auto;
+    width: 90%;
+}
+
+#search_term{
+	height: 100px;
+    margin: auto auto 30px;
+    width: 70%;
+	color: 	#3C6586;
+    font-family: 'Hoefler Text',Georgia,'Times New Roman',serif;
+    font-size: 1.5em;
+    font-weight: bold;
+    letter-spacing: 0.07em;
+    line-height: 1.1em;
+    position: relative;
+    text-transform: uppercase;
+    top: 10%;
+	clear:both;
+}
+#box_wrapper{
+	position:relative;
+}
+#box_wrapper label{
+	position: relative;
+	text-align:center;
+}
+#box_wrapper #searchbox{
+    bottom: 0;
+    clear: both;
+    font-size: 16px !important;
+    font-weight: lighter !important;
+    height: 26px !important;
+    left: 0;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    top: 1.6em;
+    width: 93%;
+}
+
+#searchsubmit{
+    border: medium none;
+    float: right;
+    height: 30px !important;
+    line-height: 30px !important;
+    margin: 4px 0 0;
+}
+
+#search_results{
+    border: 2px solid red;
+    clear: both;
+    display: block;
+    height: 70%;
+    margin: auto;
+    width: 92%;
+}
+
+
+
