@@ -143,7 +143,6 @@ $(document).ready(function() {
 	else
 		search_term = "";
 
-	var viewer_displayed = false;
 	var scrollHandler = function(){
 		$(".ui-dialog").css({"margin-top": ($(window).scrollTop()) + "px", "margin-left":($(window).scrollLeft()) + "px"});
 	}
@@ -176,7 +175,7 @@ $(document).ready(function() {
 				},
 				click: function(){
 					type_height = $(this).parents('.ui-dialog').height();
-					console.log(type_height);
+					//console.log(type_height);
 					$(this).parents('.ui-dialog').animate({
 						height: 27,
 						width: 200,
@@ -210,61 +209,51 @@ $(document).ready(function() {
 		
 
 	});
-
+	
+	var counter = 0; 
+	var wait_interval;
+	
+	function intervalStart() {
+		wait_interval = setInterval(function () {myTimer()}, 1000);
+	}
+	
+	function myTimer() {
+		counter ++;
+		if(counter < 4)
+			$("#activity p").append(".");
+		else{
+			window.clearInterval(wait_interval);
+			counter = 0;
+			
+			window.setTimeout(function () { //clear dots and start over
+				$('#activity p').empty().append("<span class='value-cool'>Awaiting Search Criteria to retreive results</span>");
+				intervalStart();
+			}, 1000);
+		}
+			
+		if ($('#resultsGrid').is(":visible")){
+			window.clearInterval(wait_interval);
+			counter = 0;
+		}
+	}
 
 	//var results_url  = 'https://' + getHost() + '/queryservice/results/' + msg + '?callback=?';
 	var results_url = 'mock_data2.json';
-	
-	if(!viewer_displayed)
-		$('#no_results').empty().append("<label><span class='value-cool'>Loading...</span></label>");
-	
-	if (viewer_displayed) {
-		$('#results').hide();
-		$('#no_results').fadeIn(400);
-		$('#no_results').empty().append("<label><span class='value-cool'>Loading...</span></label>");
-
-		viewer_displayed = false;
-	}
 	
 	$('#warning').empty();
 	//console.log(search_type);
 	if((search_type == "term" && search_term) || search_type == "date"){
 		$('#activity p').empty();
 		$("#activity").append("<p><span class='value-cool'>Loading...</span></p>");
+		$('#no_results').empty().append("<label><span class='value-cool'>Loading...</span></label>");
 		displayResults(results_url);
+		
 	}
 	else{
 		$('#no_results').empty();
 		$('#activity p').empty();
 		$("#activity").append("<p><span class='value-cool'>Awaiting Search Criteria to retreive results</span></p>");
-		
-		var counter = 0; 
-		var wait_interval;
-		
-		function intervalStart() {
-			wait_interval = setInterval(function () {myTimer()}, 1000);
-		}
-		
-		function myTimer() {
-			counter ++;
-			if(counter < 4)
-				$("#activity p").append(".");
-			else{
-				window.clearInterval(wait_interval);
-				counter = 0;
-				
-				window.setTimeout(function () {
-					$('#activity p').empty().append("<span class='value-cool'>Awaiting Search Criteria to retreive results</span>");
-					intervalStart();
-				}, 1000);
-			}
-				
-			if ($('#results').is(":visible")){
-				window.clearInterval(wait_interval);
-				counter = 0;
-			}
-		}
-		
+
 		intervalStart();
 	}
 });
