@@ -80,7 +80,7 @@ fieldset label{
 }
 .two_halves{
 	width:46%;
-	text-align: center;
+	text-align: left;
 }
 .cell{
 	display:table-cell;

@@ -470,6 +470,8 @@ function jsonHandler(results){
 	
 	function createColumns (label, value, placement, split_row, complete_row){
 		var html = "";
+		value = value.replace(/&nbsp;/g, " ");
+		console.log(value);
 
 		if (placement == "left")
 			html += "<div class='row'>";

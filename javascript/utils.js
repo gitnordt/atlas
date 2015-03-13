@@ -185,6 +185,7 @@ function validEmail(item) {
 function stringToDate(text){
 	var pattern1 = /\d{4}\d{2}\d{2}/;
 	var pattern2 = /\d{4}\-\d{2}\-\d{2}/;
+	var pattern3 = /\d{2}\/\d{2}\/\d{4}/;
 	var dt = "";
 	
 	if(pattern1.exec(text))
@@ -192,6 +193,10 @@ function stringToDate(text){
 	else if (pattern2.exec(text)){
 		text = text.split("-");
 		dt = new Date(text[0], parseInt(text[1]) - 1, text[2]); // - 1 because months starts from 0.
+	}
+	else if (pattern3.exec(text)){
+		text = text.split("/");
+		dt = new Date(text[2], parseInt(text[0]) - 1, text[1]); // - 1 because months starts from 0.
 	}
 	else
 		dt = new Date(text);

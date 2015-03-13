@@ -802,7 +802,15 @@ function closeDialog(id){
 }
 
 function cleanLabel(label){
-	var clean_label = toCamelCase(label.substr(0, label.lastIndexOf("_")).replace(/_/g, " "));
+	var splitter = label.split("_");
+	var clean_label = "";
+	console.log(label.indexOf("state"));
+	console.log(toCamelCase(label.substr(0, label.lastIndexOf("_"))));
+	
+	if(splitter.length >= 2 && label.indexOf("state") == -1 && label.lastIndexOf("text") == -1)
+		clean_label = toCamelCase(label.replace(/_/g, " "));
+	else
+		clean_label = toCamelCase(label.substr(0, label.lastIndexOf("_")).replace(/_/g, " "));
 	
 	if(label.indexOf("brief") != -1)
 		clean_label = clean_label + " Comments";
@@ -891,13 +899,13 @@ function resetForm(id){
 function submitForm(id){
 	//console.log(id);
 	var id_prefix = id.substr(0, id.lastIndexOf("_"));
-	var form_inputs = $('#' + id_prefix).find('input[type="text"], input[type="checkbox"], input[type="radio"], input[type="file"], select');
+	var form_inputs = $('#' + id_prefix).find('input[type="text"], textarea, input[type="checkbox"], input[type="radio"], input[type="file"], select');
 	var input_object = {};
 
 	//gather search criteria items submitted in the query
 	$.each(form_inputs, function( index, field ) {
-		//console.log(field);
-		if(field.type == "text" && field.value != "") //text boxes with values
+		console.log(field);
+		if((field.type == "text" || field.type == "textarea" ) && field.value != "") //text boxes with values
 			input_object[field.id] = field.value;
 		else if(field.type == "checkbox" && field.id.indexOf("date") == -1 && field.checked == true) //checked checkboxes
 			input_object[field.id] = field.checked;		
@@ -928,6 +936,8 @@ function submitForm(id){
 			}
 		}
 	});
+	
+	console.log(input_object);
 	return input_object;
 }
 	
