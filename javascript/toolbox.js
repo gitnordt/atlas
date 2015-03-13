@@ -467,7 +467,8 @@ function getFilingUrl(path){
 }
 
 function getAnchorDetails(search_term, search_type){
-		//console.log("Search: " + search_term);
+
+		var invalid_date = isNaN(stringToDate(search_term).getTime());
 		var html = "";  
 
 		html += "<div id='criteria_input'>";
@@ -481,14 +482,24 @@ function getAnchorDetails(search_term, search_type){
 		if(search_type == "term"){
 			html += "<div class='two right'>";	
 			html += "<div style='margin:auto;'>";
-			html += createRowTextbox(search_type, toCamelCase(search_type), search_term, "Edit the term you wish to search for.");
+			
+			if(invalid_date)
+				html += createRowTextbox(search_type, toCamelCase(search_type), search_term, "Edit the term you wish to search for.");
+			else
+				html += createRowTextbox(search_type, toCamelCase(search_type), "", "Edit the term you wish to search for.");
+				
 			html += "</div>";
 			html += "</div>";
 		}		
 		else if(search_type == "date"){
 			html += "<div class='two right'>";	
 			html += "<div style='margin:auto;'>";
-			html += createDateTextbox(search_type, toCamelCase(search_type), search_term, "Select the date you wish to search for.");
+			
+			if(invalid_date)
+				html += createDateTextbox(search_type, toCamelCase(search_type), "", "Select the date you wish to search for.");
+			else
+				html += createDateTextbox(search_type, toCamelCase(search_type), search_term, "Select the date you wish to search for.");
+				
 			html += "</div>";
 			html += "</div>";
 		}
@@ -965,15 +976,14 @@ function criteriaSubmit(id){
 	}
 	
 	closeDialog("criteria_details");
+	resetForm('criteria_input_submit');
 	displayResults(results_url);
 	//console.log(criteria_html);
 		
 }
 
 function confirmationSubmit(){
-
 	location.href="submit-confirmed-filing.html";
-
 }
 
 function displayResults(results_url) {
