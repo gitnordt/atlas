@@ -1,3 +1,11 @@
+dojo.addOnLoad(function(){
+	dojo.require("dojo");
+	dojo.require("dojox.validate");
+	dojo.require("dijit.form.Form");
+	dojo.require("dojox.validate.web");
+	dojo.require("dojox.validate.check");
+});
+
 
 /* Select Menu variables for the search criteria menu */
 function getFilingSelectorMenu(){
@@ -291,58 +299,86 @@ function getBureauSelectorMenu(){
 }
 
 /*Functions to build each field in the search criteria menu*/
-function createRowTextbox(id_prefix, label_text, value, tooltip_text){
+function createRowTextbox(id_prefix, label_text, value, tooltip_text, regex, required){
 	var html = "<label for='" + id_prefix + "_text'>" + label_text + "</label>";
-	html += "<input type='text' maxlength='128' id='"+ id_prefix +"_text' class='row_textbox' value='" + value + "' title='"+ tooltip_text +"'/>";
+	html += "<input type='text' id='"+ id_prefix +"_text' name='"+ id_prefix +"_text' class='row_textbox' value='" + value + "' ";
+	if(regex)
+		html += "pattern='" + regex + "' title='" + tooltip_text + "' ";
+	if(required)
+		html += "required='true'";	
+	html += "/>"; 
+	
 	return html;
 }
 
-function createCellTextbox(id_prefix, label_text, value, tooltip_text){
+function createCellTextbox(id_prefix, label_text, value, tooltip_text, regex, required){
 	var html = "<label for='" + id_prefix + "_text'>" + label_text + "</label>";
-	html += "<input type='text' maxlength='128' id='"+ id_prefix +"_text' class='cell_textbox' value='" + value + "' title='"+ tooltip_text +"'/>";
+	html += "<input type='text' id='"+ id_prefix +"_text' name='"+ id_prefix +"_text'  class='cell_textbox' value='" + value + "' ";
+	if(regex)
+		html += "pattern='" + regex + "' title='" + tooltip_text + "' ";
+	if(required)
+		html += "required='true'";	
+	html += "/>"; 
+	
 	return html;
 }
 
-function createDateTextbox(id_prefix, label_text, value, tooltip_text){
+function createDateTextbox(id_prefix, label_text, value, required){ 
 	var html = "<label for='" + id_prefix + "_text'>" + label_text + "</label>";
-	html += "<input type='text' maxlength='50' class='datepicker cell_textbox' id='"+ id_prefix +"_text' value='" + value + "' title='"+ tooltip_text +"'/>";
+	html += "<input type='text' maxlength='50' class='datepicker cell_textbox' id='"+ id_prefix +"_text' name='"+ id_prefix +"_text' value='" + value + "' ";
+	html += date_rgx_html;
+	if(required)
+		html += "required='true'";	
+	html += "/>"; 
 	return html;
 }
 
-function createSingleDateField(id_prefix){
+function createSingleDateField(id_prefix, required){
 	var html = "<span class='left' style='width:100%;'><label for='" + id_prefix + "_picker'>Date</label>";
-	html += "<input id='" + id_prefix + "_picker' class='datepicker' type='text'></span>";
+	html += "<input id='" + id_prefix + "_picker' name='" + id_prefix + "_picker' class='datepicker' type='text' ";
+	html += date_rgx_html;
+	if(required)
+		html += "required='true'";	
+	html += "/></span>";
 	return html;
 }
 
-function createMultiDateField(id_prefix){
+function createMultiDateField(id_prefix, required){
 	var html = "<span class='left small_span'><label for='" + id_prefix + "_from_picker' >From</label>";
-	html += "<input id='" + id_prefix + "_from_picker' class='datepicker small_box' type='text'/></span>";
+	html += "<input id='" + id_prefix + "_from_picker' name='" + id_prefix + "_from_picker'  class='datepicker small_box' type='text' ";
+	html += date_rgx_html;
+	if(required)
+		html += "required='true'";	
+	html += "/></span>";
 	html += "<span class='right small_span'><label for='" + id_prefix + "_to_picker'>To</label>";
-	html += "<input id='" + id_prefix + "_to_picker' class='datepicker small_box' type='text'/></span>";
+	html += "<input id='" + id_prefix + "_to_picker' name='" + id_prefix + "_to_picker' class='datepicker small_box' type='text' ";
+	html += date_rgx_html;
+	if(required)
+		html += "required='true'";		
+	html += "/></span>";
 	return html;
 }
 
 function createCheckbox(id_prefix, label_text, multi){
 	if(multi)
-		var html = "<label class='option_label'><input type='checkbox' id='" + id_prefix + "_checkbox' onclick='checkboxSwitch(this.id);'/> " + label_text + "</label>";
+		var html = "<label class='option_label'><input type='checkbox' id='" + id_prefix + "_checkbox' name='" + id_prefix + "_checkbox' onclick='checkboxSwitch(this.id);'/> " + label_text + "</label>";
 	else
-		var html = "<label class='option_label'><input type='checkbox' id='" + id_prefix + "_checkbox' /> " + label_text + "</label>";
+		var html = "<label class='option_label'><input type='checkbox' id='" + id_prefix + "_checkbox' name='" + id_prefix + "_checkbox'/> " + label_text + "</label>";
 	return html;
 }
 
 function createDateCheckbox(id_prefix, state){
 	var html = "";
 	if(state)
-		html = "<label class='option_label' for='" + id_prefix + "_checkbox'><input type='checkbox' id='"+ id_prefix +"_checkbox' " + state + " onclick='dateFieldExchange(this.id);'/> Search Date Range?</label></br>";
+		html = "<label class='option_label' for='" + id_prefix + "_checkbox'><input type='checkbox' id='"+ id_prefix +"_checkbox' name='"+ id_prefix +"_checkbox' " + state + " onclick='dateFieldExchange(this.id);'/> Search Date Range?</label></br>";
 	
 	else
-		html = "<label class='option_label' for='" + id_prefix + "_checkbox'><input type='checkbox' id='"+ id_prefix +"_checkbox' onclick='dateFieldExchange(this.id);'/> Search Date Range?</label></br>";
+		html = "<label class='option_label' for='" + id_prefix + "_checkbox'><input type='checkbox' id='"+ id_prefix +"_checkbox' name='"+ id_prefix +"_checkbox'  onclick='dateFieldExchange(this.id);'/> Search Date Range?</label></br>";
 	return html;
 }
 
 function createRadioOptions(id_prefix, label_text){
-	var html = "<label class='option_label'><input type='radio' id='"+ id_prefix + "_" + label_text + "_radio_switch' onclick='radioSwitch(this.id);'/> " + toCamelCase(label_text) + "</label>";
+	var html = "<label class='option_label'><input type='radio' id='"+ id_prefix + "_" + label_text + "_radio_switch' name='"+ id_prefix + "_" + label_text + "_radio_switch' onclick='radioSwitch(this.id);'/> " + toCamelCase(label_text) + "</label>";
 	return html;
 
 }
@@ -393,15 +429,11 @@ function dateFieldExchange(id){
 
 	if(input_fields.length > 1){
 		date_div.empty();
-		//date_div.removeClass("date-div");
-		//date_div.addClass("date-with-radio-div");
 		html = createSingleDateField(id_prefix);
 		date_div.html(html);
 	}	
 	else{
 		date_div.empty();
-		//date_div.removeClass("date-with-radio-div");
-		//date_div.addClass("date-div");
 		html = createMultiDateField(id_prefix);
 		date_div.html(html);
 	}
@@ -471,7 +503,7 @@ function getAnchorDetails(search_term, search_type){
 		var invalid_date = isNaN(stringToDate(search_term).getTime());
 		var html = "";  
 
-		html += "<div id='criteria_input'>";
+		html += "<form id='criteria_input' data-dojo-type='dijit.form.Form' onsubmit='return criteriaSubmit(this.id);'>";
 		
 		html += "<div class='row'>";
 		html += "<div class='two left'>";
@@ -484,9 +516,9 @@ function getAnchorDetails(search_term, search_type){
 			html += "<div style='margin:auto;'>";
 			
 			if(invalid_date)
-				html += createRowTextbox(search_type, toCamelCase(search_type), search_term, "Edit the term you wish to search for.");
+				html += createRowTextbox(search_type, toCamelCase(search_type), search_term, "Enter at least 2 characters. Some special characters are invalid.", "^[A-Za-z0-9]{2,}[A-Za-z0-9\\s\._-]*$", true);
 			else
-				html += createRowTextbox(search_type, toCamelCase(search_type), "", "Edit the term you wish to search for.");
+				html += createRowTextbox(search_type, toCamelCase(search_type), "", "Enter enter at least 2 characters. Some special characters are invalid.", "^[A-Za-z0-9]{2,}[A-Za-z0-9\\s\._-]*$", true);
 				
 			html += "</div>";
 			html += "</div>";
@@ -496,9 +528,9 @@ function getAnchorDetails(search_term, search_type){
 			html += "<div style='margin:auto;'>";
 			
 			if(invalid_date)
-				html += createDateTextbox(search_type, toCamelCase(search_type), "", "Select the date you wish to search for.");
+				html += createDateTextbox(search_type, toCamelCase(search_type), "", true);
 			else
-				html += createDateTextbox(search_type, toCamelCase(search_type), search_term, "Select the date you wish to search for.");
+				html += createDateTextbox(search_type, toCamelCase(search_type), search_term, true);
 				
 			html += "</div>";
 			html += "</div>";
@@ -506,7 +538,7 @@ function getAnchorDetails(search_term, search_type){
 		else if(search_type == "status"){
 			html += "<div class='two right'>";	
 			html += "<div style='margin:auto;'>";
-			html += createRowTextbox("confirmation_number", "Confirmation Number", "", "Type the filing confirmation number you wish to search for.");
+			html += createRowTextbox("confirmation_number", "Confirmation Number", "", "Enter at least 4 characters of the filing confirmation number.", "^[A-Za-z0-9]{4,}[A-Za-z0-9\\s-]*$", true);
 			html += "</div>";
 			html += "</div>";
 		}
@@ -521,15 +553,15 @@ function getAnchorDetails(search_term, search_type){
 			html += "<div class='row'>";
 				html += "<div class='two left'>";
 				html += "<div class='cell two left'>";
-				html += createCellTextbox("proceeding_number", "Proceeding Number", "", "Enter the proceeding number you wish to search for.");
+				html += createCellTextbox("proceeding_number", "Proceeding Number", "", "Enter a valid proceeding number.", "^(\\d{2}|RM)-(\\d{0,5})$", false);
 				html += "</div>";
 				html += "<div class='cell two right'>";
-				html += createCellTextbox("bureau_number", "Bureau ID Number", "", "Enter the bureau id you wish to search for.");
+				html += createCellTextbox("bureau_number", "Bureau ID Number", "", "Enter at least 2 characters of valid bureau identification number.", "^[A-Za-z0-9-]{2,}$", false);
 				html += "</div>";
 				html += "</div>";
 				html += "<div class='two right'>";
 				html += "<div>";
-				html += createRowTextbox("proceeding_subject", "Subject", "", "Enter terms in the proceeding subject you wish to search for.");
+				html += createRowTextbox("proceeding_subject", "Subject", "", "Enter at least 5 characters from the proceeding subject you wish to search for.", "^[A-Za-z0-9\\s\._-]{5,}$", false);
 				html += "</div>";
 				html += "</div>";
 			html += "</div>";
@@ -538,10 +570,10 @@ function getAnchorDetails(search_term, search_type){
 				html += "<div class='two left'>";
 				html += "<div class='cell two left'>";
 				html += "<div style='margin-top:6px; margin-bottom:4px;'>";
-				html += createCellTextbox("filer_name", "Name of Party", "", "Enter the name you wish to search for.");
+				html += createCellTextbox("filer_name", "Name of Filer", "", "Enter at least 2 letters of the filer's first or last name.", "^[A-Za-z]{1}([A-Za-z\\s\.\-]*)$", false);
 				html += "</div>";
 				html += "<div>";
-				html += createCellTextbox("prepared_by", "Prepared By", "", "Enter the name you wish to search for.");
+				html += createCellTextbox("prepared_by", "Prepared By", "", "Enter at least 2 letters of the filer's first or last name.", "^[A-Za-z]{1}([A-Za-z\\s\.\-]*)$", false);
 				html += "<hr class='criteria_divider cell_divider'>";
 				html += "</div>";
 				html += "</div>";
@@ -605,10 +637,10 @@ function getAnchorDetails(search_term, search_type){
 			html += "</div>";
 			html += "<div class='two right'>";	
 			html += "<div class='cell two left'>";
-			html += createCellTextbox("lawfirm_name", "Lawfirm Name", "", "Enter the lawfirm you wish to search for.");
+			html += createCellTextbox("lawfirm_name", "Lawfirm Name", "", "Enter at least 2 characters of the lawfirm name.", "[A-Za-z]{2,}([A-Za-z\\s\.\&]*)$", false);
 			html += "</div>";
 			html += "<div class='cell two right'>";
-			html += createCellTextbox("attorney/author_name", "Attorney/Author Name", "", "Enter the attorney or author's name you wish to search for.");
+			html += createCellTextbox("author_name", "Attorney/Author Name", "", "Enter at least 2 letters of the author's first or last name.", "[A-Za-z]{2,}([A-Za-z\\s\.]*)$", false);
 			html += "</div>";
 			html += "</div>";			
 			html += "</div>";
@@ -616,18 +648,18 @@ function getAnchorDetails(search_term, search_type){
 			html += "<div class='row'>";
 			html += "<div class='two left'>";
 			html += "<div class='cell two left'>";
-			html += createCellTextbox("proceeding_number", "Proceeding Number", "", "Enter the proceeding number you wish to search for.");
+			html += createCellTextbox("proceeding_number", "Proceeding Number", "",  "Enter at least 2 characters of a valid proceeding number. e.g. 14-28", "^(\\d{2}|RM)(-(\\d{0,5}))*$", false);
 			html += "</div>";
 			html += "<div class='cell two right'>";
-			html += createCellTextbox("da/fcc_number", "DA/FCC Number", "", "Enter the DA or FCC number you wish to search for.");
+			html += createCellTextbox("fcc_number", "DA/FCC Number", "", "Enter at least 2 characters of valid DA/FCC number.", "^[A-Za-z0-9\-]{2,}$", false);
 			html += "</div>";
 			html += "</div>";
 			html += "<div class='two right'>";
 			html += "<div class='cell two left'>";
-			html += createCellTextbox("bureau_number", "Bureau ID Number", "", "Enter the bureau id you wish to search for.");
+			html += createCellTextbox("bureau_number", "Bureau ID Number", "", "Enter at least 2 characters of valid bureau identification number.", "^[A-Za-z0-9\-]{2,}$", false);
 			html += "</div>";
 			html += "<div class='cell two right'>";
-			html += createCellTextbox("report_number", "Report Number", "", "Enter the report number you wish to search for.");
+			html += createCellTextbox("report_number", "Report Number", "", "Enter at least 2 characters of valid report number.", "^[A-Za-z0-9\-]{2,}$", false);
 			html += "</div>";
 			html += "</div>";
 			html += "</div>";
@@ -635,10 +667,10 @@ function getAnchorDetails(search_term, search_type){
 			html += "<div class='row'>";
 			html += "<div class='two left'>";
 			html += "<div class='cell two left'>";
-			html += createCellTextbox("filer_name", "Name of Filer", "", "Enter the filer name you wish to search for.");
+			html += createCellTextbox("filer_name", "Name of Filer", "", "Enter at least 2 letters of the filer's first or last name.", "[A-Za-z]{2,}([A-Za-z\\s\.]*)$", false);
 			html += "</div>";
 			html += "<div class='cell two right'>";
-			html += createCellTextbox("city", "City", "", "Enter the city you wish to search for.");
+			html += createCellTextbox("city", "City", "", "Enter at least 2 letters of the city you wish to search for.", "[A-Za-z]{2,}([A-Za-z\\s]*)$", false);
 			html += "</div>";
 			html += "</div>";
 			html += "<div class='two right'>";
@@ -646,7 +678,7 @@ function getAnchorDetails(search_term, search_type){
 			html += getStateSelectorMenu();
 			html += "</div>";
 			html += "<div class='cell two right'>";
-			html += createCellTextbox("zipcode", "Zip Code", "", "Enter the zip code you wish to search for.");
+			html += createCellTextbox("zipcode", "Zip Code", "", "Enter at least 5 digits of a valid zip code or enter zip code +4, e.g. 32656-5521", "^\\d{5}(-(\\d{4}))?$", false);
 			html += "</div>";
 			html += "</div>";
 			html += "</div>";
@@ -720,15 +752,14 @@ function getAnchorDetails(search_term, search_type){
 			html += "</div>";
 	}	
 		
-		html += "</br>";//end of criteria div
-		html += "</div>"; 
-		
-		html += "<div id='submit_div' class='ui-widget-footer'>";
-		html += "<input type='submit' class='pointer clear_criteria' onclick='resetForm(this.id)' value='Reset' id='criteria_input_clear'/>";		
-		html += "<input type='submit' name='submit' class='pointer submit_criteria' onclick='criteriaSubmit(this.id)' value='Submit' id='criteria_input_submit'/>";
-		html += "</div>";
-		
-		return html;
+	html += "</br>";
+	html += "<div id='submit_div' class='ui-widget-footer'>";
+	html += "<input type='button' class='pointer clear_criteria' onclick='resetForm(this.id)' value='Reset' id='criteria_input_clear'/>";		
+	html += "<input type='submit' name='submit' class='pointer submit_criteria' value='Submit' id='criteria_input_submit'/>";
+	html += "</div>";
+	html += "</form>";
+
+	return html;
 }
 
 function switchAnchorDetails(id){
@@ -740,7 +771,7 @@ function switchAnchorDetails(id){
 	$("#criteria_details").empty().append(getAnchorDetails(input_term, input_type));
 	$('#' + id + ' option:selected').removeAttr('selected');
 	$('#' + id).find('option[value="' + input_type + '"]').attr("selected",true);
-	jq('.datepicker').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+5", closeText : "Close"}); 
+	jq('.datepicker').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+0", closeText : "Close"}); 
 	
 	if(input_type == "status" || input_type == "date")
 		$('.ui-dialog').animate({height: 160}, 200);
@@ -804,10 +835,10 @@ function closeDialog(id){
 function cleanLabel(label){
 	var splitter = label.split("_");
 	var clean_label = "";
-	console.log(label.indexOf("state"));
-	console.log(toCamelCase(label.substr(0, label.lastIndexOf("_"))));
+	//console.log(label.indexOf("state"));
+	//console.log(toCamelCase(label.substr(0, label.lastIndexOf("_"))));
 	
-	if(splitter.length >= 2 && label.indexOf("state") == -1 && label.lastIndexOf("text") == -1)
+	if(splitter.length >= 2 && label.indexOf("state") == -1 && label.lastIndexOf("text") == -1 && label.lastIndexOf("selector") == -1)
 		clean_label = toCamelCase(label.replace(/_/g, " "));
 	else
 		clean_label = toCamelCase(label.substr(0, label.lastIndexOf("_")).replace(/_/g, " "));
@@ -898,15 +929,27 @@ function resetForm(id){
 
 function submitForm(id){
 	//console.log(id);
-	var id_prefix = id.substr(0, id.lastIndexOf("_"));
-	var form_inputs = $('#' + id_prefix).find('input[type="text"], textarea, input[type="checkbox"], input[type="radio"], input[type="file"], select');
+	var form_inputs = $('#' + id).find('input[type="text"], textarea, input[type="checkbox"], input[type="radio"], input[type="file"], select');
 	var input_object = {};
 
 	//gather search criteria items submitted in the query
 	$.each(form_inputs, function( index, field ) {
-		console.log(field);
-		if((field.type == "text" || field.type == "textarea" ) && field.value != "") //text boxes with values
-			input_object[field.id] = field.value;
+		//console.log(field);
+		if((field.type == "text" || field.type == "textarea" ) && field.value != ""){ //text boxes with values
+			if(field.id.indexOf("date") == -1) //if it is not a date field
+				input_object[field.id] = field.value;
+			else{
+				console.log(field.value);
+				var split_date = field.value.split('/');
+				var reformatted_date = split_date[1] + '/' + split_date[0] + '/' + split_date[2];
+				console.log(reformatted_date);
+				console.log(stringToDate(field.value));
+				//is valid = add like above
+				//invalid alert, delete input object,  and stop loop
+			
+			}
+				
+		}
 		else if(field.type == "checkbox" && field.id.indexOf("date") == -1 && field.checked == true) //checked checkboxes
 			input_object[field.id] = field.checked;		
 		else if(field.type == "radio" && field.id.indexOf("address") != -1 && field.checked == true) //selected radio buttons
@@ -941,55 +984,60 @@ function submitForm(id){
 	return input_object;
 }
 	
-var results_url = 'mock_data2.json';	
+var results_url = 'data/mock_data2.json';	
+	
 function criteriaSubmit(id){
-	var criteria_object = submitForm(id);
+	
+		var criteria_object = submitForm(id);
+		//console.log(criteria_object);
+		if(criteria_object){
+			//add new search criteria to the list
+			$("#criteria_view").empty();
+			var criteria_keys = Object.keys(criteria_object);
+			//console.log(criteria_keys);
+			var criteria_length = criteria_keys.length;
+			
+			//if the number of items in the search criteria is even, split into equal columns and rows, else add an additional row for the solo column
+			
+			var criteria_html = "";
+			if(parseInt(criteria_length) % 2 == 0){
+				//console.log("even");
+				for(var i = 0; i < criteria_length; i++){
+					var curr_key = criteria_keys[i];
+					
+					if(i % 2 == 0)
+						criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "left", false);
+					else
+						criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "right", false);
+				}
+				
+				$("#criteria_view").html(criteria_html);	
+			
+			}
+			else{
+				//console.log("odd");
+				for(var i = 0; i < criteria_length; i++){
+					var curr_key = criteria_keys[i];
+					
+					if(i % 2 == 0)
+						criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "left", false);
+					else if(i == criteria_length - 1)
+						criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "left", true);
+					else
+						criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "right", false);
+				}
+				
+				$("#criteria_view").html(criteria_html);	
+			}
+			
+			closeDialog("criteria_details");
+			resetForm('criteria_input_submit');
+			displayResults(results_url);
+			//console.log(criteria_html);
+		}
+	
+	return false;
 
-	//add new search criteria to the list
-	$("#criteria_view").empty();
-	var criteria_keys = Object.keys(criteria_object);
-	//console.log(criteria_keys);
-	var criteria_length = criteria_keys.length;
-	
-	/*if the number of items in the search criteria is even, split into equal columns and rows, else add an
-	additional row for the solo column*/
-	
-	var criteria_html = "";
-	if(parseInt(criteria_length) % 2 == 0){
-		//console.log("even");
-		for(var i = 0; i < criteria_length; i++){
-			var curr_key = criteria_keys[i];
-			
-			if(i % 2 == 0)
-				criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "left", false);
-			else
-				criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "right", false);
-		}
-		
-		$("#criteria_view").html(criteria_html);	
-	
-	}
-	else{
-		//console.log("odd");
-		for(var i = 0; i < criteria_length; i++){
-			var curr_key = criteria_keys[i];
-			
-			if(i % 2 == 0)
-				criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "left", false);
-			else if(i == criteria_length - 1)
-				criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "left", true);
-			else
-				criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "right", false);
-		}
-		
-		$("#criteria_view").html(criteria_html);	
-	}
-	
-	closeDialog("criteria_details");
-	resetForm('criteria_input_submit');
-	displayResults(results_url);
-	//console.log(criteria_html);
-		
 }
 
 function confirmationSubmit(){
@@ -1030,62 +1078,5 @@ function displayResults(results_url) {
 	else if(results.metadata.totalCount == 0){	
 		$('#no_results').empty().append('<label>No results found.</label>');
 	}
-
-	
-	/*$.getJSON(results_url, function(response) {
-		task_json=self.setInterval(function() {
-			var timer = new Date().getTime() - start_time;
-			console.log(timer + " secs");
-			if(timer > getWaitTime()){
-				self.clearInterval(task_json); //stops interval
-				$('#no_results').empty().append('<label>Request timeout: Taking too long to retrieve results.</label>');
-				return; //breaks loop and returns message
-			}
-			
-			// Results logic start.
-			
-			$.getJSON(results_url, function(response) {
-				console.log(response);
-				if(response){
-					if(response.metadata.queryStatus == "DONE"){
-						self.clearInterval(task_json);
-						if(response.metadata.totalCount >= max_recs){
-							$('#warning').empty().append("<label>** Only displaying " + max_recs + " of " + response.metadata.totalCount + " records.  Please refine your search.</label>");
-						}
-						if(response.metadata.totalCount != 0){								
-							dojo.ready(function(){
-								jsonHandler(response);
-								$('#no_results').hide();
-								if ($('#results').is(":hidden")){
-									$('#results').show();
-									dijit.byId("resultsGrid")._refresh();
-								}
-								viewer_displayed = true;
-								filtering();
-							});
-							
-							dojo.addOnLoad(function() {
-							   dojo.connect(window, "onresize", resizeGrid("resultsGrid");
-							});
-						}
-						else if(response.metadata.totalCount == 0){	
-							$('#no_results').empty().append('<label>No results found.</label>');
-						}
-					}
-					else{
-						console.log("not done querying: " + timer + "+ timer + " secs");
-					}
-				}
-			})
-			.fail(function() {
-				$('#no_results').empty().append('<label>This query could not be submitted.</label>');
-				self.clearInterval(task_json);
-			});
-			
-			// Results logic end.
-			
-		},check_time); 	
-	
-	});	*/
 }
 

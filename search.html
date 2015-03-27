@@ -24,14 +24,16 @@
 
 <script type="text/javascript" src="javascript/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="javascript/jquery-ui-1.11.2/jquery-ui.js"></script>
+
 <script type="text/javascript" src="javascript/jquery-drupal.js"></script>
+<script type="text/javascript" src="javascript/utils.js"></script>
 <script type="text/javascript" src="javascript/application.js"></script>
 <script type="text/javascript" src="javascript/jstorage.js"></script>
-<script type="text/javascript" src="javascript/utils.js"></script>
 <script type="text/javascript" src="javascript/page_layout.js"></script>
 <script type="text/javascript" src="javascript/equalheight.js"></script>
 <script type="text/javascript" src="javascript/shCore.js"></script>
 <script type="text/javascript" src="javascript/shBrushXml.js"></script>
+
 <script type='text/javascript' src='javascript/dojo-1.10.2/dojo/dojo.js'></script>
 <script type="text/javascript" src="javascript/toolbox.js"></script>
 <script type="text/javascript" src="javascript/results_grid.js"></script>
@@ -151,7 +153,7 @@ $(document).ready(function() {
 	$("#criteria_details").append(getAnchorDetails(search_term, search_type));
 	$('#search_type_selector option:selected').removeAttr('selected');
 	$("#search_type_selector").find('option[value="' + search_type + '"]').attr("selected",true);
-	jq('.datepicker').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+5", closeText : "Close"}); 
+	jq('.datepicker').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+0", closeText : "Close"}); 
 	
 	var type_height = 450;
 	$(function() {
@@ -238,7 +240,7 @@ $(document).ready(function() {
 	}
 
 	//var results_url  = 'https://' + getHost() + '/queryservice/results/' + msg + '?callback=?';
-	var results_url = 'mock_data2.json';
+	var results_url = 'data/mock_data2.json';
 	
 	$('#warning').empty();
 	//console.log(search_type);
@@ -267,6 +269,5 @@ dojo.addOnLoad(function(){
 		});
 	});
 });
-
 
 </script>

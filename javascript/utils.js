@@ -12,6 +12,19 @@ months[9] = {"long_name":"October", "short_name":"Oct"};
 months[10] = {"long_name":"November", "short_name":"Nov"};
 months[11] = {"long_name":"December", "short_name":"Dec"};
 
+//today's date, 100 year date range, date splits
+var today = new Date(), range_start = today.getFullYear() - 100, range_end = today.getFullYear();
+var front_end = range_end.toString().substr(0,2);
+var front_start = range_start.toString().substr(0,2);
+var back_first = range_end.toString().charAt(2);
+var back_second = range_end.toString().charAt(3);
+
+var date_rgx_html = "pattern='^(((0?[469]|11)\/(0?[1-9]|[1-2]\\d|30))|((0?[13578]|1[02])\/(0?[1-9]|[1-2]\\d|3[01]))|(0?2\/(0?[1-9]|1\\d|2[0-8])))";
+	date_rgx_html += "\/((" + parseInt(front_start) + "(" + parseInt(back_first) + "[" + parseInt(back_second) + "-9]|[";
+	date_rgx_html += (parseInt(back_first) < 9 ? parseInt(back_first) + 1 : 9) + "-9][0-9]))|(" + parseInt(front_end) + "(" + parseInt(back_first) + "[0-" + parseInt(back_second) + "]|";
+	date_rgx_html += (parseInt(back_first) > 0 ? parseInt(back_first) - 1 : 0) + "[0-9])))$' title='Please enter a valid date between the years " + range_start + " and "+ range_end +" using format MM/DD/YYYY' ";
+
+
 Number.prototype.ordinate = function(){
     var num = this,
         ones = num % 10, //gets the last digit

@@ -100,6 +100,11 @@ th {
     width: 26px !important;
 }
 
+#actionbar #search .form-item {
+    padding-left: 2px;
+    padding-top: 2px;
+}
+
 #actionbar .actioncenter {
     border: 10px solid transparent;
     position: absolute;
@@ -281,9 +286,12 @@ th {
 }
 
 #actionbar .form-item .form-text:not(#date_search_input) {
-    width: 155px !important;
+    width: 157px !important;
 }
 
+#actionbar .form-item .form-text {
+	padding: 5px !important;
+}
 
 #actionbar .odd {
     background-color: #274866;

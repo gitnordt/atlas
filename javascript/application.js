@@ -395,7 +395,8 @@ function quickSearchSwitch(searchType){
 	var quick_html = "";
 
 	if(searchType == "term"){
-		quick_html = "<label for='search_term_input'>Search<\/label><input type='text' maxlength='128' id='search_term_input' size='15' value='' title='Enter the term you wish to search for.' class='form-text' />";
+		quick_html = "<label for='search_term_input'>Search<\/label><input type='text' maxlength='128' id='search_term_input' size='15' value='' class='form-text'";
+		quick_html += "pattern='^[A-Za-z0-9]{2,}[A-Za-z0-9\\s\._-]*$' title='Enter at least 2 characters. Some special characters are invalid'/>"; 
 
 		$("#search_term_input").keyup(function(){
 			$("#edit-search-theme-form-wrapper").find("label").remove();
@@ -403,7 +404,8 @@ function quickSearchSwitch(searchType){
 		});
 	}
 	else if(searchType == "date"){		
-		quick_html = "<label for='search_term_input'>Search<\/label><input type='text' maxlength='50' class='datepicker form-text' id='search_term_input' value=''/>";
+		quick_html = "<label for='search_term_input'>Search<\/label><input type='text' maxlength='50' class='datepicker form-text'";
+		quick_html += "id='search_term_input' value=''" + date_rgx_html + " />"; // date_rgx_html - utils.js variable 
 	}
 	
 	if(quick_html){
@@ -413,7 +415,7 @@ function quickSearchSwitch(searchType){
 	}
 	
 	if($('#search_term_input').hasClass("datepicker")){
-		jq('#search_term_input').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+5", closeText : "Close", 
+		jq('#search_term_input').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+0", closeText : "Close", 
 		onSelect: function(){
 			$("#edit-search-theme-form-wrapper").find("label").remove();
 			$.jStorage.set("searchType", "date");
