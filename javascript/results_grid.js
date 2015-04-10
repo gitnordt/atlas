@@ -9,29 +9,21 @@ var results_id = "resultsGrid";
 var filter_id = "filterGrid";
 var expand_all = true;
 
-function col(v) {
-    return v ? v.replace('#','') : '';
-}
-
 function cleanHeader(header){
 	var newHeader = "";
 	if(header.indexOf("Totals") == 1)
 		header = header.substring(1, header.length);
 	else if(hasUpperCase(header)){
 		var upperLetters = findUpperCaseLetters(header);
-		//console.log(header);
-		//console.log(upperLetters);
 		var concat = header;
 		for(var c=0;c<upperLetters.length;c++){
 			if(upperLetters[c] != 0){
 				if(upperLetters[c+1]){
 					upperLetters[c+1] = upperLetters[c+1] + 1;
-					//console.log(upperLetters);
 				}
 				concat = concat.substring(0, upperLetters[c]) + "_" + concat.substring(upperLetters[c], concat.length);	
 			}
 		}
-		//console.log(concat);
 		header = concat;
 	}
 		
@@ -52,15 +44,12 @@ function toggle(inIndex, inShow, grid) {
 }
 
 function addLinks(value, inRowIndex, inItem){
- /*console.log(value);
- console.log(inRowIndex);
- console.log(inItem);*/
+ /*console.log(value); console.log(inRowIndex); console.log(inItem);*/
 
-  if(value)
+  if(typeof value != "undefined")
 	return '<span class="pointer value-pop" onclick="filterResults(\'' + value + '\', \'' + inItem.field + '\')" >' + value + '</span>';
   else
     return value;
-
 }
 
 function filterResults(value, columnName){
@@ -72,7 +61,7 @@ function filterResults(value, columnName){
 	var lastIndex = grid.layout.cells.length - 1; //lastIndex represents the index of the details column
 
 	dojo.some(grid.layout.cells, function(cell,idx) {
-		if(cell.field.toLowerCase().indexOf(nameConversion.toLowerCase()) != -1){
+		if(cell.field.toLowerCase().indexOf(nameConversion.toLowerCase()) != -1 || nameConversion.toLowerCase().indexOf(cell.field.toLowerCase()) != -1){
 			colIndex = idx;
 			return true;
 		}
@@ -102,7 +91,7 @@ function jsonHandler(results){
 	var records = results;
 	// Handle a single record.  Turn 'undefined' into '1'.
 	var record_length = records.length;
-
+	//console.log(results);
 	if (record_length == undefined) {
 		record_length = 1;
 	} else {
@@ -115,10 +104,8 @@ function jsonHandler(results){
 	for (var i=0, total=record_length; i < total; i++) { //loop through documents(rows) to get headers
 
 		records[i]["Toggle"] = "";
-		if (record_length == 1)
-			var headerRow = records;
-		else
-			var headerRow = records[i];
+
+		var headerRow = records[i];
 
 		//console.log("header row: "  + headerRow);
 		for (var key in headerRow) {
@@ -128,7 +115,7 @@ function jsonHandler(results){
 			   if(objkey == "text" || objkey == "Filing_Comment")
 					commentHeader = objkey;
 		       else if(isInArray(objkey, origHeaders) == false && objkey.indexOf('_') != 0 
-			   && objkey.indexOf('_sort') == -1 && objkey != "score" && objkey != "viewingStatus")
+			   && objkey.indexOf('_sort') == -1 && objkey.indexOf("score") == -1 && objkey != "viewingStatus")
 					origHeaders.push(objkey);
 		   }
 		}
@@ -152,13 +139,15 @@ function jsonHandler(results){
 				calc_width = calculateWidth(clean_header, 25) + "px";
 			else if(clean_header == "COMMENT PERIOD")
 				calc_width = calculateWidth(clean_header, 16) + "px";
+			else if(clean_header == "TOGGLE")
+				calc_width = calculateWidth(clean_header, 5) + "px";
 			else
-				calc_width = calculateWidth(clean_header, 9) + "px";
+				calc_width = 'auto';
 				
 			if(clean_header == "TOGGLE")
-				cellSet1.push({ name: "*", field:origHeaders[item], width: "40px", headerClasses: ["staticHeader"], styles: "text-align: center; font-size:1.5em;font-weight:bold;", get: getCheck, formatter: formatCheck});
-			else if(clean_header.indexOf("PROCEEDING") != -1 || clean_header == "NAME OF FILER" || clean_header == "APPLICANT" || clean_header.indexOf("STATE CODE") != -1 || clean_header == "DATE RECEIVED" 
-			|| clean_header == "DATE RECEIPT" || clean_header == "FILING TYPE" || clean_header == "SUBMISSION TYPE" || clean_header == "PAGES" || clean_header.indexOf("BRIEF") != -1)
+				cellSet1.push({ name: "*", field:origHeaders[item], width: calc_width, headerClasses: ["staticHeader"], styles: "text-align: center; font-size:1.5em;font-weight:bold;", get: getCheck, formatter: formatCheck});
+			else if(clean_header.indexOf("PROCEEDING") != -1 || clean_header == "NAME OF FILER" || clean_header == "APPLICANT" || clean_header.indexOf("STATE CODE") != -1 || clean_header.indexOf("DATE RECEI") != -1
+			|| clean_header == "FILING TYPE" || clean_header == "SUBMISSION TYPE" || clean_header == "PAGES" || clean_header.indexOf("BRIEF") != -1)
 				cellSet1.push({ name: clean_header, field:origHeaders[item], width: "auto"});
 			else
 				fieldSet.push(origHeaders[item]);
@@ -171,25 +160,21 @@ function jsonHandler(results){
 
                         }};
 	resultWidthHeaders[0]["cells"] = [cellSet1];
-	cellSet2.push({ name
-	: "DETAILS", field:"Filing_Details", fields:fieldSet, width: calc_width, colSpan : cellSet1.length, headerClasses: ["staticHeader"], filterable: true, formatter: formatDetail});
+	cellSet2.push({ name: "DETAILS", field:"Filing_Details", fields:fieldSet, width: calc_width, colSpan : cellSet1.length, headerClasses: ["staticHeader"], filterable: true, formatter: formatDetail});
 	resultWidthHeaders[0]["cells"].push(cellSet2);
 
 	/*Now set the data for each row*/
 	var setResultsRows = [], setFilterRows = [], proceedings = [], proceeding_check = [], filingTypes = [], filing_check = [],
 		states = [], state_check = [], briefComment = [], brief_check = [];
-			
+
 	for (var i=0, total=record_length; i < total; i++) {
-		if (record_length == 1) 
-			var row = records;
-		else
-			var row = records[i];
-		
+		var row = records[i];
 		var link = {};
-		//console.log(row);
+		
 		for(key in origHeaders) {
 			var value = row[origHeaders[key]];
-			if(!value)
+			
+			if(typeof value == "undefined")
 				value = "";
 				
 			//get filter counts
@@ -229,7 +214,7 @@ function jsonHandler(results){
 					});
 				}
 			}
-			else if(origHeaders[key].toLowerCase().indexOf("brief") != -1){				
+			else if(origHeaders[key].toLowerCase().indexOf("brief") != -1){
 				if(isInArray(value, brief_check) == false){
 					brief_check.push(value);
 				    briefComment.push({"briefComment": value, "BTotals" : 1});
@@ -242,30 +227,30 @@ function jsonHandler(results){
 				}
 			}
 			
+		
 			var _array = getStringArray(value);
-			if(_array.length > 1 && _array.length < 3){
+			if(_array.length > 1 && _array.length < 3){//for date range variables change [12-20-2012, 12-22-2013] to a string: 12-20-2012 to 12-22-2013
 				for(var j=0; j < _array.length; j++){
 					var new_value = _array[j];
 					if(j == 0)
-						link[origHeaders[key]] = new_value /*col(new_value)*/;
+						link[origHeaders[key]] = new_value;
 					else if(j > 0 && new_value != "")
-						link[origHeaders[key]] += " to " + new_value/*col(new_value)*/;
+						link[origHeaders[key]] += " to " + new_value;
 				}
 			}	
 			else
-				link[origHeaders[key]] = value/*col(value)*/;
+				link[origHeaders[key]] = value;
 		}
 		
 		setResultsRows.push(link); 	
 	}
-	//console.log(setResultsRows);
+
 	proceedings.sort(sortByProperty("PTotals")).reverse();
 	filingTypes.sort(sortByProperty("FTotals")).reverse();
 	states.sort(sortByProperty("STotals")).reverse();
 	briefComment.sort(sortByProperty("BTotals")).reverse();
-	
 	//Gather the top 3 highest counts of each object set
-	for (var k=0; k < 6; k++) {
+	for (var k=0; k < 3; k++) {
 		var gather_rows = {};
 
 		for (proc in proceedings[k]){
@@ -309,9 +294,6 @@ function jsonHandler(results){
 		
 		setFilterRows.push(gather_rows);
 	}
-	
-	document.getElementById("warning").style.display='inline';
-	document.getElementById("warning").style.visibility='visible';	
 
 	buildGrid(resultWidthHeaders, setResultsRows, results_id, results_id + "Div", "results");
 	buildGrid(filterWidthHeaders, setFilterRows, filter_id, filter_id + "Div", "filter");
@@ -334,11 +316,8 @@ function jsonHandler(results){
 		
 		if(grid_type == "results"){
 			paging_rules = {id: "paginator", pageSizes: ["100", "300", "600", "1000"], description: true, 	defaultPageSize:20, sizeSwitch: true,pageStepper: true, gotoButton: true, maxPageStep: 5, 	position: "bottom"};
-			
 			filter_rules = {closeFilterbarButton: true, itemsName: "records", ruleCount: 4,ruleCountToConfirmClearFilter: 3};
-			
 			results_plugins = {filter: filter_rules, pagination: paging_rules};
-			
 			auto_width = false;
 		}
 
@@ -348,6 +327,7 @@ function jsonHandler(results){
 				id: grid_id,
 				store: store,
 				structure: layout,
+				selectable: true,
 				clientSort : true,
 				rowSelector: '10px',
 				selectionMode: 'single',
@@ -358,56 +338,34 @@ function jsonHandler(results){
 			}, document.createElement('div'));
 
 			dojo.connect(grid, "onHeaderCellClick", grid, function(e){
-					if(e.cell.index == 0){
-						if(expand_all == true){
-							var rows_to_alter = [];
-							this.store.fetch({
-								 onComplete: function (items) {
-									 dojo.forEach(items, function (item, index) {
-											rows_to_alter[index] = true;
-									 })
-								 }
-							});
-							
-							this.expandedRows = rows_to_alter;
-							expand_all = false;
-						}
-						else{
-							this.expandedRows = [];
-							expand_all = true;
-						}
+				if(e.cell.index == 0){
+					if(expand_all == true){
+						var rows_to_alter = [];
+						this.store.fetch({
+							 onComplete: function (items) {
+								 dojo.forEach(items, function (item, index) {
+										rows_to_alter[index] = true;
+								 })
+							 }
+						});
 						
-						this.updateRows(0, this.getTotalRowCount() - 1);	
+						this.expandedRows = rows_to_alter;
+						expand_all = false;
 					}
+					else{
+						this.expandedRows = [];
+						expand_all = true;
+					}
+					
+					this.updateRows(0, this.getTotalRowCount() - 1);	
+				}
 
 			});
-
-			//remove the last p element which contains the loading message
-			if(grid_type == "filter")
-				$("#activity").find('p').slice(-1).remove();
-				
+		
 			/*Append grid and call startup() to render the grid*/
 			grid.placeAt(placement_div);
 			grid.startup();
-			
-			
-			/*if(grid_type == "filter"){
-				grid.on("RowClick", function(evt){		
-					var idx = evt.rowIndex, clickedRow = grid.getItem(idx);
-					console.log("index: " + idx);
-					console.log(clickedRow);
-					//filtering();
-					headers_index = 0;
-					var card_json = {};		
-					for (var key in clickedRow) {
-						var objkey = key;
-						if(isInArray(objkey, origHeaders) == true ){
-							card_json[cleanHeaders[headers_index]] = encodeURIComponent(clickedRow[objkey]);
-							headers_index++;
-						}
-					}
-				}, true); 
-			}*/
+
 		}
 		else
 		{
@@ -429,7 +387,7 @@ function jsonHandler(results){
 	}
 	
 	function formatDetail(value, inRowIndex){
-		//every other index, display formatted  data
+		//every other index, display formatted data in the results table
 		var fields = this._props.fields;
 		var value_length = Object.keys(value).length;
 		var counter = 0;
@@ -441,7 +399,7 @@ function jsonHandler(results){
 			}
 			else{
 				if(counter % 2 == 0){
-					if( counter == value_length - 1)//if last
+					if( counter == value_length - 1)//if last row, make the entire row one column
 						html += createColumns(cleanHeader(fields[counter]), val, "left", true, true);
 					else 
 						html += createColumns(cleanHeader(fields[counter]), val, "left", true, false);
@@ -470,8 +428,9 @@ function jsonHandler(results){
 	
 	function createColumns (label, value, placement, split_row, complete_row){
 		var html = "";
-		value = value.replace(/&nbsp;/g, " ");
-		console.log(value);
+		
+		if(label.indexOf("LINK") != -1 && value.indexOf("http") == 0)
+			value = "<a href='" + value + "' class='value-cool'>" + value + "</a>";
 
 		if (placement == "left")
 			html += "<div class='row'>";
@@ -479,13 +438,12 @@ function jsonHandler(results){
 		if(split_row == true)
 			html += "<div class='cell two_halves " + placement + "'><p>" + label + " : <span class='value-cool'>" + value + "</span></p></div>";
 		else
-			html += "<div class='cell" + placement + "'><p>" + label + " : <span class='value-cool'>" + value + "</span></p></div>";
+			html += "<div class='cell " + placement + "'><p>" + label + " : <span class='value-cool'>" + value + "</span></p></div>";
 		
 		if(placement == "right"  || complete_row == true)
 			html += "</div>";
 
 		return html;
 	}
-
 }
 

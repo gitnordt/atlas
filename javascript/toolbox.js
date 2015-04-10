@@ -7,10 +7,10 @@ dojo.addOnLoad(function(){
 });
 
 
-/* Select Menu variables for the search criteria menu */
+/* Select Menu items for the search criteria menu */
 function getFilingSelectorMenu(){
 	var filing_selector_menu = "";
-		filing_selector_menu += "<label for='filing_type_selector' >Filing Type</label><select class='selector_cell search_selector' id='filing_type_selector'>";
+		filing_selector_menu += "<label for='submission_type_selector' >Filing Type</label><select class='selector_cell search_selector' id='submission_type_selector'>";
 		filing_selector_menu += "<option value=''></option>";
 		filing_selector_menu += "<option value='AMENDMENT'>AMENDMENT</option>";
 		filing_selector_menu += "<option value='ANSWER TO INTERROGATORY'>ANSWER TO INTERROGATORY</option>";
@@ -238,8 +238,8 @@ function getSearchTypeSelectorMenu(){
 		search_type_selector_menu += "<option value='filing'>FILING</option>";
 		search_type_selector_menu += "<option value='status'>FILING STATUS</option>";
 		search_type_selector_menu += "<option value='date'>DATE</option>";
-		search_type_selector_menu += "<option value='proceeding'>PROCEEDING</option>";
-		search_type_selector_menu += "<option value='term'>TERM</option>";
+		/*search_type_selector_menu += "<option value='proceeding'>PROCEEDING</option>";*/
+		search_type_selector_menu += "<option value='text'>TEXT</option>";
 		search_type_selector_menu += "</select>";
 
 		return search_type_selector_menu;
@@ -326,7 +326,7 @@ function createCellTextbox(id_prefix, label_text, value, tooltip_text, regex, re
 function createDateTextbox(id_prefix, label_text, value, required){ 
 	var html = "<label for='" + id_prefix + "_text'>" + label_text + "</label>";
 	html += "<input type='text' maxlength='50' class='datepicker cell_textbox' id='"+ id_prefix +"_text' name='"+ id_prefix +"_text' value='" + value + "' ";
-	html += date_rgx_html;
+	html += "pattern='" + validity["date"].regex + "' title='" + validity["date"].message + "' ";
 	if(required)
 		html += "required='true'";	
 	html += "/>"; 
@@ -336,7 +336,7 @@ function createDateTextbox(id_prefix, label_text, value, required){
 function createSingleDateField(id_prefix, required){
 	var html = "<span class='left' style='width:100%;'><label for='" + id_prefix + "_picker'>Date</label>";
 	html += "<input id='" + id_prefix + "_picker' name='" + id_prefix + "_picker' class='datepicker' type='text' ";
-	html += date_rgx_html;
+	html += "pattern='" + validity["date"].regex + "' title='" + validity["date"].message + "' ";
 	if(required)
 		html += "required='true'";	
 	html += "/></span>";
@@ -346,13 +346,13 @@ function createSingleDateField(id_prefix, required){
 function createMultiDateField(id_prefix, required){
 	var html = "<span class='left small_span'><label for='" + id_prefix + "_from_picker' >From</label>";
 	html += "<input id='" + id_prefix + "_from_picker' name='" + id_prefix + "_from_picker'  class='datepicker small_box' type='text' ";
-	html += date_rgx_html;
+	html += "pattern='" + validity["date"].regex + "' title='" + validity["date"].message + "' ";
 	if(required)
 		html += "required='true'";	
 	html += "/></span>";
 	html += "<span class='right small_span'><label for='" + id_prefix + "_to_picker'>To</label>";
 	html += "<input id='" + id_prefix + "_to_picker' name='" + id_prefix + "_to_picker' class='datepicker small_box' type='text' ";
-	html += date_rgx_html;
+	html += "pattern='" + validity["date"].regex + "' title='" + validity["date"].message + "' ";
 	if(required)
 		html += "required='true'";		
 	html += "/></span>";
@@ -383,7 +383,7 @@ function createRadioOptions(id_prefix, label_text){
 
 }
 
-//creates the html for the Query Menu displayed in the UI
+//creates the html columns for the Query Menu displayed in the UI
 function createCriteriaColumns (label, value, placement,complete_row){
 	var html = "";
 	
@@ -498,9 +498,9 @@ function getFilingUrl(path){
 	return url;	
 }
 
-function getAnchorDetails(search_term, search_type){
+function getAnchorDetails(search_text, search_type){
 
-		var invalid_date = isNaN(stringToDate(search_term).getTime());
+		var invalid_date = isNaN(stringToDate(search_text).getTime());
 		var html = "";  
 
 		html += "<form id='criteria_input' data-dojo-type='dijit.form.Form' onsubmit='return criteriaSubmit(this.id);'>";
@@ -511,14 +511,14 @@ function getAnchorDetails(search_term, search_type){
 		html += getSearchTypeSelectorMenu();
 		html += "</div>";
 		html += "</div>";
-		if(search_type == "term"){
+		if(search_type == "text"){
 			html += "<div class='two right'>";	
 			html += "<div style='margin:auto;'>";
 			
 			if(invalid_date)
-				html += createRowTextbox(search_type, toCamelCase(search_type), search_term, "Enter at least 2 characters. Some special characters are invalid.", "^[A-Za-z0-9]{2,}[A-Za-z0-9\\s\._-]*$", true);
+				html += createRowTextbox(search_type, toCamelCase(search_type), search_text, validity['text'].message, validity['text'].regex, true);  // validity - utils.js variable 
 			else
-				html += createRowTextbox(search_type, toCamelCase(search_type), "", "Enter enter at least 2 characters. Some special characters are invalid.", "^[A-Za-z0-9]{2,}[A-Za-z0-9\\s\._-]*$", true);
+				html += createRowTextbox(search_type, toCamelCase(search_type), "", validity['text'].message, validity['text'].regex, true);
 				
 			html += "</div>";
 			html += "</div>";
@@ -530,7 +530,7 @@ function getAnchorDetails(search_term, search_type){
 			if(invalid_date)
 				html += createDateTextbox(search_type, toCamelCase(search_type), "", true);
 			else
-				html += createDateTextbox(search_type, toCamelCase(search_type), search_term, true);
+				html += createDateTextbox(search_type, toCamelCase(search_type), search_text, true);
 				
 			html += "</div>";
 			html += "</div>";
@@ -538,7 +538,7 @@ function getAnchorDetails(search_term, search_type){
 		else if(search_type == "status"){
 			html += "<div class='two right'>";	
 			html += "<div style='margin:auto;'>";
-			html += createRowTextbox("confirmation_number", "Confirmation Number", "", "Enter at least 4 characters of the filing confirmation number.", "^[A-Za-z0-9]{4,}[A-Za-z0-9\\s-]*$", true);
+			html += createRowTextbox("id", "Filing Confirmation Number", "", validity['confirmation_id'].message, validity['confirmation_id'].regex, true);
 			html += "</div>";
 			html += "</div>";
 		}
@@ -548,20 +548,20 @@ function getAnchorDetails(search_term, search_type){
 		html += "<hr class='criteria_divider'>";
 		html += "</div>";
 		
-		if(search_type == "proceeding"){
+		/*if(search_type == "proceeding"){
 		
 			html += "<div class='row'>";
 				html += "<div class='two left'>";
 				html += "<div class='cell two left'>";
-				html += createCellTextbox("proceeding_number", "Proceeding Number", "", "Enter a valid proceeding number.", "^(\\d{2}|RM)-(\\d{0,5})$", false);
+				html += createCellTextbox("proceeding_number", "Proceeding Number", "", validity['proceeding_id'].message, validity['proceeding_id'].regex, false);
 				html += "</div>";
 				html += "<div class='cell two right'>";
-				html += createCellTextbox("bureau_number", "Bureau ID Number", "", "Enter at least 2 characters of valid bureau identification number.", "^[A-Za-z0-9-]{2,}$", false);
+				html += createCellTextbox("bureau_number", "Bureau ID Number", "", validity['generic_id'].message, validity['generic_id'].regex, false);
 				html += "</div>";
 				html += "</div>";
 				html += "<div class='two right'>";
 				html += "<div>";
-				html += createRowTextbox("proceeding_subject", "Subject", "", "Enter at least 5 characters from the proceeding subject you wish to search for.", "^[A-Za-z0-9\\s\._-]{5,}$", false);
+				html += createRowTextbox("proceeding_subject", "Subject", "", validity['description'].message, validity['description'].regex, false);
 				html += "</div>";
 				html += "</div>";
 			html += "</div>";
@@ -570,10 +570,10 @@ function getAnchorDetails(search_term, search_type){
 				html += "<div class='two left'>";
 				html += "<div class='cell two left'>";
 				html += "<div style='margin-top:6px; margin-bottom:4px;'>";
-				html += createCellTextbox("filer_name", "Name of Filer", "", "Enter at least 2 letters of the filer's first or last name.", "^[A-Za-z]{1}([A-Za-z\\s\.\-]*)$", false);
+				html += createCellTextbox("filer_name", "Name of Filer", "", validity['person'].message, validity['person'].regex, false);
 				html += "</div>";
 				html += "<div>";
-				html += createCellTextbox("prepared_by", "Prepared By", "", "Enter at least 2 letters of the filer's first or last name.", "^[A-Za-z]{1}([A-Za-z\\s\.\-]*)$", false);
+				html += createCellTextbox("prepared_by", "Prepared By", "", validity['person'].message, validity['person'].regex, false);
 				html += "<hr class='criteria_divider cell_divider'>";
 				html += "</div>";
 				html += "</div>";
@@ -628,8 +628,8 @@ function getAnchorDetails(search_term, search_type){
 				html += "</div>";
 			html += "</div>";
 		}
-		else if(search_type != "status" && search_type != "date"){
-			html += "<div class='row'>";
+		else*/ if(search_type != "status" && search_type != "date"){
+			/*html += "<div class='row'>";
 			html += "<div class='two left'>";
 			html += "<div>";
 			html += getFilingSelectorMenu();
@@ -637,40 +637,58 @@ function getAnchorDetails(search_term, search_type){
 			html += "</div>";
 			html += "<div class='two right'>";	
 			html += "<div class='cell two left'>";
-			html += createCellTextbox("lawfirm_name", "Lawfirm Name", "", "Enter at least 2 characters of the lawfirm name.", "[A-Za-z]{2,}([A-Za-z\\s\.\&]*)$", false);
+			html += createCellTextbox("lawfirm_name", "Lawfirm Name", "", validity['lawfirm'].message, validity['lawfirm'].regex, false);
 			html += "</div>";
 			html += "<div class='cell two right'>";
-			html += createCellTextbox("author_name", "Attorney/Author Name", "", "Enter at least 2 letters of the author's first or last name.", "[A-Za-z]{2,}([A-Za-z\\s\.]*)$", false);
+			html += createCellTextbox("author_name", "Attorney/Author Name", "", validity['person'].message, validity['person'].regex, false);
+			html += "</div>";
+			html += "</div>";			
+			html += "</div>";
+			//replaced with row below */
+			
+			html += "<div class='row'>";
+			html += "<div class='two left'>";
+			html += "<div class='cell two left'>";
+			html += createCellTextbox("proceeding", "Proceeding Number", "", validity['proceeding_id'].message, validity['proceeding_id'].regex, false);
+			html += "</div>";
+			html += "<div class='cell two right'>";
+			html += createCellTextbox("report", "Report Number", "", validity['generic_id'].message, validity['generic_id'].regex, false);
+			html += "</div>";
+			html += "</div>";
+			html += "<div class='two right'>";	
+			html += "<div>";
+			html += getFilingSelectorMenu();
 			html += "</div>";
 			html += "</div>";			
 			html += "</div>";
 			
-			html += "<div class='row'>";
+			
+			/*html += "<div class='row'>";
 			html += "<div class='two left'>";
 			html += "<div class='cell two left'>";
-			html += createCellTextbox("proceeding_number", "Proceeding Number", "",  "Enter at least 2 characters of a valid proceeding number. e.g. 14-28", "^(\\d{2}|RM)(-(\\d{0,5}))*$", false);
+			html += createCellTextbox("proceeding_number", "Proceeding Number", "", validity['proceeding_id'].message, validity['proceeding_id'].regex, false);
 			html += "</div>";
 			html += "<div class='cell two right'>";
-			html += createCellTextbox("fcc_number", "DA/FCC Number", "", "Enter at least 2 characters of valid DA/FCC number.", "^[A-Za-z0-9\-]{2,}$", false);
+			html += createCellTextbox("fcc_number", "DA/FCC Number", "", validity['generic_id'].message, validity['generic_id'].regex, false);
 			html += "</div>";
 			html += "</div>";
 			html += "<div class='two right'>";
 			html += "<div class='cell two left'>";
-			html += createCellTextbox("bureau_number", "Bureau ID Number", "", "Enter at least 2 characters of valid bureau identification number.", "^[A-Za-z0-9\-]{2,}$", false);
+			html += createCellTextbox("bureau_number", "Bureau ID Number", "", validity['generic_id'].message, validity['generic_id'].regex, false);
 			html += "</div>";
 			html += "<div class='cell two right'>";
-			html += createCellTextbox("report_number", "Report Number", "", "Enter at least 2 characters of valid report number.", "^[A-Za-z0-9\-]{2,}$", false);
+			html += createCellTextbox("report_number", "Report Number", "", validity['generic_id'].message, validity['generic_id'].regex, false);
 			html += "</div>";
 			html += "</div>";
-			html += "</div>";
+			html += "</div>";*/
 			
 			html += "<div class='row'>";
 			html += "<div class='two left'>";
 			html += "<div class='cell two left'>";
-			html += createCellTextbox("filer_name", "Name of Filer", "", "Enter at least 2 letters of the filer's first or last name.", "[A-Za-z]{2,}([A-Za-z\\s\.]*)$", false);
+			html += createCellTextbox("applicant", "Name of Filer", "", validity['person'].message, validity['person'].regex, false);
 			html += "</div>";
 			html += "<div class='cell two right'>";
-			html += createCellTextbox("city", "City", "", "Enter at least 2 letters of the city you wish to search for.", "[A-Za-z]{2,}([A-Za-z\\s]*)$", false);
+			html += createCellTextbox("city", "City", "", validity['city'].message, validity['city'].regex, false);
 			html += "</div>";
 			html += "</div>";
 			html += "<div class='two right'>";
@@ -678,7 +696,7 @@ function getAnchorDetails(search_term, search_type){
 			html += getStateSelectorMenu();
 			html += "</div>";
 			html += "<div class='cell two right'>";
-			html += createCellTextbox("zipcode", "Zip Code", "", "Enter at least 5 digits of a valid zip code or enter zip code +4, e.g. 32656-5521", "^\\d{5}(-(\\d{4}))?$", false);
+			html += createCellTextbox("zip", "Zip Code", "",  validity['zip_cd'].message, validity['zip_cd'].regex,  false);
 			html += "</div>";
 			html += "</div>";
 			html += "</div>";
@@ -686,10 +704,10 @@ function getAnchorDetails(search_term, search_type){
 			html += "<div class='row'>";
 			html += "<div class='two left' style='position:relative;'>";
 			html += "<div class='cell two left'>";
-			html += "<fieldset id='date_posted'><legend>Date Posted</legend>";
-			html += createDateCheckbox("date_posted");
-			html += "<div id='date_posted_div'>";
-			html += createSingleDateField("date_posted");
+			html += "<fieldset id='date_disseminated'><legend>Date Posted</legend>";
+			html += createDateCheckbox("date_disseminated");
+			html += "<div id='date_disseminated_div'>";
+			html += createSingleDateField("date_disseminated");
 			html += "</div>";
 			html += "</fieldset>";
 			html += "</div>";
@@ -712,7 +730,7 @@ function getAnchorDetails(search_term, search_type){
 			html += "</div>";
 			html += "<div class='cell two right'><fieldset id='ex_parte'  style='height:2.7em; position: relative;'>";
 			html += "<div style='position:absolute; bottom:7px;'>"
-			html += createCheckbox("ex_parte_filing", "Ex Parte Filing");
+			html += createCheckbox("ex_parte", "Ex Parte Filing");
 			html += "</div>";
 			html += "</fieldset>";
 			html += "</div>";
@@ -734,16 +752,16 @@ function getAnchorDetails(search_term, search_type){
 			html += "</fieldset>";
 			html += "</div>";
 			html += "<div class='cell two right'>";
-			html += "<fieldset id='date_reply'><legend>Comment Reply</legend>";
-			html += createDateCheckbox("date_reply");
-			html += "<div id='date_reply_div' class='date-div'>";
-			html += createSingleDateField("date_reply");
+			html += "<fieldset id='date_modified'><legend>Comment Reply</legend>";
+			html += createDateCheckbox("date_modified");
+			html += "<div id='date_modified_div' class='date-div'>";
+			html += createSingleDateField("date_modified");
 			html += "</div>";
 			html += "<div class='date-radio-div'><label class='floating_label'>Due Next:</label><span class='left small_span'>";
-			html += createRadioOptions("date_reply", "week");
+			html += createRadioOptions("date_modified", "week");
 			html += "</span>";
 			html += "<span class='left small_span'>";
-			html += createRadioOptions("date_reply", "month");
+			html += createRadioOptions("date_modified", "month");
 			html += "</span>";
 			html += "</div>";
 			html += "</fieldset>";
@@ -763,9 +781,9 @@ function getAnchorDetails(search_term, search_type){
 }
 
 function switchAnchorDetails(id){
-	var input_term = $("#search_term_input").val();
+	var input_term = $("#search_text_input").val();
 	var input_type = $('#' + id + ' option:selected').val();	
-	$.jStorage.set("searchTerm", input_term);
+	$.jStorage.set("searchText", input_term);
 	$.jStorage.set("searchType", input_type);
 
 	$("#criteria_details").empty().append(getAnchorDetails(input_term, input_type));
@@ -784,7 +802,7 @@ function getConfirmationDetails(id){
 		var confirmation_object = submitForm(id);
 		var confirmation_keys = Object.keys(confirmation_object);
 		var confirmation_length = confirmation_keys.length;
-		//console.log(confirmation_object);
+		console.log(confirmation_object);
 		
 		var html = ""; 
 		
@@ -827,27 +845,25 @@ function getConfirmationDetails(id){
 
 function closeDialog(id){
 	var id_prefix = id.substr(0, id.lastIndexOf("_"));
-	//console.log(jq('#' + id_prefix + '_details'));
 	jq('#' + id_prefix + '_details').dialog("close");
-	quickSearchSwitch("term");
+	quickSearchSwitch($.jStorage.get("searchType"));
 }
 
 function cleanLabel(label){
 	var splitter = label.split("_");
 	var clean_label = "";
-	//console.log(label.indexOf("state"));
-	//console.log(toCamelCase(label.substr(0, label.lastIndexOf("_"))));
-	
-	if(splitter.length >= 2 && label.indexOf("state") == -1 && label.lastIndexOf("text") == -1 && label.lastIndexOf("selector") == -1)
-		clean_label = toCamelCase(label.replace(/_/g, " "));
-	else
+
+	if(splitter.length >= 2 && label.toLowerCase().indexOf('date') == -1)
 		clean_label = toCamelCase(label.substr(0, label.lastIndexOf("_")).replace(/_/g, " "));
+	else
+		clean_label = toCamelCase(label.replace(/_/g, " "));
 	
 	if(label.indexOf("brief") != -1)
-		clean_label = clean_label + " Comments";
+		clean_label = clean_label.split(" ")[1] + " Comments";
 		
 	return clean_label;
 }
+
 /*-------------------------------Used for multi-select textbox-------------------------------*/
 function addItems(id) {
 	var id_prefix = id.substr(0, id.lastIndexOf("_"));
@@ -873,7 +889,6 @@ function deleteItems(id) {
 		var sel_options = $('#' + id_prefix + '_selector option:selected');
 		
 		$.map(sel_options ,function(option) {
-			//console.log(option.value);
 			selector.find('[value="' + option.value + '"]').remove();
 		});
 	}
@@ -889,15 +904,12 @@ function clearItems(id) {
 	return true;
  } 
 
-/*-------------------------------Used for all submit forms-------------------------------*/ 
+/*-------------------------------Used for form submissions and retrieving results-------------------------------*/ 
 function resetForm(id){
 	//console.log(id);
 	var id_prefix = id.substr(0, id.lastIndexOf("_"));
-	//console.log(id_prefix);
 	var form_input = $('#' + id_prefix).find('input[type="text"], input[type="checkbox"], input[type="radio"], input[type="file"], select, textarea');
-	
-	//console.log(form_input);
-	
+
 	$.each(form_input, function( index, field ) {
 		if((field.type == "text" || field.type == "textarea"  || field.type == "file")  && field.value != ""){
 			if(id_prefix == "express_filing"){
@@ -928,36 +940,37 @@ function resetForm(id){
 }
 
 function submitForm(id){
-	//console.log(id);
+
 	var form_inputs = $('#' + id).find('input[type="text"], textarea, input[type="checkbox"], input[type="radio"], input[type="file"], select');
 	var input_object = {};
-
+	var date_holder = '';
 	//gather search criteria items submitted in the query
 	$.each(form_inputs, function( index, field ) {
-		//console.log(field);
 		if((field.type == "text" || field.type == "textarea" ) && field.value != ""){ //text boxes with values
 			if(field.id.indexOf("date") == -1) //if it is not a date field
 				input_object[field.id] = field.value;
-			else{
-				console.log(field.value);
-				var split_date = field.value.split('/');
-				var reformatted_date = split_date[1] + '/' + split_date[0] + '/' + split_date[2];
-				console.log(reformatted_date);
-				console.log(stringToDate(field.value));
-				//is valid = add like above
-				//invalid alert, delete input object,  and stop loop
-			
+			else{//format output based on a user selected single date or a date range.
+				var new_name = field.id.split('_')[0] + '_' + field.id.split('_')[1];
+				if(field.id.indexOf("_from_") > -1)
+					date_holder = field.value;
+				else if(field.id.indexOf("_to_") > -1)
+					input_object[new_name] = date_holder + ' TO ' + field.value;
+				else
+					input_object[new_name] = field.value;
 			}
-				
 		}
 		else if(field.type == "checkbox" && field.id.indexOf("date") == -1 && field.checked == true) //checked checkboxes
-			input_object[field.id] = field.checked;		
+				input_object[field.id] = field.checked;
 		else if(field.type == "radio" && field.id.indexOf("address") != -1 && field.checked == true) //selected radio buttons
 			input_object[field.id] = field.checked;
 		else if(field.type == "file" && field.files.length > 0) //uploaded files
 			input_object[field.id] = field.files[0];
-		else if(field.type == "select-one" && (field.selectedIndex > 0 || (field.id.indexOf("search_type") != -1 && field.selectedIndex > -1))) //single-select menus
-			input_object[field.id] = field.options[field.selectedIndex].text;
+		else if(field.type == "select-one" && (field.selectedIndex > 0 || (field.id.indexOf("search_type") != -1 && field.selectedIndex > -1))){ //single-select menus
+			if(field.id.indexOf("state") > -1)
+				input_object[field.id] = field.options[field.selectedIndex].value;
+			else
+				input_object[field.id] = field.options[field.selectedIndex].text;
+		}
 		else if(field.type == "select-multiple" && field.options.length > 0){ //multi-select menus
 			if(field.id.indexOf("proceedings") != -1){
 				input_object[field.id] = [];
@@ -980,60 +993,102 @@ function submitForm(id){
 		}
 	});
 	
-	console.log(input_object);
+	//console.log(input_object);
 	return input_object;
 }
 	
-var results_url = 'data/mock_data2.json';	
-	
 function criteriaSubmit(id){
-	
+		window.clearInterval(wait_interval);
+		$('#activity p').remove();
+		$("#activity").append(activity_spinner.el).append("<p class='filter_msg'><br><span class='value-cool'>Loading...</span></p>");
+		$('#no_results').empty().append(results_spinner.el).append("<label><span class='value-cool'>Loading...</span></label>");
+		$.jStorage.set("searchText", "");
+		if ($('#no_results').is(":hidden"))
+			$('#no_results').show();
+		
+		if(dijit.byId("filterGrid") != undefined){
+			dijit.byId("filterGrid").destroy();
+			dijit.byId("resultsGrid").destroy();
+		}
+		
+		dojo.addOnLoad(function() {		
+			$('#criteria').height($('#activity').height() - 1);		
+			$('#criteria_view').height($('#criteria').height() - 21);
+		});
+		
 		var criteria_object = submitForm(id);
-		//console.log(criteria_object);
+		var criteria_query_string = "";
 		if(criteria_object){
 			//add new search criteria to the list
-			$("#criteria_view").empty();
+			$("#criteria_scroll").empty();
 			var criteria_keys = Object.keys(criteria_object);
-			//console.log(criteria_keys);
 			var criteria_length = criteria_keys.length;
-			
-			//if the number of items in the search criteria is even, split into equal columns and rows, else add an additional row for the solo column
-			
 			var criteria_html = "";
-			if(parseInt(criteria_length) % 2 == 0){
-				//console.log("even");
-				for(var i = 0; i < criteria_length; i++){
-					var curr_key = criteria_keys[i];
-					
-					if(i % 2 == 0)
-						criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "left", false);
-					else
-						criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "right", false);
-				}
-				
-				$("#criteria_view").html(criteria_html);	
+			var even = parseInt(criteria_length) % 2 == 0 ? true : false;
 			
-			}
-			else{
-				//console.log("odd");
-				for(var i = 0; i < criteria_length; i++){
-					var curr_key = criteria_keys[i];
-					
+			for(var i = 0; i < criteria_length; i++){
+				var curr_key = criteria_keys[i];
+				var clean_key = cleanLabel(curr_key);
+				var key_val = criteria_object[curr_key];
+				//convert labels to database naming convention
+				var query_key = curr_key.indexOf('report') > -1 ? 'text' 
+					: curr_key.indexOf('submission') > -1 ? curr_key.split('_')[0] + toCamelCase(curr_key.split('_')[1])
+					: clean_key.toLowerCase() == 'state' ? clean_key.toLowerCase() + 'Cd' 
+					: curr_key.indexOf('brief') > -1 ? 'brief'
+					: curr_key.indexOf('ex_parte') > -1 ? curr_key.split('_')[0] + toCamelCase(curr_key.split('_')[1])
+					: curr_key.indexOf('received') > -1 ? 'dateRcpt'
+					: curr_key.indexOf('date_text') > -1 ? 'dateRcpt'
+					: curr_key.indexOf('date') > -1 ? curr_key.split('_')[1]
+					: clean_key.toLowerCase();
+				
+				if(curr_key.indexOf('date') > -1){ //convert date values to solr timestamp format
+						var date_string = (key_val.indexOf(' TO ') > -1) ? key_val.split(' TO ') : date_string = getStringArray(key_val);
+						var query_val = '[';
+						for(var q = 0; q < date_string.length; q++){
+							var split_date = date_string[q].split('/');
+							var reformatted_date = split_date[2] + '-' + split_date[0] + '-' + split_date[1];
+
+							if(q == 0)
+								query_val += reformatted_date + 'T00:00:00Z';
+							if((date_string.length > 1 && q == 1) || (date_string.length == 1))
+								query_val += ' TO ' + reformatted_date + 'T23:59:59.999Z';
+						}
+						query_val += ']';
+				}
+				else
+					query_val = key_val;
+				
+				if(even){
+					if(i % 2 == 0)
+						criteria_html += createCriteriaColumns(clean_key, key_val, "left", false);
+					else
+						criteria_html += createCriteriaColumns(clean_key, key_val, "right", false);
+				}
+				else{
 					if(i % 2 == 0)
 						criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "left", false);
 					else if(i == criteria_length - 1)
 						criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "left", true);
 					else
 						criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "right", false);
+				
 				}
 				
-				$("#criteria_view").html(criteria_html);	
+				if(curr_key.indexOf("period") > -1){ //query all dates within the given date range for the Date Period field
+					criteria_query_string += "dateRcpt:" + query_val + " AND disseminated:" + query_val;
+					criteria_query_string += " AND modified:"  + query_val +  " AND ";
+				}
+				else if(curr_key.indexOf("search_type") == -1)	
+					criteria_query_string += query_key + ":" + query_val + " AND ";
 			}
 			
+			criteria_query_string = criteria_query_string.slice(0, -5);
+			$("#criteria_scroll").html(criteria_html);	
+
+			
 			closeDialog("criteria_details");
-			resetForm('criteria_input_submit');
-			displayResults(results_url);
-			//console.log(criteria_html);
+			//resetForm('criteria_input_submit');
+			solrCall(criteria_query_string);
 		}
 	
 	return false;
@@ -1044,39 +1099,69 @@ function confirmationSubmit(){
 	location.href="submit-confirmed-filing.html";
 }
 
-function displayResults(results_url) {
+function solrCall(query){
+	console.log(query);
+	$.ajax({
+		url: getSolrUrl(),
+		data:{'q': query, 'wt':'json','indent':'true', 'rows':getMaxRecords()},
+		dataType: 'jsonp',
+		jsonp: 'json.wrf',
+		success: function(data){
+			//console.log("success");
+			displayResults(data.response);
+		},
+		error:function(jqXHR, textStatus, errorThrown){
+			//console.log("error");
+			$('#no_results').empty().append("<p><span class='value-cool'>There was a problem with the request</span></p><p style='color:#9F000F;'>Status: " + jqXHR.status + ", Error: " + textStatus + "</p>");
+		},
+		fail: function (xmlHttpRequest, textStatus) {
+             console.log(textStatus);
+        }
+	});
+}
+function displayResults(results) {
 	var start_time = new Date().getTime();
 	var max_recs = getMaxRecords();
 	var check_time = getCheckTime();
-	
-	var results = ajaxCall(results_url, 'json', false, true);
-	//console.log(results.length);
 
-	if(results.length >= max_recs){
-		$('#warning').empty().append("<label>** Only displaying " + max_recs + " of 600 records.  Please refine your search.</label>");
-	}
+	console.log(results);
+	activity_spinner.stop();
+	results_spinner.stop();
 	
-	if(results.length != 0){								
+	if(results.numFound > max_recs){
+		$('#warning').empty().append("<label><span class='value-cool'>* Only displaying " + max_recs + " of " + results.numFound + " records. Please refine your search.</span></label>");
+		$('#warning').show();
+	}
+	else
+		$('#warning').hide();
+	
+	if(results.numFound != 0){
 		dojo.ready(function(){
-			//console.log(results);
-			jsonHandler(results);
+
+			jsonHandler(results.docs);
 			$('#no_results').hide();
-			if ($('#results').is(":hidden")){
-				$('#results').show();
-				dijit.byId("resultsGrid")._refresh();
-				dijit.byId("filterGrid")._refresh();
-			}
+
+			$('#activity p').remove();
+			dijit.byId("resultsGrid")._refresh();
+			dijit.byId("filterGrid")._refresh();
+
 			viewer_displayed = true;
 			/*filtering();*/
 		});
+	}
+	else if(results.numFound == 0){
+		$('#activity p').remove();
+		$("#activity").append("<p class='filter_msg'><br><span class='value-cool'>No filters found</span></p>");
+		$('#no_results').empty().append("<label><span class='value-cool'>No results found</span></label>");
 		
-		dojo.addOnLoad(function() {
-		   $('#criteria').height($('#activity').height() - 1);
-		   $('#criteria_div').height($('#criteria').height() - 21);
-		});
+		if ($('#no_results').is(":hidden"))
+			$('#no_results').show();
 	}
-	else if(results.metadata.totalCount == 0){	
-		$('#no_results').empty().append('<label>No results found.</label>');
-	}
+	
+	dojo.addOnLoad(function() {		
+		$('#criteria').height($('#activity').height() - 1);		
+		$('#criteria_view').height($('#criteria').height() - 21);
+	});
 }
+
 

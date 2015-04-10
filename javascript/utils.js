@@ -19,12 +19,26 @@ var front_start = range_start.toString().substr(0,2);
 var back_first = range_end.toString().charAt(2);
 var back_second = range_end.toString().charAt(3);
 
-var date_rgx_html = "pattern='^(((0?[469]|11)\/(0?[1-9]|[1-2]\\d|30))|((0?[13578]|1[02])\/(0?[1-9]|[1-2]\\d|3[01]))|(0?2\/(0?[1-9]|1\\d|2[0-8])))";
-	date_rgx_html += "\/((" + parseInt(front_start) + "(" + parseInt(back_first) + "[" + parseInt(back_second) + "-9]|[";
-	date_rgx_html += (parseInt(back_first) < 9 ? parseInt(back_first) + 1 : 9) + "-9][0-9]))|(" + parseInt(front_end) + "(" + parseInt(back_first) + "[0-" + parseInt(back_second) + "]|";
-	date_rgx_html += (parseInt(back_first) > 0 ? parseInt(back_first) - 1 : 0) + "[0-9])))$' title='Please enter a valid date between the years " + range_start + " and "+ range_end +" using format MM/DD/YYYY' ";
+var date_rgx = "^(((0?[469]|11)\/(0?[1-9]|[1-2]\\d|30))|((0?[13578]|1[02])\/(0?[1-9]|[1-2]\\d|3[01]))|(0?2\/(0?[1-9]|1\\d|2[0-8])))";
+	date_rgx += "\/((" + parseInt(front_start) + "(" + parseInt(back_first) + "[" + parseInt(back_second) + "-9]|[";
+	date_rgx += (parseInt(back_first) < 9 ? parseInt(back_first) + 1 : 9) + "-9][0-9]))|(" + parseInt(front_end) + "(" + parseInt(back_first) + "[0-" + parseInt(back_second) + "]|";
+	date_rgx += (parseInt(back_first) > 0 ? parseInt(back_first) - 1 : 0) + "[0-9])))$";
+	
+var date_title = "Please enter a valid date between the years " + range_start + " and "+ range_end +" using format MM/DD/YYYY";
 
-
+var validity = new Array(12);
+	validity["date"] = {"regex":date_rgx, "message": date_title};
+	validity["text"] = {"regex":"^[A-Za-z0-9\\*]{2,}[A-Za-z0-9\\*\\s\._-]*$", "message": "Enter at least 2 characters. Some special characters are invalid"};
+	validity["description"] = {"regex":"^[A-Za-z0-9\\s\._-]{5,}$", "message": "Enter at least 5 characters from the proceeding description you wish to search for"};
+	validity["person"] = {"regex":"^[A-Za-z\\*]{2}([A-Za-z\\*\\s\.\-]*)$", "message": "Enter at least 2 letters of this person's first or last name"};
+	validity["lawfirm"] = {"regex":"[A-Za-z]{2,}([A-Za-z\\s\.\&]*)$", "message": "Enter at least 2 characters of the lawfirm name"};
+	validity["generic_id"] = {"regex":"^[A-Za-z0-9\-]{2}[A-Za-z0-9\\*\-]*$", "message": "Enter at least 2 characters of valid identification number"};
+	validity["confirmation_id"] = {"regex":"^[0-9]*$", "message": "Enter the confirmation number of the filing"};
+	validity["proceeding_id"] = {"regex":"^(\\d{2}|RM)-(\\d{0,5})$", "message": "Enter a valid proceeding number, e.g. 14-28"};
+	validity["city"] = {"regex":"[A-Za-z]{2,}([A-Za-z\\*\\s]*)$", "message": "Enter at least the 2 leading characters of the city name"};
+	validity["zip_cd"] = {"regex":"^\\d{5}(-(\\d{4}))?$", "message": "Enter at least 5 digits of a valid zip code or enter zip code +4, e.g. 32656-5521"};
+	
+	
 Number.prototype.ordinate = function(){
     var num = this,
         ones = num % 10, //gets the last digit

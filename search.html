@@ -21,7 +21,7 @@
 <link type="text/css" rel="stylesheet" media="all" href="javascript/dojo-1.10.2/dijit/themes/claro/claro.css" />
 <link type="text/css" rel="stylesheet" media="all" href="javascript/dojo-1.10.2/dojox/grid/enhanced/resources/claro/EnhancedGrid.css" />
 
-
+<script type='text/javascript' src="javascript/spin.js"></script>
 <script type="text/javascript" src="javascript/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="javascript/jquery-ui-1.11.2/jquery-ui.js"></script>
 
@@ -35,9 +35,10 @@
 <script type="text/javascript" src="javascript/shBrushXml.js"></script>
 
 <script type='text/javascript' src='javascript/dojo-1.10.2/dojo/dojo.js'></script>
-<script type="text/javascript" src="javascript/toolbox.js"></script>
-<script type="text/javascript" src="javascript/results_grid.js"></script>
 <script type='text/javascript' src='javascript/config.js'></script>
+<script type="text/javascript" src="javascript/toolbox.js"></script> <!--extension of search.html-->
+<script type="text/javascript" src="javascript/results_grid.js"></script> <!--extension of toolbox.js-->
+
 
 </head>
 
@@ -71,7 +72,7 @@
 												<legend>Search Criteria</legend>
 												<div id="criteria_div">
 													<div id="edit_title_div" style="float:left; width:10%;"><img id="edit-anchor" src="images/file_edit.png" class="icon-edit" alt="Edit Criteria"/></div>
-													<div id='criteria_view'></div>
+													<div id='criteria_view'><div id='criteria_scroll'></div></div>
 													<div id="criteria_details" title="Search" class="megamenu criteriamenu"></div>
 												</div>
 											</fieldset>
@@ -120,37 +121,39 @@ jQuery.extend(Drupal.settings, { "basePath": "/" });
 <script type="text/javascript">
 
 $(document).ready(function() {
-	var search_term = $.jStorage.get("searchTerm");
+	var search_text = $.jStorage.get("searchText");
 	var search_type = $.jStorage.get("searchType");
-
+	var auto_open = true;
 	quickSearchSwitch(search_type);
 	window.setTimeout(hovertipInit, 1);
 	
-	var auto_open = true;
+	activity_spinner = new Spinner({length:5, radius:3, width:2, color: '#1d4d66'}).spin(); //loading spinner graphic
+	activity_spinner.el.style.position = "relative";
+	activity_spinner.el.style.left = "44%";
+	activity_spinner.el.style.top = "36px";
 	
-
-	if(!search_type){
-		search_type = "term";
-		$.jStorage.set("searchType", search_type);
-	}
+	results_spinner = new Spinner({length:5, radius:3, width:2, color: '#1d4d66'}).spin(); //loading spinner graphic
+	results_spinner.el.style.position = "relative";
+	results_spinner.el.style.left = "1%";
+	results_spinner.el.style.top = "22px";
 	
-	if(search_term){
+	if(search_text){
 		var html = createCriteriaColumns("Search Type", search_type.toUpperCase(), "left", false);
-		html += createCriteriaColumns(toCamelCase(search_type), search_term, "right", true);
+		html += createCriteriaColumns(toCamelCase(search_type), search_text, "right", true);
 		
-		$("#criteria_view").html(html);
-		$("#search_term_input").val(search_term);
+		$("#criteria_scroll").html(html);
+		$("#search_text_input").val(search_text);
 		auto_open = false;
 	}
 	else
-		search_term = "";
-
+		search_text = "";
+		
 	var scrollHandler = function(){
 		$(".ui-dialog").css({"margin-top": ($(window).scrollTop()) + "px", "margin-left":($(window).scrollLeft()) + "px"});
 	}
 
-	$("label[for!='#search_term_input']").css("display", "none");
-	$("#criteria_details").append(getAnchorDetails(search_term, search_type));
+	$("label[for!='#search_text_input']").css("display", "none");
+	$("#criteria_details").append(getAnchorDetails(search_text, search_type));
 	$('#search_type_selector option:selected').removeAttr('selected');
 	$("#search_type_selector").find('option[value="' + search_type + '"]').attr("selected",true);
 	jq('.datepicker').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+0", closeText : "Close"}); 
@@ -176,16 +179,17 @@ $(document).ready(function() {
 					primary: "ui-icon-closethick"
 				},
 				click: function(){
-					type_height = $(this).parents('.ui-dialog').height();
-					//console.log(type_height);
-					$(this).parents('.ui-dialog').animate({
-						height: 27,
-						width: 200,
-						top: $(window).height() - 50,
-						left: 5
-					}, 200);
-					
-					$(window).scroll(scrollHandler);
+					if($(this).parents('.ui-dialog').height() > 27){
+						type_height = $(this).parents('.ui-dialog').height();
+						$(this).parents('.ui-dialog').animate({
+							height: 27,
+							width: 200,
+							top: $(window).height() - 50,
+							left: 5
+						}, 200);
+						
+						$(window).scroll(scrollHandler);
+					}
 				}
 			},
 			{
@@ -213,7 +217,7 @@ $(document).ready(function() {
 	});
 	
 	var counter = 0; 
-	var wait_interval;
+	wait_interval = null;
 	
 	function intervalStart() {
 		wait_interval = setInterval(function () {myTimer()}, 1000);
@@ -239,22 +243,31 @@ $(document).ready(function() {
 		}
 	}
 
-	//var results_url  = 'https://' + getHost() + '/queryservice/results/' + msg + '?callback=?';
-	var results_url = 'data/mock_data2.json';
-	
 	$('#warning').empty();
-	//console.log(search_type);
-	if((search_type == "term" && search_term) || search_type == "date"){
-		$('#activity p').empty();
-		$("#activity").append("<p><span class='value-cool'>Loading...</span></p>");
-		$('#no_results').empty().append("<label><span class='value-cool'>Loading...</span></label>");
-		displayResults(results_url);
+	if((search_type == "text" || search_type == "date") && search_text){
+		$('#activity p').remove();
+		$("#activity").append(activity_spinner.el).append("<p class='filter_msg'><br><span class='value-cool'>Loading...</span></p>");
+		$('#no_results').empty().append(results_spinner.el).append("<label><span class='value-cool'>Loading...</span></label>");
+		var formatted_query = '';
+		
+		if(search_type == 'date'){
+			var split_date = $("#search_text_input").val().split('/');
+			var reformatted_date = split_date[2] + '-' + split_date[0] + '-' + split_date[1];
+			formatted_query = search_type == 'date' ? search_type + 'Rcpt' : search_type;
+			formatted_query +=  ": [" + reformatted_date + "T00:00:00Z" + " TO " + reformatted_date + "T23:59:59.999Z" + "]";
+		}
+		else
+			formatted_query = search_type + ":" + $("#search_text_input").val();
+			
+		solrCall(formatted_query);
 		
 	}
 	else{
+		activity_spinner.stop();
+		results_spinner.stop();
 		$('#no_results').empty();
-		$('#activity p').empty();
-		$("#activity").append("<p><span class='value-cool'>Awaiting Search Criteria to retreive results</span></p>");
+		$('#activity p').remove();
+		$("#activity").append("<p class='filter_msg'><span class='value-cool'>Awaiting Search Criteria to retreive results</span></p>");
 
 		intervalStart();
 	}

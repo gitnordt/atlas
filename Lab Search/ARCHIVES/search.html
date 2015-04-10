@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--[if lt IE 7 ]> <html lang="en" class="ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Electronic Comment Filing System | FCC.gov</title>
+<meta name="viewport" content="width=device-width, minimum-scale=0.5, user-scalable=yes, target-densitydpi=device-dpi"/>
+ 	
+<link type="text/css" rel="stylesheet" media="all" href="css/content.css" />
+<link type="text/css" rel="stylesheet" media="all" href="javascript/jquery-ui-1.11.2/jquery-ui.min.css" />
+<link type="text/css" rel="stylesheet" media="all" href="css/content-extended.css" />
+<link type="text/css" rel="stylesheet" media="print" href="css/frame.css" />
+<link type="text/css" rel="stylesheet" href="css/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="css/shThemeDefault.css" />
+<link type="text/css" rel="stylesheet" media="all" href="css/search.css" />
+<link type="text/css" rel="stylesheet" media="all" href="javascript/dojo-1.10.2/dijit/themes/claro/claro.css" />
+<link type="text/css" rel="stylesheet" media="all" href="javascript/dojo-1.10.2/dojox/grid/enhanced/resources/claro/EnhancedGrid.css" />
+
+
+<script type="text/javascript" src="javascript/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="javascript/jquery-ui-1.11.2/jquery-ui.js"></script>
+<script type="text/javascript" src="javascript/jquery-drupal.js"></script>
+<script type="text/javascript" src="javascript/application.js"></script>
+<script type="text/javascript" src="javascript/jstorage.js"></script>
+<script type="text/javascript" src="javascript/utils.js"></script>
+<script type="text/javascript" src="javascript/page_layout.js"></script>
+<script type="text/javascript" src="javascript/equalheight.js"></script>
+<script type="text/javascript" src="javascript/shCore.js"></script>
+<script type="text/javascript" src="javascript/shBrushXml.js"></script>
+<script type='text/javascript' src='javascript/dojo-1.10.2/dojo/dojo.js'></script>
+<script type="text/javascript" src="javascript/toolbox.js"></script>
+<script type="text/javascript" src="javascript/results_grid.js"></script>
+<script type='text/javascript' src='javascript/config.js'></script>
+
+</head>
+
+<body style="background:black;" class="nojs not-front not-logged-in page-node node-type-page no-sidebars claro">
+	<div id="intro-div">
+	</div>
+	<!-- /intro-div -->
+	<div id="contentWrapper">
+		<div class="wrapper">
+			<div id="hdr">
+			</div>
+			<!-- /hdr -->
+			<div id="content-div">
+				<a name="startcontent"></a>
+				<div class="breadcrumb"><a href="http://www.fcc.gov/">FCC</a> / <a href="./index.html" class="active">ECFS</a> / <a href="./search.html" id='breadcrumb-title' class="active">Search</a></div>
+				<h1 id="content_span">Search
+					<ul class="shareTools">
+						<li><a href="/print/node/3895" target="_blank" class="print">Print</a></li>
+						<li><a href="mailto:?subject=%53%65%6e%64%20%55%73%20%59%6f%75%72%20%43%6f%6d%6d%65%6e%74%73&body=http://www.fcc.gov/comments" class="email">Email</a></li>
+					</ul>
+				</h1>
+				<div id="contentcontainer">
+					<div id="topcontent"></div>
+					<div id="maincontent" class="group">
+						<div class="content-container">
+								<div class="meta"></div>
+								<div class="content">
+									<div class="optionbox">
+										<div id="optionbox_wrapper">
+											<fieldset id="criteria">
+												<legend>Search Criteria</legend>
+												<div id="criteria_div">
+													<div id="edit_title_div" style="float:left; width:10%;"><img id="edit-anchor" src="images/file_edit.png" class="icon-edit" alt="Edit Criteria"/></div>
+													<div id='criteria_view'></div>
+													<div id="criteria_details" title="Search" class="megamenu criteriamenu"></div>
+												</div>
+											</fieldset>
+											<fieldset id="activity">
+												<legend>High Activity Filters</legend>
+												<div id="info_title_div" style="float:left; width:10%;"><img id="info-anchor" src="images/info.png" class="icon-info" alt="More Information"/>
+												</div>				
+												<div id="filterGridDiv"></div> 
+												<div id="activityDetailsDiv" style="visibility:hidden;display:none"></div>
+											</fieldset>
+											</br></br>
+											<div id='dojo_grid' align="right">
+												<p style="visibility:hidden;display:none" id='warning'></p>
+												<div id="resultsGridDiv"></div>
+										  </div>
+										  <div id='no_results'>&nbsp;</div>
+										</div>
+									</div>
+									
+								</div>
+								<p></p>
+								<p></p>
+						</div>
+						<!-- /content-container -->
+						
+					</div>
+					<!-- /maincontent -->
+				</div>
+				<!-- /contentcontainer -->
+			</div> <!-- /contentdiv -->
+			
+			<div id="footer" class="group">
+			</div>
+			<!-- /footer -->
+
+		</div>
+		<!-- /wrapper -->
+	</div>
+	<!-- /contentWrapper -->
+</body>
+</html>
+<script>
+//var jq = jQuery.noConflict();
+jQuery.extend(Drupal.settings, { "basePath": "/" });
+</script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+	var search_term = $.jStorage.get("searchTerm");
+	var search_type = $.jStorage.get("searchType");
+
+	quickSearchSwitch(search_type);
+	window.setTimeout(hovertipInit, 1);
+	
+	var auto_open = true;
+	
+
+	if(!search_type){
+		search_type = "term";
+		$.jStorage.set("searchType", search_type);
+	}
+	
+	if(search_term){
+		var html = createCriteriaColumns("Search Type", search_type.toUpperCase(), "left", false);
+		html += createCriteriaColumns(toCamelCase(search_type), search_term, "right", true);
+		
+		$("#criteria_view").html(html);
+		$("#search_term_input").val(search_term);
+		auto_open = false;
+	}
+	else
+		search_term = "";
+
+	var scrollHandler = function(){
+		$(".ui-dialog").css({"margin-top": ($(window).scrollTop()) + "px", "margin-left":($(window).scrollLeft()) + "px"});
+	}
+
+	$("label[for!='#search_term_input']").css("display", "none");
+	$("#criteria_details").append(getAnchorDetails(search_term, search_type));
+	$('#search_type_selector option:selected').removeAttr('selected');
+	$("#search_type_selector").find('option[value="' + search_type + '"]').attr("selected",true);
+	jq('.datepicker').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+5", closeText : "Close"}); 
+	
+	var type_height = 450;
+	$(function() {
+		jq( "#criteria_details" ).dialog({
+			autoOpen: auto_open,
+			resizable: false,
+			minHeight: 27,
+			maxHeight:450,
+			width:815,
+			minWidth: 200,
+			maxWidth: 815,
+			modal: false,
+			//position: {my: 'center', at: 'center'},
+			show: { effect: "explode", duration: 1000 },
+			hide: { effect: "explode", duration: 1000 },
+			buttons: [{
+				text: "minimize",
+				showText: false,
+				icons: {
+					primary: "ui-icon-closethick"
+				},
+				click: function(){
+					type_height = $(this).parents('.ui-dialog').height();
+					//console.log(type_height);
+					$(this).parents('.ui-dialog').animate({
+						height: 27,
+						width: 200,
+						top: $(window).height() - 50,
+						left: 5
+					}, 200);
+					
+					$(window).scroll(scrollHandler);
+				}
+			},
+			{
+				text: "maximize",
+				showText: false,
+				icons: {
+					primary: "ui-icon-closethick"
+				},
+				click: function(){	
+					$(this).parents('.ui-dialog').animate({
+						height: type_height,
+						width: 815,
+						top: ($(window).height()-400)/2,
+						left:($(window).width()-800)/2
+					}, 200);
+
+					$(window).unbind('scroll');
+				}
+			}]
+		});	
+		
+		$( "#edit-anchor" ).click(function() {jq( "#criteria_details" ).dialog( "open" );})
+		
+
+	});
+	
+	var counter = 0; 
+	var wait_interval;
+	
+	function intervalStart() {
+		wait_interval = setInterval(function () {myTimer()}, 1000);
+	}
+	
+	function myTimer() {
+		counter ++;
+		if(counter < 4)
+			$("#activity p").append(".");
+		else{
+			window.clearInterval(wait_interval);
+			counter = 0;
+			
+			window.setTimeout(function () { //clear dots and start over
+				$('#activity p').empty().append("<span class='value-cool'>Awaiting Search Criteria to retreive results</span>");
+				intervalStart();
+			}, 1000);
+		}
+			
+		if ($('#resultsGrid').is(":visible")){
+			window.clearInterval(wait_interval);
+			counter = 0;
+		}
+	}
+
+	//var results_url  = 'https://' + getHost() + '/queryservice/results/' + msg + '?callback=?';
+	var results_url = 'mock_data2.json';
+	
+	$('#warning').empty();
+	//console.log(search_type);
+	if((search_type == "term" && search_term) || search_type == "date"){
+		$('#activity p').empty();
+		$("#activity").append("<p><span class='value-cool'>Loading...</span></p>");
+		$('#no_results').empty().append("<label><span class='value-cool'>Loading...</span></label>");
+		displayResults(results_url);
+		
+	}
+	else{
+		$('#no_results').empty();
+		$('#activity p').empty();
+		$("#activity").append("<p><span class='value-cool'>Awaiting Search Criteria to retreive results</span></p>");
+
+		intervalStart();
+	}
+});
+
+dojo.addOnLoad(function(){
+	require(["dijit/Tooltip", "dojo/domReady!"], function(Tooltip){
+		new Tooltip({
+			id: "activity_tooltip",
+			connectId: "info-anchor",
+			label: "<legend>Details:</legend><p class='paragraph-style'>Displayed are the proceeding numbers, submission types, and states<br>with the highest volume of ECFS submissions associated with your<br>current search criteria. Also displayed are the totals for brief comments. <br>Clicking on a link will filter the results table below.</p>"
+		});
+	});
+});
+
+
+</script>

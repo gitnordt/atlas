@@ -394,18 +394,19 @@ function searchType(type){
 function quickSearchSwitch(searchType){
 	var quick_html = "";
 
-	if(searchType == "term"){
-		quick_html = "<label for='search_term_input'>Search<\/label><input type='text' maxlength='128' id='search_term_input' size='15' value='' class='form-text'";
-		quick_html += "pattern='^[A-Za-z0-9]{2,}[A-Za-z0-9\\s\._-]*$' title='Enter at least 2 characters. Some special characters are invalid'/>"; 
+	if(searchType == "text"){
+		console.log(searchType); //printed
+		quick_html = "<label for='search_text_input'>Search<\/label><input type='text' maxlength='128' id='search_text_input' size='15' value='' class='form-text'";
+		quick_html += "pattern='" + validity['text'].regex + "' title='" + validity['text'].message + "'/>"; // validity - utils.js variable 
 
-		$("#search_term_input").keyup(function(){
+		$("#search_text_input").keyup(function(){
 			$("#edit-search-theme-form-wrapper").find("label").remove();
-			$.jStorage.set("searchTerm", $("#search_term_input").val());
+			$.jStorage.set("searchText", $("#search_text_input").val());
 		});
 	}
 	else if(searchType == "date"){		
-		quick_html = "<label for='search_term_input'>Search<\/label><input type='text' maxlength='50' class='datepicker form-text'";
-		quick_html += "id='search_term_input' value=''" + date_rgx_html + " />"; // date_rgx_html - utils.js variable 
+		quick_html = "<label for='search_text_input'>Search<\/label><input type='text' maxlength='50' class='datepicker form-text'";
+		quick_html += "id='search_text_input' value='' pattern='" + validity["date"].regex + "' title='" + validity["date"].message + "' />";
 	}
 	
 	if(quick_html){
@@ -414,18 +415,24 @@ function quickSearchSwitch(searchType){
 		$( "#searchbox-switch-type .form-item").html(quick_html);
 	}
 	
-	if($('#search_term_input').hasClass("datepicker")){
-		jq('#search_term_input').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+0", closeText : "Close", 
+	if($('#search_text_input').hasClass("datepicker")){
+		jq('#search_text_input').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+0", closeText : "Close", 
 		onSelect: function(){
+		console.log(searchType); //printed
 			$("#edit-search-theme-form-wrapper").find("label").remove();
 			$.jStorage.set("searchType", "date");
-			$.jStorage.set("searchTerm", $(this).val());
+			$.jStorage.set("searchText", $(this).val());
+			console.log($.jStorage.get("searchText"));
 		}
 		});
 	}
 	else{
-		jq('#search_term_input').datepicker( "destroy" );
+		jq('#search_text_input').datepicker( "destroy" );
+		console.log(searchType); //printed
 		$.jStorage.set("searchType", searchType);
+		/*var invalid_date = isNaN(stringToDate($.jStorage.get("searchText")).getTime());
+		if(!invalid_date)
+			$.jStorage.set("searchText", "");*/
 	}
 }
 
@@ -479,14 +486,15 @@ $(document).ready(function() {
 	/***********************************************/
 
 	$("#search_theme_form").submit(function(e){
-		$.jStorage.set("searchTerm", $('#' + this.id).find('#search_term_input').val());
+		$.jStorage.set("searchText", $('#' + this.id).find('#search_text_input').val());
 	});
 	
 	var set_type = $.jStorage.get("searchType");
+	console.log(set_type); //printed
 	if(set_type)
 		quickSearchSwitch(set_type);
 	else
-		quickSearchSwitch("term");
+		quickSearchSwitch("text");
 
 	$("#quick_search_selector-menu").click(function(){
 		var search_type = $('#quick_search_selector').val();

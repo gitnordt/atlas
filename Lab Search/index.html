@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<head>
+
+<title>FCC LAB | FCC.gov</title>	
+<link type="text/css" rel="stylesheet" media="all" href="js/jquery-ui-1.11.2/jquery-ui.min.css" />
+<link type="text/css" rel="stylesheet" media="all" href="css/lab-search.css" />
+<link type="text/css" rel="stylesheet" media="all" href="js/dojo-1.10.2/dijit/themes/claro/claro.css" />
+<link type="text/css" rel="stylesheet" media="all" href="js/dojo-1.10.2/dojox/grid/enhanced/resources/claro/EnhancedGrid.css" />
+
+<script type='text/javascript' src="js/spin.js"></script>
+<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.11.2/jquery-ui.js"></script>
+<script type="text/javascript" src="js/jquery-drupal.js"></script>
+<script type='text/javascript' src='js/dojo-1.10.2/dojo/dojo.js'></script>
+<script type="text/javascript" src="js/results_grid.js"></script>
+
+</head>
+
+<body class = "claro">
+	<div id="heading">
+		<div id="heading-title"><div id='heading_start'>FCC</div><div id="logo" class="seal"></div><div id='heading_end'>LAB</div></div>
+	</div>
+	<div id="search">
+		<div id="search_term">
+			<div id="box_wrapper">
+				<label for="searchbox">SOLR SEARCH</label>
+				<input id="searchbox" class="form-text" type="text" title="Enter the terms you wish to search for." value="" name="search_theme_form" maxlength="128">
+				<input id="searchsubmit" class="form-submit" type="image" src="images/btnSearch.jpg" alt="Search" value="Search" name="submit" onclick='submitSearch();'>
+			</div>
+
+		</div>
+		<!--<div id="results">-->
+			<div id='dojo_grid' align="right">
+				<div id="resultsGridDiv"></div>
+			</div>
+			<div id='no_results'>&nbsp;</div>
+		<!--</div>-->
+	</div>
+
+</body>
+</html>
+<script type="text/javascript">
+
+$(document).ready(function() {
+	$("#searchbox").focus();
+	$('body').keypress(function(e) {
+		if (e.keyCode == '13') {
+			submitSearch();
+		}
+	});
+});
+
+var counter = 0; 
+var wait_interval;
+var spinner = new Spinner().spin(); //loading spinner graphic
+	spinner.el.style.position = "relative";
+var waiting_msg = "<span class='value-cool'>Awaiting search criteria to fetch results. Please enter a search term</span>";
+var results_url = 'http://10.1.3.42:8983/solr/all/select';
+
+function intervalStart() {
+	wait_interval = setInterval(function () {myTimer()}, 1400);
+}
+
+function myTimer() {
+	counter ++;
+	if(counter < 4)
+		$("#no_results p").append("<span class='value-cool'>.</span>");
+	else{
+		window.clearInterval(wait_interval);
+		counter = 0;
+		
+		window.setTimeout(function () { //clear dots and start over
+			$('#no_results p').empty().append(waiting_msg);
+			intervalStart();
+		}, 1800);
+	}
+		
+	if ($('#resultsGrid').is(":visible")){
+		window.clearInterval(wait_interval);
+		counter = 0;
+	}
+}
+
+function submitSearch(){
+	
+	if($("#searchbox").val() && $("#searchbox").val() != ""){
+		$('#no_results').empty().append("<p><span class='value-cool'>Fetching Results...This May Take A Moment</span></p>").append(spinner.el);
+		ajaxCall();
+	}
+	else{
+		$('#no_results').empty().append("<p>" + waiting_msg + "</p>");
+		intervalStart();
+	}
+}
+
+function ajaxCall(){
+	jq.ajax({
+		url: results_url,
+		data:{'q': $("#searchbox").val(), 'wt':'json','indent':'true'},
+		dataType: 'jsonp',
+		jsonp: 'json.wrf',
+		success: function(data){
+			displayResults(data.response);
+		},
+		error:function(jqXHR, textStatus, errorThrown){
+			spinner.stop();
+			$('#no_results').empty().append("<p><span class='value-cool'>There was a problem with the request</span></p><p style='color:#9F000F;'>Status: " + jqXHR.status + ", Error: " + textStatus + "</p>");
+		}
+	});
+}
+
+function displayResults(results) {
+	if(results.numFound != 0){								
+		dojo.ready(function(){
+			jsonHandler(results.docs);
+			spinner.stop();
+			$('#no_results').hide();
+			if ($('#results').is(":hidden")){
+				$('#results').show();
+				dijit.byId("resultsGrid")._refresh();
+			}
+		});
+	}
+	else{
+		spinner.stop();	
+		$('#no_results').empty().append("<p><span class='value-cool'>No results found.</span></p>");
+	}
+}
+
+
+
+</script>
