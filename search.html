@@ -259,7 +259,7 @@ $(document).ready(function() {
 		else
 			formatted_query = search_type + ":" + $("#search_text_input").val();
 			
-		solrCall(formatted_query);
+		solrCall(formatted_query, "select");
 		
 	}
 	else{

@@ -10341,9 +10341,9 @@ var dialog = $.widget( "ui.dialog", {
 		if ( !hasFocus.length ) {
 			hasFocus = this.element.find( ":tabbable" );
 		}
-		if ( !hasFocus.length ) {
+		/*if ( !hasFocus.length ) {
 			hasFocus = this.uiDialogButtonPane.find( ":tabbable" );
-		}
+		}*/
 		if ( !hasFocus.length ) {
 			hasFocus = this.uiDialogTitlebarClose.filter( ":tabbable" );
 		}

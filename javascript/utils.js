@@ -26,17 +26,30 @@ var date_rgx = "^(((0?[469]|11)\/(0?[1-9]|[1-2]\\d|30))|((0?[13578]|1[02])\/(0?[
 	
 var date_title = "Please enter a valid date between the years " + range_start + " and "+ range_end +" using format MM/DD/YYYY";
 
+var address1_rgx = "(^((\\d{1,6})\\s((([nN]|[sS])([wWeE]?))|([wWeE]?))?\\s?([a-zA-Z]([a-zA-Z]+)\\s){1,3}[a-zA-Z]([a-zA-Z]+)(\\s((([nN]|[sS])([wWeE]?))|([wWeE])))?(\\s(\#\\s?)?[0-9A-Z]*)?)|" //street address
+	address1_rgx += "^(([pP].?[oO].?)\\s[bB][oO][xX]\\s\\d{1,})|" //po box
+	address1_rgx += "^(([a-zA-Z]([a-zA-Z]+)\\s){1,2}[a-zA-Z]([a-zA-Z]+))|" //company name or recipient line
+	address1_rgx += "^([A-Z]{2,4}(\\s(\#\\s?)?[0-9A-Z]{1,5})?))$" //designators, e.g. APT 4B, BLDG 29394, FL 2
+
+var address2_rgx =  "(^((\\d{1,6})\\s((([nN]|[sS])([wWeE]?))|([wWeE]?))?\\s?([a-zA-Z]([a-zA-Z]+)\\s){1,3}[a-zA-Z]([a-zA-Z]+)(\\s((([nN]|[sS])([wWeE]?))|([wWeE])))?(\\s(\#\\s?)?[0-9A-Z]*)?)|" //street address
+	address2_rgx += "^(([pP].?[oO].?)\\s[bB][oO][xX]\\s\\d{1,})|" //po box
+	address2_rgx += "^([A-Z]{2,4}(\\s(\#\\s?)?[0-9A-Z]{1,5})?))$" //designators, e.g. APT 4B, BLDG 29394, FL 2
+	
 var validity = new Array(12);
 	validity["date"] = {"regex":date_rgx, "message": date_title};
 	validity["text"] = {"regex":"^[A-Za-z0-9\\*]{2,}[A-Za-z0-9\\*\\s\._-]*$", "message": "Enter at least 2 characters. Some special characters are invalid"};
+	validity["comment"] = {"regex":"^\w{2,}$", "message": "Enter a brief comment pertaining to the chosen procedure."};
 	validity["description"] = {"regex":"^[A-Za-z0-9\\s\._-]{5,}$", "message": "Enter at least 5 characters from the proceeding description you wish to search for"};
 	validity["person"] = {"regex":"^[A-Za-z\\*]{2}([A-Za-z\\*\\s\.\-]*)$", "message": "Enter at least 2 letters of this person's first or last name"};
 	validity["lawfirm"] = {"regex":"[A-Za-z]{2,}([A-Za-z\\s\.\&]*)$", "message": "Enter at least 2 characters of the lawfirm name"};
 	validity["generic_id"] = {"regex":"^[A-Za-z0-9\-]{2}[A-Za-z0-9\\*\-]*$", "message": "Enter at least 2 characters of valid identification number"};
 	validity["confirmation_id"] = {"regex":"^[0-9]*$", "message": "Enter the confirmation number of the filing"};
-	validity["proceeding_id"] = {"regex":"^(\\d{2}|RM)-(\\d{0,5})$", "message": "Enter a valid proceeding number, e.g. 14-28"};
+	validity["proceeding_id"] = {"regex":"^(\\d{2}|RM)-(\\d{0,5})$", "message": "Enter a valid proceeding number, e.g. Docket Number (96-45), RM Number (RM-10020) or proposed rulemaking (PRM04MB)"};
 	validity["city"] = {"regex":"[A-Za-z]{2,}([A-Za-z\\*\\s]*)$", "message": "Enter at least the 2 leading characters of the city name"};
 	validity["zip_cd"] = {"regex":"^\\d{5}(-(\\d{4}))?$", "message": "Enter at least 5 digits of a valid zip code or enter zip code +4, e.g. 32656-5521"};
+	validity["email"] = {"regex":"^(([a-zA-Z0-9\-?\.?]+)@(([a-zA-Z0-9\-_]+\.)+)([a-z]{2,3}))+$", "message": "Enter a valid primary email address"};
+	validity["address1"] = {"regex":address1_rgx, "message": "Enter a valid street address. Please capitalize and abbreviate all designators, e.g. APT, STE, BLDG"};
+	validity["address2"] = {"regex":address2_rgx, "message": "Enter additional address information. Please capitalize and abbreviate all designators, e.g. APT, STE, BLDG"};
 	
 	
 Number.prototype.ordinate = function(){
@@ -288,4 +301,16 @@ function findUpperCaseLetters(str) {
 	}
 	
 	return uc;
+}
+
+function isValidForm(id){
+	var valid = true;
+	$.each(id[0],function(ndx, field){
+		if(field.validity.valid == false){
+			valid = false;
+			return false;
+		}
+	});
+	
+	return valid; 
 }

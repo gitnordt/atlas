@@ -50,33 +50,9 @@ jQuery.extend(Drupal.settings, { "basePath": "/" });
 <!--//--><![CDATA[//><!--
 $(document).ready(function() {
 	window.setTimeout(hovertipInit, 1);
-	var proceeding_num = $.jStorage.get("proceedingNum");
 	var filing_path = $.jStorage.get("filingPath");
 	$("#breadcrumb_ext").attr("href", getFilingUrl(filing_path));
 	$("#breadcrumb_ext").html(filing_path + " Filing");
-
-	$("#proceeding_num").val(proceeding_num);
-	$('#state_pick').html(getStateSelectorMenu());
-		
-	$(function() {
-		jq( "#criteria_details" ).dialog({
-			autoOpen: false,
-			resizable: false,
-			draggable: false,
-			modal: true,
-			position: {my: 'center', at: 'center'},
-			show: { effect: "explode", duration: 1000 },
-			hide: { effect: "explode", duration: 1000 }
-		});
-
-		$( "#express_filing_submit" ).click(function() {
-			$("#criteria_details").empty();
-			$("#criteria_details").append(getConfirmationDetails(this.id));
-			jq( "#criteria_details" ).dialog( "open" );
-		})
-	});
-	
-
 });
 //--><!]]>
 </script>
@@ -104,93 +80,6 @@ $(document).ready(function() {
 					<div id="maincontent" class="withsidebar two-rows-sidebar-tpl group">
 						<div class="content-container">
 							<div class="main-table-view" id="express_filing">
-								<div class="row">
-									<center style="color:#990000;">
-									Note: The comment you are making is a public filing. Any information submitted including names and address will be available to the general public via the web.
-									</center>
-									<br>
-								</div>
-								<div class='row'>
-									<div class='cell small_set left'>
-										<fieldset id='express_details_set' class='quickset'><legend>Details</legend>
-										<div class = "field-table-view">
-											<div class='row'>
-												<div class='cell one left'>											
-													<label for='proceeding_num'>Proceeding Number </label>
-													<input type='text' maxlength='128' id='proceeding_num' class='cell_textbox large_box' value='' title='Either a Docket Number (96-45), RM Number (RM-10020) or proposed rulemaking (PRM04MB).'/>
-												</div>	
-											</div>	
-											<div class='row'>
-												<div class='cell one left'>												
-													<label for='applicant_name'>Name of Filer </label>
-													<input type='text' maxlength='128' id='applicant_name' class='cell_textbox large_box' value='' title='Your name if it is an individual filing, or the name of the company you are filing for." alt="Your name if it is an individual filing, or the name of the company you are filing for.'/>
-												</div>	
-											</div>	
-											<div class='row'>
-												<div class='cell one left'>	
-													<label for='applicant_email'>Email Address </label>
-													<input type='text' maxlength='128' id='applicant_email' class='cell_textbox large_box' value='' title='The filer\'s email address.'/>
-												</div>
-											</div>
-										</div>	
-
-										</fieldset>
-									</div>
-									<div class='cell large_set right'>
-										<fieldset id='express_address_set' class='quickset'><legend>Address</legend>
-											<div class = "field-table-view">
-												<div class='row'>
-													<div class='cell one left'>
-														<label for='address_line_1'>Street Address</label>
-														<input type='text' maxlength='128' id='address_line_1' class='cell_textbox' value='' title='Enter complete street address.' style='width:95%'/>
-													</div>			
-												</div>
-												<div class='row'>
-													<div class='cell two left'>
-														<label for='address_line_2'>Apt / Suite / Other</label>
-														<input type='text' maxlength='128' id='address_line_2' class='cell_textbox large_box' value='' title='Enter apartment number, suite number, company name, or any additional information related to the street address.'/>
-													</div>
-													<div class='cell two right'>
-														<label for='address_city'>City</label>
-														<input type='text' maxlength='128' id='address_city' class='cell_textbox large_box' value=''/>								
-													</div>													
-												</div>
-												<div class='row'>												
-													<div class='cell two left' id='state_pick'>
-													</div>
-													<div class='cell two right'>										
-														<label>Zip Code</label>
-														<input type='text' maxlength='128' id='address_zip_code' class='cell_textbox small_box' value='' title='Enter 5 digit zip code.'/><span style='font-size: 120%; font-weight: bold;'>&nbsp;&nbsp;-&nbsp;&nbsp;</span><input type='text' maxlength='128' id='address_zip_extended' class='cell_textbox small_box' value='' title='Enter 5 digit zip code.'/>
-													</div>
-												</div>
-											</div>
-										</fieldset>
-									</div>
-								</div>
-								<div class='row'>
-									<fieldset id='doc_set' class='detailset'><legend>Comments</legend>
-										<div class = "field-table-view">
-											<div class='row'>
-												<div class='cell one left'>
-													<label id="comment_label" for="comment_text">Type or paste your brief comments </label> <textarea  rows="5" cols="102" value="" id="comment_text" style="resize:none;"></textarea>
-												</div>
-											</div>
-										</div>
-									</fieldset>
-								</div>							
-								<div class='row'>
-									<div style="margin:auto; width:160px;">
-										<input type="submit" id="express_filing_reset" value="Reset" onclick='clearForm(this.id)' class="submit left"/>
-										<input type="submit" id="express_filing_submit" value="Continue" class="submit right"/>
-										<div id="criteria_details" title="Confirm Submission" class="megamenu criteriamenu"></div>
-									</div>
-								</div>
-								<div class='row'>
-									<br>
-									<center style="color:#990000;">
-									Note: The comment you are making is a public filing. Any information submitted including names and address will be available to the general public via the web.
-									</center>	
-								</div>
 							</div>
 						</div>	
 						<div id="sidebar">
@@ -212,3 +101,114 @@ $(document).ready(function() {
 	<!-- /contentWrapper -->
 </body>
 </html>
+<script type="text/javascript">
+	var html = "<form id='express_input' data-dojo-type='dijit.form.Form' onsubmit='return commentSubmit(this.id);'>";
+	html += ' 	<div class="row">'
+	html += '		<center style="color:#990000;">'
+	html += '			Note: The comment you are making is a public filing. Any information submitted including names and address will be available to the general public via the web.'
+	html += '		</center>'
+	html += '		<br>'
+	html += '	</div>'
+	html += '	<div class="row">'
+	html += '		<div class="cell small_set left">'
+	html += '			<fieldset id="express_details_set" class="quickset"><legend>Details</legend>'
+	html += '				<div class = "field-table-view">'
+	html += '					<div class="row">'
+	html += '						<div class="cell one left">'	
+	html += '							<label for="proceeding">Proceeding Number</label>'
+	html += '							<input type="text" maxlength="128" id="proceeding" class="cell_textbox large_box" value="" pattern="' + validity["proceeding_id"].regex + '" title="' + validity["proceeding_id"].message + '" required="true"/>'
+	html += '						</div>'
+	html += '					</div>'
+	html += '					<div class="row">'
+	html += '						<div class="cell one left">'		
+	html += '							<label for="file">Name of Filer </label>'
+	html += '							<input type="text" maxlength="128" id="file" class="cell_textbox large_box" value="test one" pattern="' + validity["person"].regex + '" title="' + validity["person"].message + '" required="true"/>'
+	html += '						</div>'
+	html += '					</div>'
+	html += '					<div class="row">'
+	html += '						<div class="cell one left">'
+	html += '							<label for="email">Email Address </label>'
+	html += '							<input type="text" maxlength="128" id="email" class="cell_textbox large_box" value="t1@c.com" pattern="' + validity["email"].regex + '" title="' + validity["email"].message + '"/>'
+	html += '						</div>'
+	html += '					</div>'
+	html += '				</div>	'
+	html += '			</fieldset>'
+	html += '		</div>'
+	html += '		<div class="cell large_set right">'
+	html += '			<fieldset id="express_address_set" class="quickset"><legend>Address</legend>'
+	html += '				<div class = "field-table-view">'
+	html += '					<div class="row">'
+	html += '						<div class="cell one left">'
+	html += '							<label for="address_line">Street Address</label>'
+	html += '							<input type="text" maxlength="128" id="address_line" class="cell_textbox" value="282902 test street" pattern="' + validity["address1"].regex + '" title="' + validity["address1"].message + '" required="true" style="width:95%"/>'
+	html += '						</div>'	
+	html += '					</div>'
+	html += '					<div class="row">'
+	html += '						<div class="cell one left">'
+	html += '							<label for="city">City</label>'
+	html += '							<input type="text" maxlength="128" id="city" class="cell_textbox large_box" value="huff" pattern="' + validity["city"].regex + '" title="' + validity["city"].message + '" required="true" style="width:95%"/>		'						
+	html += '						</div>'	
+	html += '					</div>'
+	html += '					<div class="row">'
+	html += '						<div class="cell two left" id="state_pick" style="width:51%">'
+	html += '						</div>'
+	html += '						<div class="cell two right">	'
+	html += '							<label for="zip">Zip Code</label>'
+	html += '							<input type="text" maxlength="128" id="zip" class="cell_textbox large_box" value="38292-2029" pattern="' + validity["zip_cd"].regex + '" title="' + validity["zip_cd"].message + '" required="true" style="width:90%"/>		'						
+	html += '						</div>'
+	html += '					</div>'
+	html += '				</div>'
+	html += '			</fieldset>'
+	html += '		</div>'
+	html += '	</div>' //end second row
+	html += '	<div class="row">'
+	html += '		<fieldset id="doc_set" class="detailset"><legend>Comments</legend>'
+	html += '			<div class = "field-table-view">'
+	html += '				<div class="row">'
+	html += '					<div class="cell one left">'
+	html += '						<label id="comment_label" for="comment_text">Type or paste your brief comments </label> <textarea  rows="5" cols="102" value="" pattern="' + validity["comment"].regex + '" title="' + validity["comment"].message + '" id="comment_text" style="resize:none;">Testing</textarea>'
+	html += '					</div>'
+	html += '				</div>'
+	html += '			</div>'
+	html += '		</fieldset>'
+	html += '	</div>	'						
+	html += '	<div class="row">'
+	html += '		<div style="margin:auto; width:160px;">'
+	html += '			<input type="button" id="express_filing_clear" value="Reset" onclick="resetForm(this.id)" class="submit left pointer"/>'
+	html += '			<input type="submit"  name="submit"  id="express_filing_submit" value="Continue" class="submit right pointer"/>'
+	html += '			<div id="criteria_details" title="Confirm Submission" class="megamenu criteriamenu"></div>'
+	html += '		</div>'
+	html += '	</div>'
+	html += '	<div class="row">'
+	html += '		<br>'
+	html += '		<center style="color:#990000;">'
+	html += '			Note: The comment you are making is a public filing. Any information submitted including names and address will be available to the general public via the web.'
+	html += '		</center>	'
+	html += '	</div>'
+	html += '</form>'
+	
+	$('#express_filing').append(html);
+	
+	var proceeding_num = $.jStorage.get("proceedingNum");
+	$("#proceeding").val(proceeding_num);
+	$('#state_pick').html(getStateSelectorMenu());
+
+	$(function() {
+		jq( "#criteria_details" ).dialog({
+			autoOpen: false,
+			resizable: false,
+			draggable: false,
+			modal: true,
+			position: {my: 'center', at: 'center'},
+			show: { effect: "explode", duration: 1000 },
+			hide: { effect: "explode", duration: 1000 }
+		});
+
+		$( "#express_filing_submit" ).click(function() {
+			if(isValidForm($("#express_input")) == true)
+				jq( "#criteria_details" ).dialog( "open" );
+		})
+	});
+		
+
+</script>

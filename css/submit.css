@@ -82,6 +82,10 @@ fieldset label{
 	width:46%;
 	text-align: left;
 }
+.three{
+	width: 31%;
+}
+
 .cell{
 	display:table-cell;
 	position:relative;
@@ -95,7 +99,7 @@ fieldset label{
 	background: #fff;
 	border-top: 1px solid silver;
 	border-left: 1px solid #E5E4E2;
-	height: 23px;
+	height: 20px;
 	font: 10pt/180% Verdana,Arial,Helvetica,sans-serif !important;
 	padding: 0 !important;
 }

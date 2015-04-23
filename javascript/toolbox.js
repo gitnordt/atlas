@@ -797,52 +797,6 @@ function switchAnchorDetails(id){
 		$('.ui-dialog').animate({height: 450}, 200);
 }
 
-function getConfirmationDetails(id){
-		//console.log(id);
-		var confirmation_object = submitForm(id);
-		var confirmation_keys = Object.keys(confirmation_object);
-		var confirmation_length = confirmation_keys.length;
-		console.log(confirmation_object);
-		
-		var html = ""; 
-		
-		html += "<div id='criteria_input' style='width:100%; margin:2px;'>";
-		html += "<div class='row'>";
-		html += "<p style='margin:8px; font-weight:bold;'>Please review and confirm the information below before submitting to the ECFS:</p>"
-		html += "</div>";
-
-		for(var i = 0; i < confirmation_length; i++){
-			var curr_key = confirmation_keys[i];
-			var value = confirmation_object[curr_key];
-			
-			if(curr_key.toLowerCase().indexOf("proceedings") != -1){
-				value = value.toString().replace(/,/g, ", ");
-			} 
-			else if(typeof value == "object"){
-				value = value.name;
-			}
-
-			if(i % 2 == 0){
-				if( i == confirmation_length - 1)//if last
-					html += createConfirmationColumns(cleanLabel(curr_key), value, "left", true);
-				else 
-					html += createConfirmationColumns(cleanLabel(curr_key), value, "left", false);
-			}
-			else
-				html += createConfirmationColumns(cleanLabel(curr_key), value, "right", true);				
-		}
-		
-		html += "</div>";
-		html += "</br>";
-		html += "<div id='submit_div' class='ui-widget-footer'>";
-		html += "<input type='submit' class='pointer clear_criteria' id='criteria_close'value='Edit' onclick='closeDialog(this.id)'/>";		
-		html += "<input type='submit' name='submit' class='pointer submit_criteria' onclick='confirmationSubmit()' value='Submit' id='criteria_submit'/>";
-		html += "</div>";
-		
-		return html;
-}
-
-
 function closeDialog(id){
 	var id_prefix = id.substr(0, id.lastIndexOf("_"));
 	jq('#' + id_prefix + '_details').dialog("close");
@@ -940,13 +894,16 @@ function resetForm(id){
 }
 
 function submitForm(id){
-
+	//console.log("submit form");
 	var form_inputs = $('#' + id).find('input[type="text"], textarea, input[type="checkbox"], input[type="radio"], input[type="file"], select');
 	var input_object = {};
 	var date_holder = '';
+
 	//gather search criteria items submitted in the query
 	$.each(form_inputs, function( index, field ) {
+		//console.log(field);
 		if((field.type == "text" || field.type == "textarea" ) && field.value != ""){ //text boxes with values
+			//console.log(field);
 			if(field.id.indexOf("date") == -1) //if it is not a date field
 				input_object[field.id] = field.value;
 			else{//format output based on a user selected single date or a date range.
@@ -998,98 +955,153 @@ function submitForm(id){
 }
 	
 function criteriaSubmit(id){
-		window.clearInterval(wait_interval);
-		$('#activity p').remove();
-		$("#activity").append(activity_spinner.el).append("<p class='filter_msg'><br><span class='value-cool'>Loading...</span></p>");
-		$('#no_results').empty().append(results_spinner.el).append("<label><span class='value-cool'>Loading...</span></label>");
-		$.jStorage.set("searchText", "");
-		if ($('#no_results').is(":hidden"))
-			$('#no_results').show();
-		
-		if(dijit.byId("filterGrid") != undefined){
-			dijit.byId("filterGrid").destroy();
-			dijit.byId("resultsGrid").destroy();
-		}
-		
-		dojo.addOnLoad(function() {		
-			$('#criteria').height($('#activity').height() - 1);		
-			$('#criteria_view').height($('#criteria').height() - 21);
-		});
-		
-		var criteria_object = submitForm(id);
-		var criteria_query_string = "";
-		if(criteria_object){
-			//add new search criteria to the list
-			$("#criteria_scroll").empty();
-			var criteria_keys = Object.keys(criteria_object);
-			var criteria_length = criteria_keys.length;
-			var criteria_html = "";
-			var even = parseInt(criteria_length) % 2 == 0 ? true : false;
-			
-			for(var i = 0; i < criteria_length; i++){
-				var curr_key = criteria_keys[i];
-				var clean_key = cleanLabel(curr_key);
-				var key_val = criteria_object[curr_key];
-				//convert labels to database naming convention
-				var query_key = curr_key.indexOf('report') > -1 ? 'text' 
-					: curr_key.indexOf('submission') > -1 ? curr_key.split('_')[0] + toCamelCase(curr_key.split('_')[1])
-					: clean_key.toLowerCase() == 'state' ? clean_key.toLowerCase() + 'Cd' 
-					: curr_key.indexOf('brief') > -1 ? 'brief'
-					: curr_key.indexOf('ex_parte') > -1 ? curr_key.split('_')[0] + toCamelCase(curr_key.split('_')[1])
-					: curr_key.indexOf('received') > -1 ? 'dateRcpt'
-					: curr_key.indexOf('date_text') > -1 ? 'dateRcpt'
-					: curr_key.indexOf('date') > -1 ? curr_key.split('_')[1]
-					: clean_key.toLowerCase();
-				
-				if(curr_key.indexOf('date') > -1){ //convert date values to solr timestamp format
-						var date_string = (key_val.indexOf(' TO ') > -1) ? key_val.split(' TO ') : date_string = getStringArray(key_val);
-						var query_val = '[';
-						for(var q = 0; q < date_string.length; q++){
-							var split_date = date_string[q].split('/');
-							var reformatted_date = split_date[2] + '-' + split_date[0] + '-' + split_date[1];
 
-							if(q == 0)
-								query_val += reformatted_date + 'T00:00:00Z';
-							if((date_string.length > 1 && q == 1) || (date_string.length == 1))
-								query_val += ' TO ' + reformatted_date + 'T23:59:59.999Z';
-						}
-						query_val += ']';
-				}
+	window.clearInterval(wait_interval);
+	$('#activity p').remove();
+	$("#activity").append(activity_spinner.el).append("<p class='filter_msg'><br><span class='value-cool'>Loading...</span></p>");
+	$('#no_results').empty().append(results_spinner.el).append("<label><span class='value-cool'>Loading...</span></label>");
+	$.jStorage.set("searchText", "");
+	if ($('#no_results').is(":hidden"))
+		$('#no_results').show();
+	
+	if(dijit.byId("filterGrid") != undefined){
+		dijit.byId("filterGrid").destroy();
+		dijit.byId("resultsGrid").destroy();
+	}
+	
+	dojo.addOnLoad(function() {		
+		$('#criteria').height($('#activity').height() - 1);		
+		$('#criteria_view').height($('#criteria').height() - 21);
+	});
+	
+	var criteria_object = submitForm(id);
+	var criteria_query_string = "";
+	if(criteria_object){
+		//add new search criteria to the list
+		$("#criteria_scroll").empty();
+		var criteria_keys = Object.keys(criteria_object);
+		var criteria_length = criteria_keys.length;
+		var criteria_html = "";
+		var even = parseInt(criteria_length) % 2 == 0 ? true : false;
+		var address_append = "";
+		for(var i = 0; i < criteria_length; i++){
+			var curr_key = criteria_keys[i];
+			var clean_key = cleanLabel(curr_key);
+			var key_val = criteria_object[curr_key];
+			
+			//convert labels to database naming convention
+			var query_key = curr_key.indexOf('report') > -1 ? 'text' 
+				: curr_key.indexOf('submission') > -1 ? curr_key.split('_')[0] + toCamelCase(curr_key.split('_')[1])
+				: clean_key.toLowerCase() == 'state' ? clean_key.toLowerCase() + 'Cd' 
+				: curr_key.indexOf('brief') > -1 ? 'brief'
+				: curr_key.indexOf('ex_parte') > -1 ? curr_key.split('_')[0] + toCamelCase(curr_key.split('_')[1])
+				: curr_key.indexOf('received') > -1 ? 'dateRcpt'
+				: curr_key.indexOf('date_text') > -1 ? 'dateRcpt'
+				: curr_key.indexOf('date') > -1 ? curr_key.split('_')[1]
+				: clean_key.toLowerCase();
+
+			
+			if(curr_key.indexOf('date') > -1){ //convert date values to solr timestamp format
+					var date_string = (key_val.indexOf(' TO ') > -1) ? key_val.split(' TO ') : date_string = getStringArray(key_val);
+					var query_val = '[';
+					for(var q = 0; q < date_string.length; q++){
+						var split_date = date_string[q].split('/');
+						var reformatted_date = split_date[2] + '-' + split_date[0] + '-' + split_date[1];
+
+						if(q == 0)
+							query_val += reformatted_date + 'T00:00:00Z';
+						if((date_string.length > 1 && q == 1) || (date_string.length == 1))
+							query_val += ' TO ' + reformatted_date + 'T23:59:59.999Z';
+					}
+					query_val += ']';
+			}
+			else
+				query_val = key_val;
+			
+			if(even){
+				if(i % 2 == 0)
+					criteria_html += createCriteriaColumns(clean_key, key_val, "left", false);
 				else
-					query_val = key_val;
-				
-				if(even){
-					if(i % 2 == 0)
-						criteria_html += createCriteriaColumns(clean_key, key_val, "left", false);
-					else
-						criteria_html += createCriteriaColumns(clean_key, key_val, "right", false);
-				}
-				else{
-					if(i % 2 == 0)
-						criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "left", false);
-					else if(i == criteria_length - 1)
-						criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "left", true);
-					else
-						criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "right", false);
-				
-				}
-				
-				if(curr_key.indexOf("period") > -1){ //query all dates within the given date range for the Date Period field
-					criteria_query_string += "dateRcpt:" + query_val + " AND disseminated:" + query_val;
-					criteria_query_string += " AND modified:"  + query_val +  " AND ";
-				}
-				else if(curr_key.indexOf("search_type") == -1)	
-					criteria_query_string += query_key + ":" + query_val + " AND ";
+					criteria_html += createCriteriaColumns(clean_key, key_val, "right", false);
+			}
+			else{
+				if(i % 2 == 0)
+					criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "left", false);
+				else if(i == criteria_length - 1)
+					criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "left", true);
+				else
+					criteria_html += createCriteriaColumns(cleanLabel(curr_key), criteria_object[curr_key], "right", false);
+			
 			}
 			
-			criteria_query_string = criteria_query_string.slice(0, -5);
-			$("#criteria_scroll").html(criteria_html);	
-
 			
-			closeDialog("criteria_details");
-			//resetForm('criteria_input_submit');
-			solrCall(criteria_query_string);
+			if(curr_key.indexOf("period") > -1){ //query all dates within the given date range for the Date Period field
+				criteria_query_string += "dateRcpt:" + query_val + " AND disseminated:" + query_val;
+				criteria_query_string += " AND modified:"  + query_val +  " AND ";
+			}		
+			else if(curr_key.indexOf("search_type") == -1)
+				criteria_query_string += query_key + ":" + query_val + " AND ";
 		}
+		
+		criteria_query_string = criteria_query_string.slice(0, -5);
+
+		$("#criteria_scroll").html(criteria_html);
+		closeDialog("criteria_details");
+		//resetForm('criteria_input_submit');
+		solrCall(criteria_query_string, "select");
+
+	}
+	
+	return false;
+
+}
+
+function commentSubmit(id){
+
+	var criteria_object = submitForm(id);
+	var criteria_query_string = "";
+	if(criteria_object){
+		//add new search criteria to the list
+		$("#criteria_scroll").empty();
+		var criteria_keys = Object.keys(criteria_object);
+		var criteria_length = criteria_keys.length;
+		var criteria_html = "<div id='criteria_input' style='width:100%; margin:2px;'>";
+		criteria_html += "<div class='row'>";
+		criteria_html += "<p style='margin:8px; font-weight:bold;'>Please review and confirm the information below before submitting to the ECFS:</p>"
+		criteria_html += "</div>";
+		var even = parseInt(criteria_length) % 2 == 0 ? true : false;
+
+		for(var i = 0; i < criteria_length; i++){
+			var curr_key = criteria_keys[i];
+			var clean_key = cleanLabel(curr_key);
+			var key_val = criteria_object[curr_key];
+			
+			//convert labels to database naming convention
+			var query_key = curr_key.indexOf('proceeding') > -1 ? 'proceedingNumber' 
+				: curr_key.indexOf('applicant') > -1 ? "file"
+				: clean_key.toLowerCase() == 'address' ? "street" 
+				: clean_key.toLowerCase();
+
+			criteria_html += "<p style='margin-left:.8em;'>" + clean_key + " : <span class='value-cool'>" + key_val + "</span></p>" 
+				
+			if(curr_key.indexOf("zip") > -1 && key_val.indexOf("-") > -1 ){
+				criteria_query_string += "zip:" + key_val.substr(0, key_val.indexOf("-")) + " AND zipExt:" + key_val.substr(key_val.indexOf("-") +1, key_val.length) + " AND ";
+			}			
+			else if(curr_key.indexOf("search_type") == -1)
+				criteria_query_string += query_key + ":" + key_val + " AND ";
+		}
+		
+		criteria_html += "</div></br>";
+		criteria_html += "<div id='submit_div' class='ui-widget-footer'>";
+		criteria_html += "<input type='submit' class='pointer clear_criteria' id='criteria_close'value='Edit' onclick='closeDialog(this.id)'/>";		
+		criteria_html += "<input type='submit' name='submit' class='pointer submit_criteria' onclick='confirmationSubmit()' value='Submit' id='criteria_submit'/>";
+		criteria_html += "</div>";
+		
+		criteria_query_string = criteria_query_string.slice(0, -5);
+		$("#criteria_details").empty();
+		$("#criteria_details").append(criteria_html);
+		//solrCall(criteria_query_string, "update");
+	}
 	
 	return false;
 
@@ -1099,32 +1111,90 @@ function confirmationSubmit(){
 	location.href="submit-confirmed-filing.html";
 }
 
-function solrCall(query){
-	console.log(query);
+function solrCall(query, type){
+	//console.log(query);
+	var params = null;
+	if(type == "select")
+		params = {'q': query, 'wt':'json','indent':'true', 'rows':getMaxRecords()};
+	else
+		params = {'q': query, 'wt':'json','indent':'true'};
+		
+	//console.log(params);
+	
 	$.ajax({
-		url: getSolrUrl(),
-		data:{'q': query, 'wt':'json','indent':'true', 'rows':getMaxRecords()},
+		url: getSolrUrl(type),
+		data:params,
 		dataType: 'jsonp',
 		jsonp: 'json.wrf',
 		success: function(data){
-			//console.log("success");
-			displayResults(data.response);
+			//console.log(data.reponse);
+			if(type == "select")
+				displayResults(data.response);
+			//else 
+				//confirmationSubmit();
 		},
 		error:function(jqXHR, textStatus, errorThrown){
 			//console.log("error");
-			$('#no_results').empty().append("<p><span class='value-cool'>There was a problem with the request</span></p><p style='color:#9F000F;'>Status: " + jqXHR.status + ", Error: " + textStatus + "</p>");
+			if(type == "select")
+				$('#no_results').empty().append("<p><span class='value-cool'>There was a problem with the request</span></p><p style='color:#9F000F;'>Status: " + jqXHR.status + ", Error: " + textStatus + "</p>");
+			else
+				alert("There was a problem with the request.");
 		},
 		fail: function (xmlHttpRequest, textStatus) {
              console.log(textStatus);
         }
 	});
 }
+
+function getConfirmationDetails(id){
+	var confirmation_object = submitForm(id);
+	var confirmation_keys = Object.keys(confirmation_object);
+	var confirmation_length = confirmation_keys.length;
+	
+	var html = ""; 
+	
+	html += "<div id='criteria_input' style='width:100%; margin:2px;'>";
+	html += "<div class='row'>";
+	html += "<p style='margin:8px; font-weight:bold;'>Please review and confirm the information below before submitting to the ECFS:</p>"
+	html += "</div>";
+
+	for(var i = 0; i < confirmation_length; i++){
+		var curr_key = confirmation_keys[i];
+		var value = confirmation_object[curr_key];
+		
+		if(curr_key.toLowerCase().indexOf("proceedings") != -1){
+			value = value.toString().replace(/,/g, ", ");
+		} 
+		else if(typeof value == "object"){
+			value = value.name;
+		}
+
+		if(i % 2 == 0){
+			if( i == confirmation_length - 1)//if last
+				html += createConfirmationColumns(cleanLabel(curr_key), value, "left", true);
+			else 
+				html += createConfirmationColumns(cleanLabel(curr_key), value, "left", false);
+		}
+		else
+			html += createConfirmationColumns(cleanLabel(curr_key), value, "right", true);				
+	}
+	
+	html += "</div>";
+	html += "</br>";
+	html += "<div id='submit_div' class='ui-widget-footer'>";
+	html += "<input type='submit' class='pointer clear_criteria' id='criteria_close'value='Edit' onclick='closeDialog(this.id)'/>";		
+	html += "<input type='submit' name='submit' class='pointer submit_criteria' onclick='confirmationSubmit()' value='Submit' id='criteria_submit'/>";
+	html += "</div>";
+	
+	return html;
+}
+
 function displayResults(results) {
 	var start_time = new Date().getTime();
 	var max_recs = getMaxRecords();
 	var check_time = getCheckTime();
 
-	console.log(results);
+	//console.log(results);
 	activity_spinner.stop();
 	results_spinner.stop();
 	

@@ -395,7 +395,6 @@ function quickSearchSwitch(searchType){
 	var quick_html = "";
 
 	if(searchType == "text"){
-		console.log(searchType); //printed
 		quick_html = "<label for='search_text_input'>Search<\/label><input type='text' maxlength='128' id='search_text_input' size='15' value='' class='form-text'";
 		quick_html += "pattern='" + validity['text'].regex + "' title='" + validity['text'].message + "'/>"; // validity - utils.js variable 
 
@@ -418,21 +417,15 @@ function quickSearchSwitch(searchType){
 	if($('#search_text_input').hasClass("datepicker")){
 		jq('#search_text_input').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+0", closeText : "Close", 
 		onSelect: function(){
-		console.log(searchType); //printed
 			$("#edit-search-theme-form-wrapper").find("label").remove();
 			$.jStorage.set("searchType", "date");
 			$.jStorage.set("searchText", $(this).val());
-			console.log($.jStorage.get("searchText"));
 		}
 		});
 	}
 	else{
 		jq('#search_text_input').datepicker( "destroy" );
-		console.log(searchType); //printed
 		$.jStorage.set("searchType", searchType);
-		/*var invalid_date = isNaN(stringToDate($.jStorage.get("searchText")).getTime());
-		if(!invalid_date)
-			$.jStorage.set("searchText", "");*/
 	}
 }
 
@@ -490,7 +483,6 @@ $(document).ready(function() {
 	});
 	
 	var set_type = $.jStorage.get("searchType");
-	console.log(set_type); //printed
 	if(set_type)
 		quickSearchSwitch(set_type);
 	else
@@ -599,7 +591,6 @@ $(document).ready(function() {
 	$('.node').prepend('<ul class="translations-list links inline"></ul>');
 	$('.translation-link').each(function(i,link){
 		$link = $(link);
-		//console.log($link.parent().html())
 		$($link.parent()).appendTo('.translations-list');
 	});
 
