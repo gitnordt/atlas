@@ -9,13 +9,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 <link rel="shortcut icon" href="/sites/default/files/fcc_favicon_0.ico" type="image/x-icon" />
-<meta property="og:title" content="Electronic Comment Filing System" />
-<meta name="description" content="To file a comment of up to several paragraphs, click on one of the proceedings listed below. To file a longer comment as an attachment, click on submit a filing and include the docket number of the proceeding both on the form and on the attachment." />
-<meta name="dcterms.description" content="To file a comment of up to several paragraphs, click on one of the proceedings listed below. To file a longer comment as an attachment, click on submit a filing and include the docket number of the proceeding both on the form and on the attachment." />
-<meta property="og:description" content="To file a comment of up to several paragraphs, click on one of the proceedings listed below. To file a longer comment as an attachment, click on submit a filing and include the docket number of the proceeding both on the form and on the attachment." />
-<link rel="canonical" href="http://www.fcc.gov/comments" />
-<meta property="og:url" content="http://www.fcc.gov/comments" />
-<meta name="revisit-after" content="1 day" />
 
 <title>Electronic Comment Filing System | FCC.gov</title>
 <meta name="viewport" content="width=device-width, minimum-scale=0.5, user-scalable=yes, target-densitydpi=device-dpi"/> 	
@@ -25,17 +18,11 @@
 <link type="text/css" rel="stylesheet" media="print" href="css/frame.css" />
 <link href="css/shCore.css" rel="stylesheet" type="text/css" />
 <link href="css/shThemeDefault.css" rel="stylesheet" type="text/css" />
-<!--<script type="text/javascript" src="javascript/jquery-drupal.js"></script>
-<script type="text/javascript" src="javascript/application.js"></script>
-<script type="text/javascript" src="javascript/page_layout.js"></script>
-<script type="text/javascript" src="javascript/jstorage.js"></script>
-<script type="text/javascript" src="javascript/equalheight.js"></script>
-<script type="text/javascript" src="javascript/shCore.js"></script>
-<script type="text/javascript" src="javascript/shBrushXml.js"></script>-->
 
 <script type="text/javascript" src="javascript/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="javascript/jquery-ui-1.11.2/jquery-ui.js"></script>
 <script type="text/javascript" src="javascript/jquery-drupal.js"></script>
+<script type='text/javascript' src='javascript/watermark.min.js'></script>
 <script type="text/javascript" src="javascript/application.js"></script>
 <script type="text/javascript" src="javascript/jstorage.js"></script>
 <script type="text/javascript" src="javascript/utils.js"></script>
@@ -43,6 +30,10 @@
 <script type="text/javascript" src="javascript/equalheight.js"></script>
 <script type="text/javascript" src="javascript/shCore.js"></script>
 <script type="text/javascript" src="javascript/shBrushXml.js"></script>
+<script type='text/javascript' src='javascript/dojo-1.10.2/dojo/dojo.js'></script>
+<script type="text/javascript" src="javascript/toolbox.js"></script> <!--extension of search.html-->
+
+
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
 jQuery.extend(Drupal.settings, { "basePath": "/" });
@@ -54,10 +45,30 @@ jQuery.extend(Drupal.settings, { "basePath": "/" });
 $(document).ready(function() {
 	//$("body").load("page_layout.html"); 
 	window.setTimeout(hovertipInit, 1);
-	$.jStorage.flush();
+	var login = $.jStorage.get("successful_login");
+	$("#login_details").append(loginHtml());
 	
 	//jq('#search_text_input').datepicker({dateFormat: "mm/dd/yy", changeMonth: true, changeYear: true, showButtonPanel: true, yearRange: "-100:+5", closeText : "Close"}); 
-	
+	$(function() {
+		jq( "#login_details" ).dialog({
+			autoOpen: !login,
+			resizable: false,
+			draggable: false,
+			modal: true,
+			position: {my: 'center', at: 'center'},
+			show: { effect: "explode", duration: 1000 },
+			hide: { effect: "explode", duration: 1000 }
+		});
+		
+		jq(".ui-dialog-titlebar-close").hide();
+		
+		$( "#login_input_submit" ).click(function() {
+			if(isValidForm($("#login_input")) == true){
+				jq( "#login_details" ).dialog( "close" );
+				$.jStorage.set("successful_login", true);
+			}
+		})
+	});
 });
 
 //--><!]]>
@@ -68,6 +79,7 @@ $(document).ready(function() {
 	</div>
 	<!-- /intro-div -->
 	<div id="contentWrapper">
+		<div id="login_details" title="Login" class="megamenu criteriamenu"></div>
 		<div class="wrapper">
 			<div id="hdr">
 			</div>
@@ -87,6 +99,7 @@ $(document).ready(function() {
 						<div class="content-container">
 							<div id="node-3895" class="node clear-block">
 								<div class="meta"></div>
+
 								<div class="content">
 									<h4 class="mainHeader">The Electronic Comment Filing System </h4>
 									<p> The Federal Communications Commission's Electronic Comment Filing System (ECFS) serves as the repository for official records in the FCC's docketed proceedings and rulemakings from 1992 to the present. Consumers can research, retrieve, view, and print any document in the system, including earlier non-electronic FCC documents that have been scanned into the system. </p>

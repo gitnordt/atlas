@@ -498,6 +498,25 @@ function getFilingUrl(path){
 	return url;	
 }
 
+function loginHtml(){
+	var html = "<form id='login_input' data-dojo-type='dijit.form.Form' onsubmit='return false;'>";
+	html += "<div class='row login'>";
+		html += "<div>";	
+		html += createRowTextbox("username", toCamelCase("username:"), "", validity['username'].message, validity['username'].regex, true);
+		html += "</br></br>";
+		html += createRowTextbox("password", toCamelCase("password:"), "", validity['password'].message, validity['password'].regex, true);			
+		html += "</div>";
+	html += "</div>";
+	html += "</br>";
+	html += "<div id='submit_div' class='ui-widget-footer'>";
+		html += "<input type='submit' name='login_submit' class='pointer' value='Submit' id='login_input_submit'/>";
+	html += "</div>";
+	html += "</form>";
+	
+	return html;
+
+}
+
 function getAnchorDetails(search_text, search_type){
 
 		var invalid_date = isNaN(stringToDate(search_text).getTime());

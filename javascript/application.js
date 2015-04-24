@@ -450,6 +450,9 @@ $(document).ready(function() {
 	$("#actionbar").wrap('<div id="stickynav" />');
 	$("#stickynav").prepend("<div id='stickywrapper'></div>");
 
+	if(!$.jStorage.get("successful_login"))
+		$.jStorage.set("successful_login", false);
+
 	/***********************************************/	
 	$(function() {
 		jq.widget("custom.iconselectmenu", jq.ui.selectmenu, {
@@ -534,6 +537,23 @@ $(document).ready(function() {
 			$("#stickywrapper").fadeOut('fast');
 		}
 	}
+	
+	
+	var load = false;
+	if(!load) {
+		//console.log("watermark3");
+		wmark.init({
+			/* config goes here */
+			"position": "top-left", // default "bottom-right"
+			"opacity": 50, // default 50
+			"className": "watermark", // default "watermark"
+			"path": "images/atlas_poc_repeated.png"
+		});
+	
+		load = true;
+	}
+	
+	$("#actionbar").append('<img src="images/1pix.gif" style="width:1200px; height:40px; background-repeat: repeat-x;" class="watermark" />');
 
 	// Add titles to every link
 	$('a').each(function() {

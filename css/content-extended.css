@@ -7,6 +7,29 @@ body {
 
     width: 1200px !important;
 }
+.row .login{
+	width: 100%;
+}
+#login_input_submit{
+	display: block;
+	margin: auto;
+}
+
+#login_input label{
+	display: inline-block;
+	font-weight: bold;
+	padding: 0 .6em 0 .6em;
+	float:left;
+}
+
+#login_input .row_textbox{
+	width: 16em;
+	font-weight: bold;
+	margin: 0 .6em 0 0;
+	float:right;
+}
+
+
 #hdr {
     height: 115px;
     padding-bottom: 5px;
