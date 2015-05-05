@@ -114,8 +114,8 @@ function jsonHandler(results){
 		      //console.log("header to push: " + objkey);
 			   if(objkey == "text" || objkey == "Filing_Comment")
 					commentHeader = objkey;
-		       else if(isInArray(objkey, origHeaders) == false && objkey.indexOf('_') != 0 
-			   && objkey.indexOf('_sort') == -1 && objkey.indexOf("score") == -1 && objkey != "viewingStatus")
+		       else if(isInArray(objkey, origHeaders) == false && objkey.indexOf('_') != 0 && objkey.indexOf('_sort') == -1 
+			    && objkey.indexOf("score") == -1 && objkey != "viewingStatus" && objkey != "deleted")
 					origHeaders.push(objkey);
 		   }
 		}

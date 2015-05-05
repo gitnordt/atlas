@@ -1034,6 +1034,8 @@ function criteriaSubmit(id){
 					}
 					query_val += ']';
 			}
+			else if(query_key.indexOf('text') > -1)
+				query_val = "*" + key_val + "*";
 			else
 				query_val = key_val;
 			
@@ -1097,7 +1099,7 @@ function commentSubmit(id){
 			
 			//convert labels to database naming convention
 			var query_key = curr_key.indexOf('proceeding') > -1 ? 'proceedingNumber' 
-				: curr_key.indexOf('applicant') > -1 ? "file"
+				: curr_key.indexOf('applicant') > -1 ? "filer"
 				: clean_key.toLowerCase() == 'address' ? "street" 
 				: clean_key.toLowerCase();
 
@@ -1109,17 +1111,16 @@ function commentSubmit(id){
 			else if(curr_key.indexOf("search_type") == -1)
 				criteria_query_string += query_key + ":" + key_val + " AND ";
 		}
+		criteria_query_string = criteria_query_string.slice(0, -5);
 		
 		criteria_html += "</div></br>";
 		criteria_html += "<div id='submit_div' class='ui-widget-footer'>";
-		criteria_html += "<input type='submit' class='pointer clear_criteria' id='criteria_close'value='Edit' onclick='closeDialog(this.id)'/>";		
-		criteria_html += "<input type='submit' name='submit' class='pointer submit_criteria' onclick='confirmationSubmit()' value='Submit' id='criteria_submit'/>";
+		criteria_html += "<input type='submit' class='pointer clear_criteria' id='criteria_close' value='Edit' onclick='closeDialog(this.id)'/>";		
+		criteria_html += "<input type='submit' name='submit' class='pointer submit_criteria' onclick='solrCall(\"" + criteria_query_string + "\", \"update\");' value='Submit' id='criteria_submit'/>";
 		criteria_html += "</div>";
 		
-		criteria_query_string = criteria_query_string.slice(0, -5);
 		$("#criteria_details").empty();
 		$("#criteria_details").append(criteria_html);
-		//solrCall(criteria_query_string, "update");
 	}
 	
 	return false;
@@ -1135,32 +1136,38 @@ function solrCall(query, type){
 	var params = null;
 	if(type == "select")
 		params = {'q': query, 'wt':'json','indent':'true', 'rows':getMaxRecords()};
-	else
+	else{
 		params = {'q': query, 'wt':'json','indent':'true'};
-		
-	//console.log(params);
-	
+		closeDialog("criteria_details");
+	}
+
 	$.ajax({
-		url: getSolrUrl(type),
+		url: getSolrHost(type),
 		data:params,
 		dataType: 'jsonp',
 		jsonp: 'json.wrf',
 		success: function(data){
-			//console.log(data.reponse);
+			//console.log(data);
 			if(type == "select")
 				displayResults(data.response);
-			//else 
-				//confirmationSubmit();
+			else 
+				confirmationSubmit();
 		},
 		error:function(jqXHR, textStatus, errorThrown){
-			//console.log("error");
+			console.log(jqXHR.status);
 			if(type == "select")
 				$('#no_results').empty().append("<p><span class='value-cool'>There was a problem with the request</span></p><p style='color:#9F000F;'>Status: " + jqXHR.status + ", Error: " + textStatus + "</p>");
-			else
-				alert("There was a problem with the request.");
+			else{
+				var error = "<p><span class='value-cool'>There was a problem with the request</span></p><p style='color:#9F000F;'>Status: " + jqXHR.status + ", Error: " + textStatus + "</p>";
+				$.jStorage.set("error_msg", error);
+				confirmationSubmit();
+			}
 		},
 		fail: function (xmlHttpRequest, textStatus) {
+			 var error = textStatus;
+			 $.jStorage.set("error_msg", error);
              console.log(textStatus);
+			 confirmationSubmit();
         }
 	});
 }
@@ -1214,8 +1221,7 @@ function displayResults(results) {
 	var check_time = getCheckTime();
 
 	//console.log(results);
-	activity_spinner.stop();
-	results_spinner.stop();
+
 	
 	if(results.numFound > max_recs){
 		$('#warning').empty().append("<label><span class='value-cool'>* Only displaying " + max_recs + " of " + results.numFound + " records. Please refine your search.</span></label>");
@@ -1223,7 +1229,7 @@ function displayResults(results) {
 	}
 	else
 		$('#warning').hide();
-	
+		
 	if(results.numFound != 0){
 		dojo.ready(function(){
 
@@ -1236,6 +1242,9 @@ function displayResults(results) {
 
 			viewer_displayed = true;
 			/*filtering();*/
+			
+			activity_spinner.stop();
+			results_spinner.stop();
 		});
 	}
 	else if(results.numFound == 0){
@@ -1245,9 +1254,12 @@ function displayResults(results) {
 		
 		if ($('#no_results').is(":hidden"))
 			$('#no_results').show();
+			
+		activity_spinner.stop();
+		results_spinner.stop();
 	}
 	
-	dojo.addOnLoad(function() {		
+	dojo.addOnLoad(function() {	
 		$('#criteria').height($('#activity').height() - 1);		
 		$('#criteria_view').height($('#criteria').height() - 21);
 	});

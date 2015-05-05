@@ -256,11 +256,12 @@ $(document).ready(function() {
 			formatted_query = search_type == 'date' ? search_type + 'Rcpt' : search_type;
 			formatted_query +=  ": [" + reformatted_date + "T00:00:00Z" + " TO " + reformatted_date + "T23:59:59.999Z" + "]";
 		}
+		else if(search_type == 'text')
+			formatted_query = search_type + ": *" + $("#search_text_input").val() + "*";
 		else
 			formatted_query = search_type + ":" + $("#search_text_input").val();
 			
 		solrCall(formatted_query, "select");
-		
 	}
 	else{
 		activity_spinner.stop();

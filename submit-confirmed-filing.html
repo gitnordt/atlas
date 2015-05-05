@@ -53,29 +53,27 @@ $(document).ready(function() {
 	window.setTimeout(hovertipInit, 1);
 	var search_text = $.jStorage.get("searchText");
 	var filing_path = $.jStorage.get("filingPath");
+	var error_msg = $.jStorage.get("error_msg");
+
 
 	//$("#criteria_details").append(getConfirmationDetails());
 	$('#filing_type').html(getFilingSelectorMenu());
 	$('#state_pick').html(getStateSelectorMenu());
 	$("#breadcrumb_ext").attr("href", getFilingUrl(filing_path));
 	$("#breadcrumb_ext").html(filing_path + " Filing");
-		
-	$(function() {
-		jq( "#criteria_details" ).dialog({
-			autoOpen: false,
-			resizable: false,
-			draggable: false,
-			modal: true,
-			position: {my: 'center', at: 'center'},
-			show: { effect: "explode", duration: 1000 },
-			hide: { effect: "explode", duration: 1000 }
-		});	
-		$( "#expert_filing_submit" ).click(function() {jq( "#criteria_details" ).dialog( "open" );})
-	});
-	
 	$("#confirmation_num").html(generateRandomId());
+	
+	if(error_msg){
+		//console.log("change message");
+		$("#content_span").html("Filing Error");
+		var msg_html = '<div class="row"><p> Your filing was not submitted. Please check with your admin if the problem persists.</p><br>' + error_msg + '</div>';
+		$("#expert_filing").html(msg_html);
+	}
 
 });
+
+	
+
 //--><!]]>
 </script>
 </head>
