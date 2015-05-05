@@ -1142,7 +1142,7 @@ function solrCall(query, type){
 	}
 
 	$.ajax({
-		url: getSolrHost(type),
+		url: getSolrUrl(type),
 		data:params,
 		dataType: 'jsonp',
 		jsonp: 'json.wrf',
