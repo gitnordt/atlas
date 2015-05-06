@@ -1106,12 +1106,12 @@ function commentSubmit(id){
 			criteria_html += "<p style='margin-left:.8em;'>" + clean_key + " : <span class='value-cool'>" + key_val + "</span></p>" 
 				
 			if(curr_key.indexOf("zip") > -1 && key_val.indexOf("-") > -1 ){
-				criteria_query_string += "zip:" + key_val.substr(0, key_val.indexOf("-")) + " AND zipExt:" + key_val.substr(key_val.indexOf("-") +1, key_val.length) + " AND ";
+				criteria_query_string += "zip=" + key_val.substr(0, key_val.indexOf("-")) + "&zipExt=" + key_val.substr(key_val.indexOf("-") +1, key_val.length) + "&";
 			}			
 			else if(curr_key.indexOf("search_type") == -1)
-				criteria_query_string += query_key + ":" + key_val + " AND ";
+				criteria_query_string += query_key + "=" + key_val + "&";
 		}
-		criteria_query_string = criteria_query_string.slice(0, -5);
+		criteria_query_string = criteria_query_string.slice(0, -1);
 		
 		criteria_html += "</div></br>";
 		criteria_html += "<div id='submit_div' class='ui-widget-footer'>";
@@ -1134,10 +1134,11 @@ function confirmationSubmit(){
 function solrCall(query, type){
 	//console.log(query);
 	var params = null;
+
 	if(type == "select")
 		params = {'q': query, 'wt':'json','indent':'true', 'rows':getMaxRecords()};
 	else{
-		params = {'q': query, 'wt':'json','indent':'true'};
+		params = query + '&callback=?';
 		closeDialog("criteria_details");
 	}
 
@@ -1150,8 +1151,11 @@ function solrCall(query, type){
 			//console.log(data);
 			if(type == "select")
 				displayResults(data.response);
-			else 
+			else{
+				$.jStorage.set("conf_id", data.id);
+				//console.log($.jStorage.get("conf_id"));
 				confirmationSubmit();
+			}
 		},
 		error:function(jqXHR, textStatus, errorThrown){
 			console.log(jqXHR.status);
@@ -1164,9 +1168,9 @@ function solrCall(query, type){
 			}
 		},
 		fail: function (xmlHttpRequest, textStatus) {
+			console.log(textStatus);
 			 var error = textStatus;
 			 $.jStorage.set("error_msg", error);
-             console.log(textStatus);
 			 confirmationSubmit();
         }
 	});

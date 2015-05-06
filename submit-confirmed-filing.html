@@ -53,15 +53,15 @@ $(document).ready(function() {
 	window.setTimeout(hovertipInit, 1);
 	var search_text = $.jStorage.get("searchText");
 	var filing_path = $.jStorage.get("filingPath");
+	var id = $.jStorage.get("conf_id") ? $.jStorage.get("conf_id") : generateRandomId();
 	var error_msg = $.jStorage.get("error_msg");
-
 
 	//$("#criteria_details").append(getConfirmationDetails());
 	$('#filing_type').html(getFilingSelectorMenu());
 	$('#state_pick').html(getStateSelectorMenu());
 	$("#breadcrumb_ext").attr("href", getFilingUrl(filing_path));
 	$("#breadcrumb_ext").html(filing_path + " Filing");
-	$("#confirmation_num").html(generateRandomId());
+	$("#confirmation_num").html(id);
 	
 	if(error_msg){
 		//console.log("change message");

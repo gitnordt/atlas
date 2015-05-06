@@ -17,7 +17,7 @@ var  ldap = {
 var url_origin = window.location.origin;
 //change url to the original newserver if testing from localhost
 if(url_origin.indexOf("localhost") > -1) 
-	url_origin = "http://192.255.32.218";
+	url_origin = "http://192.255.40.245"; //url_origin = "http://192.255.32.218"; 	
 	
 var solr_server_select = url_origin + ":8500/solr/ECFS/select"; //q=test&sort=id+asc&wt+json&indent=true, http://192.255.32.218:8500/solr/#/ECFS/query
 var solr_url_select = url_origin + ":8080/fccEcfs/Select"; //backend JAVA request
