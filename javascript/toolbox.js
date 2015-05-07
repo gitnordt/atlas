@@ -299,9 +299,12 @@ function getBureauSelectorMenu(){
 }
 
 /*Functions to build each field in the search criteria menu*/
-function createRowTextbox(id_prefix, label_text, value, tooltip_text, regex, required){
+function createRowTextbox(id_prefix, label_text, value, tooltip_text, regex, required, type){
+	if(!type)
+		type = 'text';
+	
 	var html = "<label for='" + id_prefix + "_text'>" + label_text + "</label>";
-	html += "<input type='text' id='"+ id_prefix +"_text' name='"+ id_prefix +"_text' class='row_textbox' value='" + value + "' ";
+	html += "<input type=" + type + " id='"+ id_prefix +"_text' name='"+ id_prefix +"_text' class='row_textbox' value='" + value + "' ";
 	if(regex)
 		html += "pattern='" + regex + "' title='" + tooltip_text + "' ";
 	if(required)
@@ -504,7 +507,7 @@ function loginHtml(){
 		html += "<div>";	
 		html += createRowTextbox("username", toCamelCase("username:"), "", validity['username'].message, validity['username'].regex, true);
 		html += "</br></br>";
-		html += createRowTextbox("password", toCamelCase("password:"), "", validity['password'].message, validity['password'].regex, true);			
+		html += createRowTextbox("password", toCamelCase("password:"), "", validity['password'].message, validity['password'].regex, true,'password');			
 		html += "</div>";
 	html += "</div>";
 	html += "</br>";
