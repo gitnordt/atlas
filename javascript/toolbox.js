@@ -1037,8 +1037,6 @@ function criteriaSubmit(id){
 					}
 					query_val += ']';
 			}
-			else if(query_key.indexOf('text') > -1)
-				query_val = "*" + key_val + "*";
 			else
 				query_val = key_val;
 			
@@ -1060,14 +1058,14 @@ function criteriaSubmit(id){
 			
 			
 			if(curr_key.indexOf("period") > -1){ //query all dates within the given date range for the Date Period field
-				criteria_query_string += "dateRcpt:" + query_val + " AND disseminated:" + query_val;
-				criteria_query_string += " AND modified:"  + query_val +  " AND ";
+				criteria_query_string += "dateRcpt=" + query_val + " AND disseminated=" + query_val;
+				criteria_query_string += "&modified="  + query_val +  "&";
 			}		
 			else if(curr_key.indexOf("search_type") == -1)
-				criteria_query_string += query_key + ":" + query_val + " AND ";
+				criteria_query_string += query_key + "=" + query_val + "&";
 		}
 		
-		criteria_query_string = criteria_query_string.slice(0, -5);
+		criteria_query_string = criteria_query_string.slice(0, -1);
 
 		$("#criteria_scroll").html(criteria_html);
 		closeDialog("criteria_details");
@@ -1136,14 +1134,10 @@ function confirmationSubmit(){
 
 function solrCall(query, type){
 	//console.log(query);
-	var params = null;
+	var params = query +'&callback=?';
 
-	if(type == "select")
-		params = {'q': query, 'wt':'json','indent':'true', 'rows':getMaxRecords()};
-	else{
-		params = query + '&callback=?';
+	if(type != "select")
 		closeDialog("criteria_details");
-	}
 
 	$.ajax({
 		url: getSolrUrl(type),

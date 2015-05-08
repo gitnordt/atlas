@@ -51,6 +51,7 @@ jQuery.extend(Drupal.settings, { "basePath": "/" });
 <!--//--><![CDATA[//><!--
 $(document).ready(function() {
 	window.setTimeout(hovertipInit, 1);
+	$.jStorage.set("searchText", "");
 	$.jStorage.set("filingPath", "Expert");
 	$('#filing_type').html(getFilingSelectorMenu());
 	$('#state_pick').html(getStateSelectorMenu());

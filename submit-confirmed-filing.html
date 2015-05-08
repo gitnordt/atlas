@@ -51,7 +51,6 @@ jQuery.extend(Drupal.settings, { "basePath": "/" });
 <!--//--><![CDATA[//><!--
 $(document).ready(function() {
 	window.setTimeout(hovertipInit, 1);
-	var search_text = $.jStorage.get("searchText");
 	var filing_path = $.jStorage.get("filingPath");
 	var id = $.jStorage.get("conf_id") ? $.jStorage.get("conf_id") : generateRandomId();
 	var error_msg = $.jStorage.get("error_msg");

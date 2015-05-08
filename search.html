@@ -123,6 +123,7 @@ jQuery.extend(Drupal.settings, { "basePath": "/" });
 $(document).ready(function() {
 	var search_text = $.jStorage.get("searchText");
 	var search_type = $.jStorage.get("searchType");
+	$.jStorage.set("searchText", "");
 	var auto_open = true;
 	quickSearchSwitch(search_type);
 	window.setTimeout(hovertipInit, 1);
@@ -254,12 +255,10 @@ $(document).ready(function() {
 			var split_date = $("#search_text_input").val().split('/');
 			var reformatted_date = split_date[2] + '-' + split_date[0] + '-' + split_date[1];
 			formatted_query = search_type == 'date' ? search_type + 'Rcpt' : search_type;
-			formatted_query +=  ": [" + reformatted_date + "T00:00:00Z" + " TO " + reformatted_date + "T23:59:59.999Z" + "]";
+			formatted_query +=  "= [" + reformatted_date + "T00:00:00Z" + " TO " + reformatted_date + "T23:59:59.999Z" + "]";
 		}
-		else if(search_type == 'text')
-			formatted_query = search_type + ": *" + $("#search_text_input").val() + "*";
 		else
-			formatted_query = search_type + ":" + $("#search_text_input").val();
+			formatted_query = search_type + "=" + $("#search_text_input").val();
 			
 		solrCall(formatted_query, "select");
 	}
@@ -272,6 +271,7 @@ $(document).ready(function() {
 
 		intervalStart();
 	}
+	
 });
 
 dojo.addOnLoad(function(){

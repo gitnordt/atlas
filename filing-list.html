@@ -51,8 +51,8 @@ jQuery.extend(Drupal.settings, { "basePath": "/" });
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
 $(document).ready(function() {
+	$.jStorage.set("searchText", "");
 	window.setTimeout(hovertipInit, 1);
-	var search_text = $.jStorage.get("searchText");
 		
 	$(function() {
 		jq( "#criteria_details" ).dialog({

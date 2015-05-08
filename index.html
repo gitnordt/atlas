@@ -43,7 +43,8 @@ jQuery.extend(Drupal.settings, { "basePath": "/" });
 <!--//--><![CDATA[//><!--
 // initialize tooltips in a separate thread
 $(document).ready(function() {
-	//$("body").load("page_layout.html"); 
+	//$("body").load("page_layout.html");
+	$.jStorage.set("searchText", "");	
 	window.setTimeout(hovertipInit, 1);
 	var login = $.jStorage.get("successful_login");
 	$("#login_details").append(loginHtml());
