@@ -1065,7 +1065,7 @@ function criteriaSubmit(id){
 				criteria_query_string += query_key + "=" + query_val + "&";
 		}
 		
-		criteria_query_string = criteria_query_string.slice(0, -1);
+		criteria_query_string = criteria_query_string + 'start=0&rows=' + getMaxRecords();
 
 		$("#criteria_scroll").html(criteria_html);
 		closeDialog("criteria_details");
@@ -1112,7 +1112,7 @@ function commentSubmit(id){
 			else if(curr_key.indexOf("search_type") == -1)
 				criteria_query_string += query_key + "=" + key_val + "&";
 		}
-		criteria_query_string = criteria_query_string.slice(0, -1);
+		criteria_query_string = criteria_query_string + 'start=0&rows=' + getMaxRecords();
 		
 		criteria_html += "</div></br>";
 		criteria_html += "<div id='submit_div' class='ui-widget-footer'>";

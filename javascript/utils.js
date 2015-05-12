@@ -49,7 +49,7 @@ var validity = new Array(12);
 	validity["proceeding_id"] = {"regex":"^(\\d{2}|RM)-(\\d{0,5})$", "message": "Enter a valid proceeding number, e.g. Docket Number (96-45), RM Number (RM-10020) or proposed rulemaking (PRM04MB)"};
 	validity["city"] = {"regex":"[A-Za-z]{2,}([A-Za-z\\*\\s]*)$", "message": "Enter at least the 2 leading characters of the city name"};
 	validity["zip_cd"] = {"regex":"^\\d{5}(-(\\d{4}))?$", "message": "Enter at least 5 digits of a valid zip code or enter zip code +4, e.g. 32656-5521"};
-	validity["email"] = {"regex":"^(([a-zA-Z0-9\-?\.?]+)@(([a-zA-Z0-9\-_]+\.)+)([a-z]{2,3}))+$", "message": "Enter a valid primary email address"};
+	validity["email"] = {"regex":"^(([a-zA-Z0-9\-_\.]+)@(([a-zA-Z0-9\-_]+\.)+)([a-z]{2,3}))+$", "message": "Enter a valid primary email address"};
 	validity["address1"] = {"regex":address1_rgx, "message": "Enter a valid street address. Please capitalize and abbreviate all designators, e.g. APT, STE, BLDG"};
 	validity["address2"] = {"regex":address2_rgx, "message": "Enter additional address information. Please capitalize and abbreviate all designators, e.g. APT, STE, BLDG"};
 	

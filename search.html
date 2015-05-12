@@ -258,7 +258,7 @@ $(document).ready(function() {
 			formatted_query +=  "= [" + reformatted_date + "T00:00:00Z" + " TO " + reformatted_date + "T23:59:59.999Z" + "]";
 		}
 		else
-			formatted_query = search_type + "=" + $("#search_text_input").val();
+			formatted_query = search_type + "=" + $("#search_text_input").val() + '&start=0&rows=' + getMaxRecords();
 			
 		solrCall(formatted_query, "select");
 	}
